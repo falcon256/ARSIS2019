@@ -86,6 +86,15 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Eclipse", PlayEclipse);
         _keywords.Add("Adele Rocket Man", PlayRocketMan);
 
+        //Biometrics Navigation
+        _keywords.Add("Select A1", SelectA1);
+
+        //Translation 
+        _keywords.Add("Record Path", StartTranslation);
+        _keywords.Add("Save Path", StopTranslation);
+        _keywords.Add("Show Path", ShowPath);
+        _keywords.Add("Hide Path", HidePath); 
+
         #endregion
 
         // Sets up keyword recognition 
@@ -177,7 +186,7 @@ public class VoiceManager : MonoBehaviour {
 
     public void TakePhoto()
     {
-        HoloLensSnapshotTest.S.TakePhoto();
+        VuforiaCameraCapture.S.TakePhoto(true);
 
         m_Source.clip = m_ZoomOut;
         m_Source.Play();
@@ -185,7 +194,7 @@ public class VoiceManager : MonoBehaviour {
 
     public void Toggle()
     {
-        HoloLensSnapshotTest.S.ToggleImage();
+        VuforiaCameraCapture.S.ToggleImage();
 
         m_Source.clip = m_ZoomIn;
         m_Source.Play();
@@ -396,8 +405,42 @@ public class VoiceManager : MonoBehaviour {
     {
         MusicManager.m_Instance.StopMusic();
     }
+    #endregion
+
+    #region Biometrics Navigation
+
+    public void SelectA1()
+    {
+
+    }
+
+    #endregion
+
+    #region Translation 
+
+    void StartTranslation()
+    {
+        TranslationController.S.startPathCapture(); 
+    }
+
+    void StopTranslation()
+    {
+        TranslationController.S.stopPathCapture(); 
+    }
+
+    void ShowPath()
+    {
+        TranslationController.S.showPath(); 
+    }
+
+    void HidePath()
+    {
+        TranslationController.S.hidePath();
+    }
+
     #endregion 
-    
+
+
     // Keyword Recognition 
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {

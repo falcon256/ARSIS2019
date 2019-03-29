@@ -2,6 +2,8 @@
 
 using System;
 using System.Text;
+using UnityEngine.Networking;
+using UnityEngine; 
 
 namespace BestHTTP.SocketIO.Transports
 {
@@ -161,6 +163,7 @@ namespace BestHTTP.SocketIO.Transports
             LastRequest.RawData = buffer;
 
             LastRequest.Send();
+            Debug.Log("Response: " + LastRequest.Response); 
         }
 
         private void OnRequestFinished(HTTPRequest req, HTTPResponse resp)

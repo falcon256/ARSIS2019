@@ -5,6 +5,7 @@ using BestHTTP;
 using BestHTTP.SocketIO;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Handles socket.io connection with picture server 
@@ -14,7 +15,11 @@ using UnityEngine.UI;
 public class ServerConnect : MonoBehaviour
 {
     // Singleton 
-    public static ServerConnect S; 
+    public static ServerConnect S;
+
+    public string socketURI; 
+    public bool useLocalHost;
+    public bool useOliviasTestServer; 
 
     public SocketOptions options;
     public SocketManager socketManager;
@@ -29,10 +34,57 @@ public class ServerConnect : MonoBehaviour
 
         // Socket messages that we are listening for 
         socketManager.Socket.On("connect", OnConnect);
+        socketManager.Socket.On("connecting", OnConnecting);
+        socketManager.Socket.On("reconnect_attempt", onReconAttempt);
+        socketManager.Socket.On("error", onError);
+        socketManager.Socket.On("reconnect_failed", onReconFailed);
+        //socketManager.Socket.On("event", onSocketEvent);
+        socketManager.Socket.On("disconnect", onSocketDisconnect);
+        socketManager.Socket.On("connect_error", onConnectError);
+        socketManager.Socket.On("connect_timeout", onConnectTimeout); 
+        socketManager.Socket.On(SocketIOEventTypes.Error, OnError);
+
         socketManager.Socket.On("picture", getPicture);
 
-        socketManager.Socket.On("command", onCommand); 
+        socketManager.Socket.On("command", onCommand);
+
+        //StartCoroutine(RunSwitchWWW());
+
+        /*HTTPRequest request = new HTTPRequest(new Uri("http://db45ecb7.ngrok.io/socket.io/?EIO=4&transport=polling"));
+        request.Send();*/
     }
+
+
+    /*IEnumerator RunSwitchWWW()
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get("http://db45ecb7.ngrok.io/socket.io/?EIO=4&transport=polling"))
+        {
+            Debug.Log("Well we are at least trying");
+            yield return www.SendWebRequest();
+
+            if (www.isNetworkError)
+            {
+                Debug.Log("HELP");
+
+            }
+            else if (www.isHttpError)
+            {
+                Debug.Log("HELPP");
+                Debug.Log(www.error);
+            }
+            else
+            {
+                // We are connected to the server 
+
+                // Use line below only if the JSON comes in with brackets around it 
+                //json = RemoveBrackets(www.downloadHandler.text);  
+                Debug.Log("You connected");
+                Debug.Log(www.responseCode);
+
+            }
+            // Debug.Log("None of the above?");
+        }
+    }*/
 
     ////////////////////// Public functions that emit socket messages ////////////////////////////
     public void sendPicture(Texture2D tx)
@@ -49,7 +101,8 @@ public class ServerConnect : MonoBehaviour
     ///////////////////// Handlers for recieved socket messages //////////////////////////////////
     void onCommand(Socket socket, Packet packet, params object[] args)
     {
-        string command = (string)args[0]; 
+        string command = (string)args[0];
+        Debug.Log("got command: " + command); 
 
         switch (command)
         {
@@ -132,8 +185,8 @@ public class ServerConnect : MonoBehaviour
         tx.LoadImage(b64Bytes);
         
         // Display picture and text 
-        HoloLensSnapshotTest.S.SetImage(tx);
-        HoloLensSnapshotTest.S.SetText(fromSocket["sendtext"].ToString());
+        VuforiaCameraCapture.S.SetImage(tx);
+        VuforiaCameraCapture.S.SetText(fromSocket["sendtext"].ToString());
 
         // Play sound 
         VoiceManager vm = (VoiceManager)GameObject.FindObjectOfType(typeof(VoiceManager));
@@ -146,6 +199,49 @@ public class ServerConnect : MonoBehaviour
         //Debug.Log("Connected to Socket.IO server");
     }
 
+    void OnConnecting(Socket socket, Packet packet, params object[] args)
+    {
+       // Debug.Log("Connecting to Socket.IO server");
+    }
+
+    void onReconAttempt(Socket socket, Packet packet, params object[] args)
+    {
+        //Debug.Log("Attempting to reconnect to Socket.IO server");
+    }
+
+    void onError(Socket socket, Packet packet, params object[] args)
+    {
+        Debug.Log("ERROR SOCKET HELP " + args[0]);
+    }
+
+    void onReconFailed(Socket socket, Packet packet, params object[] args)
+    {
+        Debug.Log("Reconnect failed");
+    }
+
+    void onSocketDisconnect(Socket socket, Packet packet, params object[] args)
+    {
+       // Debug.Log("Socket disconnect ");
+    }
+
+    void onConnectError(Socket socket, Packet packet, params object[] args)
+    {
+        Debug.Log("Connect error");
+    }
+
+    void onConnectTimeout(Socket socket, Packet packet, params object[] args)
+    {
+        Debug.Log("Connect timeout");
+    }
+
+    void OnError(Socket socket, Packet packet, params object[] args)
+    {
+        Error error = args[0] as Error;
+
+        switch (error.Code) { case SocketIOErrors.User: Debug.Log("Exception in an event handler!"); break; case SocketIOErrors.Internal: Debug.Log("Internal error!"); break; default: Debug.Log("Server error!"); break; }
+
+        Debug.Log(error.ToString());
+    }
     /////////////////////////////// Socket.io connection utilities /////////////////////////////////
     void OnApplicationQuit()
     {
@@ -161,15 +257,32 @@ public class ServerConnect : MonoBehaviour
         options.ReconnectionAttempts = 3;
         options.AutoConnect = true;
         options.ReconnectionDelay = miliSecForReconnect;
+        
+        //options.ConnectWith = BestHTTP.SocketIO.Transports.TransportTypes.Polling; 
+        //options.Timeout = TimeSpan.FromMilliseconds(100); // set this to much faster than default, should probably remove 
 
         //Server URI
-        socketManager = new SocketManager(new Uri("http://db45ecb7.ngrok.io:3000/socket.io/"), options);
-        Debug.Log("Connected to Socket server"); 
+        if (useLocalHost)
+        {
+            socketManager = new SocketManager(new Uri("http://localhost:3000/socket.io/"), options);
+        }
+        else if (useOliviasTestServer)
+        {
+            socketManager = new SocketManager(new Uri("http://54.175.254.200:3000/socket.io/"));
+        }
+        else
+        {
+            //socketManager = new SocketManager(new Uri("http://db45ecb7.ngrok.io:3000/socket.io/"), options);
+            socketManager = new SocketManager(new Uri(socketURI), options);
+        } 
+
+
+        //Debug.Log("Connected to Socket server"); 
     }
 
     public void DisconnectMySocket()
     {
-        Debug.Log("Disconnected from Socket Server"); 
+        //Debug.Log("Disconnected from Socket Server"); 
         socketManager.GetSocket().Disconnect();
     }
 

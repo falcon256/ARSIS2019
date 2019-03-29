@@ -20,7 +20,12 @@ public class JSONParse : MonoBehaviour {
 
     [Header("Display Text")]
     public Text bioText;
+
+    public GameObject[] bubbles; 
+
     public Text timeLeftText;
+
+    public LineGraph lineGraph; 
 
     [Space(10)]
 
@@ -116,34 +121,43 @@ public class JSONParse : MonoBehaviour {
                 // Use line below only if the JSON comes in with brackets around it 
                 //json = RemoveBrackets(www.downloadHandler.text);
                 json = www.downloadHandler.text;
+                //Debug.Log("Connected to biometrics server");
             }
-
-            NASADataType jsonObject = JsonUtility.FromJson<NASADataType>(json);
             
-            // Display Biometrics Data 
-            string bioString = "";
-            bioString += "Heart Rate: " + jsonObject.heart_bpm.ToString() + " bpm\n";
-            bioString += "Suit Pressure: " + jsonObject.p_suit.ToString() + " psid\n";
-            bioString += "External Environment Pressure: " + jsonObject.p_sub.ToString() + " psia\n";
-            bioString += "External Environment Temperature: " + jsonObject.t_sub.ToString() + "° F\n";
-            bioString += "Fan Rotation Speed: " + jsonObject.v_fan.ToString() + " rpm\n";
-            bioString += "Primary Oxygen Tank Pressure: " + jsonObject.p_o2.ToString() + " psia\n";
-            bioString += "Battery Capacity: " + jsonObject.cap_battery.ToString() + " A-hr\n";
-            bioString += "H20 Gas Pressure: " + jsonObject.p_h2o_g.ToString() + " psia\n";
-            bioString += "H20 Liquid Pressure: " + jsonObject.p_h2o_l.ToString() + " psia\n";
-            bioString += "Secondary Oxygen Pack Pressure: " + jsonObject.p_sop.ToString() + " psia\n";
-            bioString += "Flow Rate of Secondary Oxygen Pack: " + jsonObject.rate_sop.ToString() + " psi\n";
-            bioString += "Time Life Battery: " + jsonObject.t_battery + "\n";
-            bioString += "Time Life Oxygen: " + jsonObject.t_oxygen + "\n";
-            bioString += "Time Life Water: " + jsonObject.t_water + "\n"; 
-            bioText.text = bioString;
+            if (!json.Equals(""))
+            {
+                NASADataType jsonObject = JsonUtility.FromJson<NASADataType>(json);
+                bubbles[0].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.heart_bpm);
+                LineData data = new LineData();
+                data.m_DataValue = jsonObject.heart_bpm;
+                data.m_Time = Time.time; 
+                //lineGraph.AddLineDataPoint(data); 
+                bubbles[1].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_suit);
+                bubbles[2].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_sub);
+                bubbles[3].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_sub);
+                bubbles[4].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.v_fan);
+                bubbles[5].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_o2);
+                bubbles[6].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.cap_battery);
+                bubbles[7].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_h2o_g);
+                bubbles[8].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_h2o_l);
+                bubbles[9].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_sop);
+                bubbles[10].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.rate_sop);
 
-            // Get the lesser time between oxygen and battery 
-            string identifier = "";
-            string lesserTime = getLesserTime(jsonObject.t_oxygen, jsonObject.t_battery, out identifier);
+                bubbles[12].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_battery);
+                bubbles[13].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_oxygen); 
+                bubbles[14].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_water); 
 
-            // Display Time Left 
-            timeLeftText.text = "Time Left: " + lesserTime + " (" + identifier + ")"; 
+                // Get the lesser time between oxygen and battery 
+                string identifier = "";
+                string lesserTime = getLesserTime(jsonObject.t_oxygen, jsonObject.t_battery, out identifier);
+
+                // Display Time Left 
+                timeLeftText.text = "Time Left: " + lesserTime + " (" + identifier + ")";
+            } else
+            {
+                Debug.Log("no data recieved from the server"); 
+            }
+            
         }
     }
 
@@ -222,7 +236,7 @@ public class JSONParse : MonoBehaviour {
                 json = www.downloadHandler.text;
 
             }
-            
+
             NASADataTypeSwitch jsonObject = JsonUtility.FromJson<NASADataTypeSwitch>(json);
 
             CheckSuitSwitches(jsonObject);
@@ -255,6 +269,7 @@ public class JSONParse : MonoBehaviour {
         if (ndts.vent_error == "true") m_OutputErrorData.OutputErrorText("NO VENT FLOW"); // Add vent rpms 
         if (ndts.vehicle_power == "true") m_OutputErrorData.OutputErrorText("VEHICLE POWER AVAIL");
         if (ndts.o2_off == "true") m_OutputErrorData.OutputErrorText("O2 IS OFF");
+        if (ndts.sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON"); 
     }
 
     private string CleanUpJSON(string json)
