@@ -36,6 +36,8 @@ public class MeshDataGatherer : MonoBehaviour
     // This is the material with which the baked surfaces are drawn.  
     public Material m_drawMat;
 
+    bool isRendering = false; 
+
     // This flag is used to postpone requests if a bake is in progress.  Baking mesh
     // data can take multiple frames.  This sample prioritizes baking request
     // order based on surface data surfaces and will only issue a new request
@@ -47,6 +49,8 @@ public class MeshDataGatherer : MonoBehaviour
     float m_lastUpdateTime;
     float lastMeshDownlinkTime = 0;
 
+    public static MeshDataGatherer S; 
+
     void Start()
     {
         m_Observer = new SurfaceObserver();
@@ -55,6 +59,25 @@ public class MeshDataGatherer : MonoBehaviour
         m_Surfaces = new Dictionary<int, SurfaceEntry>();
         m_WaitingForBake = false;
         m_lastUpdateTime = 0.0f;
+        S = this; 
+    }
+
+    public void disableMeshDisplay()
+    {
+        isRendering = false; 
+        for (int i = 0; i < SurfacesList.Count; i++)
+        {
+            SurfacesList[i].m_Surface.SetActive(isRendering); 
+        }
+    }
+
+    public void enableMeshDisplay()
+    {
+        isRendering = true;
+        for (int i = 0; i < SurfacesList.Count; i++)
+        {
+            SurfacesList[i].m_Surface.SetActive(isRendering);
+        }
     }
 
     private void FixedUpdate()
@@ -211,6 +234,7 @@ public class MeshDataGatherer : MonoBehaviour
                     entry.m_UpdateTime = updateTime;
                     entry.m_Id = id.handle;
                     entry.m_Surface = new GameObject(System.String.Format("Surface-{0}", id.handle));
+                    entry.m_Surface.SetActive(isRendering); 
                     entry.m_Surface.AddComponent<MeshFilter>();
                     entry.m_Surface.AddComponent<MeshCollider>();
                     MeshRenderer mr = entry.m_Surface.AddComponent<MeshRenderer>();

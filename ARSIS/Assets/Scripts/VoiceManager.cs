@@ -38,7 +38,7 @@ public class VoiceManager : MonoBehaviour {
     void Start () {
         S = this; 
 
-        #region keywords
+#region keywords
         // Menus 
         _keywords.Add("Adele Main", MainMenu);
         _keywords.Add("Adele Settings", Settings);
@@ -71,9 +71,9 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Zoom In", zoomIn);
 
         // Tasks 
-        _keywords.Add("Disable Alarm", disableAlarm);
-        _keywords.Add("Reroute Power", reroutePower);
-        _keywords.Add("Light Switch", lightSwitch); 
+       // _keywords.Add("Disable Alarm", disableAlarm);
+       // _keywords.Add("Reroute Power", reroutePower);
+       // _keywords.Add("Light Switch", lightSwitch); 
 
         //Music
         _keywords.Add("Adele Hello", PlayAdele);
@@ -93,9 +93,13 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Record Path", StartTranslation);
         _keywords.Add("Save Path", StopTranslation);
         _keywords.Add("Show Path", ShowPath);
-        _keywords.Add("Hide Path", HidePath); 
+        _keywords.Add("Hide Path", HidePath);
 
-        #endregion
+        //Mesh 
+        _keywords.Add("Enable Mesh", enableMesh);
+        _keywords.Add("Disable Mesh", disableMesh);
+
+#endregion
 
         // Sets up keyword recognition 
         _keywordRecognizer = new KeywordRecognizer(_keywords.Keys.ToArray());
@@ -106,8 +110,29 @@ public class VoiceManager : MonoBehaviour {
         mc = FindObjectOfType(typeof(MenuController)) as MenuController;
     }
 
+    public void resetKeywordRecognizer()
+    {
+        _keywordRecognizer.Stop();
+        _keywordRecognizer.Dispose();
+        _keywordRecognizer = new KeywordRecognizer(_keywords.Keys.ToArray());
+        _keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
+        _keywordRecognizer.Start();
+    }
+
+    public void addProcedureCommand(string name)
+    {
+        _keywords.Add(name, () => {
+            mc.currentTask = TaskManager.S.getProcedureIndexByName(name);
+            mc.currentStep = 1;
+            generateTaskMenu();
+        });
+        resetKeywordRecognizer();
+    }
+
+
+
     // Keyword Functions 
-    #region Menu Functions
+#region Menu Functions
 
     public void MainMenu()
     {
@@ -155,9 +180,9 @@ public class VoiceManager : MonoBehaviour {
         mc.ChangeMenu(mc.m_taskList);  
     }
 
-    #endregion
+#endregion
 
-    #region Navigation Functions 
+#region Navigation Functions 
 
     public void Menu()
     {
@@ -180,9 +205,9 @@ public class VoiceManager : MonoBehaviour {
         mc.GoBack(); 
     }
 
-    #endregion
+#endregion
 
-    #region Special Functions 
+#region Special Functions 
 
     public void TakePhoto()
     {
@@ -265,9 +290,9 @@ public class VoiceManager : MonoBehaviour {
         }
     }
 
-    #endregion
+#endregion
 
-    #region Task List Functions 
+#region Task List Functions 
 
     public void generateTaskMenu()
     {
@@ -319,6 +344,8 @@ public class VoiceManager : MonoBehaviour {
         int curStep = mc.currentStep;
         int curTask = mc.currentTask;
 
+        Debug.Log("Trying to display procedure " + mc.currentTask + " step " + mc.currentStep);
+
         string curText = TaskManager.S.getStep(curTask, curStep);
         string prevText = TaskManager.S.getStep(curTask, curStep - 1);
         string nextText = TaskManager.S.getStep(curTask, curStep + 1);
@@ -337,9 +364,9 @@ public class VoiceManager : MonoBehaviour {
         mc.m_warningText.text = warningText;
     }
 
-    #endregion
+#endregion
 
-    #region Task Names
+#region Task Names
 
     public void disableAlarm()
     {
@@ -362,9 +389,9 @@ public class VoiceManager : MonoBehaviour {
         generateTaskMenu(); 
     }
 
-    #endregion
+#endregion
 
-    #region Music Functions 
+#region Music Functions 
 
     public void PlayAdele()
     {
@@ -405,18 +432,18 @@ public class VoiceManager : MonoBehaviour {
     {
         MusicManager.m_Instance.StopMusic();
     }
-    #endregion
+#endregion
 
-    #region Biometrics Navigation
+#region Biometrics Navigation
 
     public void SelectA1()
     {
 
     }
 
-    #endregion
+#endregion
 
-    #region Translation 
+#region Translation 
 
     void StartTranslation()
     {
@@ -438,9 +465,22 @@ public class VoiceManager : MonoBehaviour {
         TranslationController.S.hidePath();
     }
 
-    #endregion 
+#endregion
+
+#region Mesh
+
+    public void enableMesh()
+    {
+        MeshDataGatherer.S.enableMeshDisplay(); 
+    }
 
 
+    public void disableMesh()
+    {
+        MeshDataGatherer.S.disableMeshDisplay();
+    }
+
+#endregion
     // Keyword Recognition 
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {

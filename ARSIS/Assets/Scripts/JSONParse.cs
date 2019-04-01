@@ -129,9 +129,11 @@ public class JSONParse : MonoBehaviour {
                 NASADataType jsonObject = JsonUtility.FromJson<NASADataType>(json);
                 bubbles[0].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.heart_bpm);
                 LineData data = new LineData();
-                data.m_DataValue = jsonObject.heart_bpm;
+                data.m_DataValue = jsonObject.v_fan;
                 data.m_Time = Time.time; 
-                //lineGraph.AddLineDataPoint(data); 
+
+                lineGraph.AddLineDataPoint(data); 
+
                 bubbles[1].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_suit);
                 bubbles[2].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_sub);
                 bubbles[3].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_sub);

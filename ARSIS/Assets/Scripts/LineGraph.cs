@@ -17,12 +17,14 @@ public class LineGraph : MonoBehaviour {
     public float m_Height = 2.0f; //vertical height of graph in Unity units
     public float m_StepLength = 1.0f;
 
+    public float m_MinRange = 60.0f;
     public float m_MaxRange = 50.0f; //max value of data that is used
 
     private LineRenderer m_LineRenderer;
 
     private List<LineData> m_LineData;
     private float m_Step;
+    private float m_StartTime = 0;
     private int m_PointCount = 0; //current number of points created
 
     void Start ()
@@ -36,21 +38,29 @@ public class LineGraph : MonoBehaviour {
     {
 		if (Input.GetKeyDown(KeyCode.Space))
         {
-            m_Input.m_DataValue = 86.0f;
-            AddLineDataPoint(m_Input);
+            float tmp = Map(m_Input.m_DataValue, m_StartTime, (m_Width / 5f), 0.0f, m_Width);
+            Debug.Log(tmp);
         }
 	}
 
     public void AddLineDataPoint(LineData lineDataPoint) //send in min and max for data value
     {
+        float mappedXDataPoint = Map(Time.time, m_StartTime, (m_Width) + m_StartTime, 0.0f, m_Width);
+        float mappedYDataPoint = Map(lineDataPoint.m_DataValue, m_MinRange, m_MaxRange, 0, m_Height);
+
+        if (mappedXDataPoint >= m_Width)
+        {
+            ResetGraphData();
+            mappedXDataPoint = Map(Time.time, m_StartTime, (m_Width) + m_StartTime, 0.0f, m_Width); //width / 5 because one point every 5 second
+        }
+
         lineDataPoint.m_Time = Time.time; //set xval of point
         GameObject point = Instantiate(m_PointObject);
 
-        Debug.Log(lineDataPoint.m_DataValue);
+        lineDataPoint.m_DataObject = point;
 
         //map datapoint to the scale of the graph
-        float mappedXDataPoint = Mathf.Repeat(Time.time, m_Width);
-        float mappedYDataPoint = Map(lineDataPoint.m_DataValue, 60.0f, m_MaxRange, 0, m_Height);
+
         Vector3 offset = new Vector3(mappedXDataPoint, mappedYDataPoint, 0);
 
         point.transform.parent = m_GraphOrigin.transform;
@@ -71,6 +81,20 @@ public class LineGraph : MonoBehaviour {
         m_LineRenderer.SetPosition(m_PointCount - 1, localLineRendererPosition); //point count - 1 because 0 based index for line renderer
     }
 
+    private void ResetGraphData()
+    {
+        for (int i = 0; i < m_LineData.Count; i++)
+        {
+            Destroy(m_LineData[i].m_DataObject);
+        }
+
+        m_LineData.Clear();
+        m_LineRenderer.positionCount = 0;
+        m_PointCount = 0;
+
+        m_StartTime = Time.time;
+    }
+
     private float Map(float value, float startMin, float startMax, float endMin, float endMax)
     {
         float diff = (value - startMin) / (startMax - startMin);
@@ -87,4 +111,6 @@ public struct LineData
 {
     public float m_Time; //step or x value this data point is on
     public float m_DataValue;
+
+    public GameObject m_DataObject;
 }

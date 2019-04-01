@@ -14,12 +14,12 @@ public class TaskManager : MonoBehaviour {
     public static TaskManager S;
 
     // List of all steps organized by procedure 
-    public List<List<Step>> allTasks = new List<List<Step>>(); 
+    public List<Procedure> allProcedures = new List<Procedure>(); 
 
     // Lists of individual steps 
-    public List<Step> disabAlarm = new List<Step>(); 
-    public List<Step> reroutPower = new List<Step>();
-    public List<Step> lightSwitch = new List<Step>(); 
+    public Procedure disableAlarm = new Procedure("Disable Alarm", false, 24);
+    public Procedure reroutPower = new Procedure("Reroute Power", false, 30);
+    public Procedure lightSwitch = new Procedure("Light Switch", false, 20); 
 
     // Static Array of images for each task 
     public Texture2D[] images; 
@@ -34,11 +34,17 @@ public class TaskManager : MonoBehaviour {
     void Start () {
         S = this; 
         
-        populateTasks(); 
+        populateProcedures(); 
 
-        allTasks.Add(disabAlarm);
-        allTasks.Add(reroutPower);
-        allTasks.Add(lightSwitch); 
+        allProcedures.Add(disableAlarm);
+        allProcedures.Add(reroutPower);
+        allProcedures.Add(lightSwitch);
+        
+        for (int i = 0; i < allProcedures.Count; i++)
+        {
+            VoiceManager.S.addProcedureCommand(allProcedures[i].procedure_title); 
+        }
+
 
         m_OutputErrorData = FindObjectOfType<OutputErrorData>();
         InvokeRepeating("UpdateSystemData", 1, 5);
@@ -49,12 +55,29 @@ public class TaskManager : MonoBehaviour {
         string retval; 
         try
         {
-            retval = allTasks[task - 1][step - 1].task; 
+            retval = allProcedures[task].getStep(step - 1).text; 
         } catch (ArgumentOutOfRangeException)
         {
+            Debug.Log("Argument out of range"); 
+            retval = ""; 
+        } catch (NullReferenceException)
+        {
+            Debug.Log("Null reference exception"); 
             retval = ""; 
         }
         return retval; 
+    }
+
+    public int getProcedureIndexByName(string name)
+    {
+        for (int i = 0; i < allProcedures.Count; i++)
+        {
+            if (allProcedures[i].procedure_title.Equals(name) )
+            {
+                return i; 
+            }
+        }
+        return -1; 
     }
 
     public Texture2D getPic(int task, int step)
@@ -62,7 +85,7 @@ public class TaskManager : MonoBehaviour {
         Texture2D retval;
         try
         {
-            retval = allTasks[task - 1][step - 1].picture;
+            retval = allProcedures[task].getStep(step - 1).getImage();
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -76,7 +99,7 @@ public class TaskManager : MonoBehaviour {
         string retval; 
         try
         {
-            retval = allTasks[task - 1][step - 1].warning; 
+            retval = allProcedures[task].getStep(step - 1).warning; 
         } catch (ArgumentOutOfRangeException)
         {
             retval = ""; 
@@ -113,151 +136,90 @@ public class TaskManager : MonoBehaviour {
                 //Debug.Log(fromServer);
 
                 Procedure jsonObject = JsonUtility.FromJson<Procedure>(fromServer);
-
-                //Debug.Log(jsonObject.steps[0].text); 
-
-                //Step testStep = new Step();
-                //testStep.text = "Hi";
-                //testStep.image = "ImagePath";
-                //testStep.warning = "You have been warned"; 
-                //string json = JsonUtility.ToJson(testStep);
-                //Debug.Log("JSON: " + json);
-
-
-
-
-                /*foreach (string str in splitString)
-                {
-                    Step newStep = JsonUtility.FromJson<Step>(str);
-                    if (newStep == null){ continue; }
-                    //Debug.Log(newStep.text);
-                    string imagePath = newStep.image;
-
-                    StartCoroutine(getImage(imagePath)); 
-
-                }*/
             }
         }
     }
 
-    IEnumerator getImage(string path)
-    {
-         
-        using (UnityWebRequest www = UnityWebRequest.Get(url + path))
-        {
-            
-            yield return www.SendWebRequest();
-
-           // Debug.Log("URL: " + url + path);
-            byte[] rawImage = www.downloadHandler.data;
-           // Debug.Log(rawImage);
-            Texture2D tx = new Texture2D(1, 1);
-            tx.LoadImage(rawImage);
-
-            //cube.GetComponent<Renderer>().material.mainTexture = tx; 
-        }
-    }
-
-            /*   private Texture2D getImage(string path)
-               {
-                   Debug.Log("In getImage"); 
-                   using (UnityWebRequest www = UnityWebRequest.Get(url + path))
-                   {
-                       Debug.Log("URL: " + url + path);
-                       //byte[] rawImage = www.downloadHandler.data;
-                       string rawImage = www.downloadHandler.text;
-                       Debug.Log(rawImage); 
-                       //Debug.Log("Raw Image: " + rawImage.Length); 
-                       //Texture2D tx = new Texture2D(1, 1);
-                       //tx.LoadImage(rawImage);
-
-                       //cube.GetComponent<Renderer>().material.mainTexture = tx; 
-
-                       return null; 
-
-                   }
-               }  */
-
 
      // Staticly creates all tasks 
-    private void populateTasks()
+    private void populateProcedures()
     {
-        disabAlarm.Add(new Step("1. On the RIGHT side of the EVA kit, locate and use the PANEL ACCESS KEY to unlock the PANEL ACCESS DOOR LOCKS.", images[0], "CAUTION: The keys are on the tension-spring cable."));
-        disabAlarm.Add(new Step("2. Carefully return keys to the side of the EVA kit.", null, null));
-        disabAlarm.Add(new Step("3. Insert your fingers in the CENTER OPENING and secure the PANEL ACCESS DOOR in an OPEN position.", images[1], "WARNING: Door can accidentally close."));
-        disabAlarm.Add(new Step("4. On your belt, use the BLUE CARABINEER to securely tether to the TEHTER CABLE inside the STORAGE.", images[2], "CAUTION: Notice the TETHER CABLE is adjustable."));
-        disabAlarm.Add(new Step("5. Locate the E-STOP button and gently press down to temporarily disable the alarm.", images[3], ""));
-        disabAlarm.Add(new Step("6. Locate the FUSIBLE DISCONNECT box and tether the BLUE CARABINEER to the TETHER CABLE.", null, ""));
-        disabAlarm.Add(new Step("7. Remove the BLUE CARABINEER from the FUSIBLE DISCONNECT box and transfer it to STORAGE.", images[4], ""));
-        disabAlarm.Add(new Step("8. Open the FUSIBLE DISCONNECT box and secure the lid in the open position.", images[5], "CAUTION: Pull the locking tab toward STORAGE with the index finger while lifting the cover with the thumb."));
-        disabAlarm.Add(new Step("9.Locate the BLACK DISCONNECT and tether if to the TEHTER CABLE.", null, ""));
-        disabAlarm.Add(new Step("10. Remove the DISCONNECT and place it in STORAGE.", images[6], "CAUTION: Pull up with the index and middle fingers while pushing down on the FUSE ACCESS PANEL with the thumb."));
-        disabAlarm.Add(new Step("11. Tether the FUSE ACCESS OANEL to the TEHTER CABLE.", null, ""));
-        disabAlarm.Add(new Step("12. Remove the FUSE ACCESS PANEL by pulling straight up.", images[7], ""));
-        disabAlarm.Add(new Step("13. Place the FUSE ACCESS PANEL into STORAGE.", null, ""));
-        disabAlarm.Add(new Step("14. Tether the ALARM FUSE to the TETHER CABLE.", null, ""));
-        disabAlarm.Add(new Step("15. In STORAGE, locate the BLUE FUSE PULLER.", null, ""));
-        disabAlarm.Add(new Step("16. Use the BLUE FUSE PULLER to remove ONLY the ALARM FUSE.", images[8], "CAUTION: Rock the ALARM FUSE with the FUSE PULLER when pulling up."));
-        disabAlarm.Add(new Step("17. Return the ALARM FUSE and the FUSE PULLER to STORAGE.", null, ""));
-        disabAlarm.Add(new Step("18. In STORAGE, locate the FUSE ACCESS PANEL and reinstall it into the FUSIBLE DISCONNECT box.", images[9], ""));
-        disabAlarm.Add(new Step("19. Remove the FUSE ACCESS PANEL tether from the TETHER CABLE and stow inside.", null, "WARNING: All tethers are under spring tension and can retract quickly."));
-        disabAlarm.Add(new Step("20. In STORAGE, locate the DISCONNECT and reinstall it into the FUSIBLE DISCONNECT box.", images[10], "CAUTION: The DISCONNECT must read 'ON' in the upper right corner to restore conductivity."));
-        disabAlarm.Add(new Step("21. Remove the DISCONNECT tether form the TETHER CABLE.", null, "WARNING: All tethers are under spring tension and can retract quickly."));
-        disabAlarm.Add(new Step("22. Close the FUSIBLE DISCONNECT box cover.", null, ""));
-        disabAlarm.Add(new Step("23. In STORAGE, use the BLUE CARABINEER to clip and lock the FUSIBLE DISCONNECT box cover.", images[11], ""));
-        disabAlarm.Add(new Step("24. Remove the BLUE CARABINEER's tether from the TETHER CABLE.", null, "WARNING: All tethers are under spring tension and can retract quickly."));
+        disableAlarm.addStep(0, new serStep("1. On the RIGHT side of the EVA kit, locate and use the PANEL ACCESS KEY to unlock the PANEL ACCESS DOOR LOCKS.", images[0], "CAUTION: The keys are on the tension-spring cable."));
+        disableAlarm.addStep(1, new serStep("2. Carefully return keys to the side of the EVA kit.", null, null));
+        disableAlarm.addStep(2, new serStep("3. Insert your fingers in the CENTER OPENING and secure the PANEL ACCESS DOOR in an OPEN position.", images[1], "WARNING: Door can accidentally close."));
+        disableAlarm.addStep(3, new serStep("4. On your belt, use the BLUE CARABINEER to securely tether to the TEHTER CABLE inside the STORAGE.", images[2], "CAUTION: Notice the TETHER CABLE is adjustable."));
+        disableAlarm.addStep(4, new serStep("5. Locate the E-STOP button and gently press down to temporarily disable the alarm.", images[3], ""));
+        disableAlarm.addStep(5, new serStep("6. Locate the FUSIBLE DISCONNECT box and tether the BLUE CARABINEER to the TETHER CABLE.", null, ""));
+        disableAlarm.addStep(6, new serStep("7. Remove the BLUE CARABINEER from the FUSIBLE DISCONNECT box and transfer it to STORAGE.", images[4], ""));
+        disableAlarm.addStep(7, new serStep("8. Open the FUSIBLE DISCONNECT box and secure the lid in the open position.", images[5], "CAUTION: Pull the locking tab toward STORAGE with the index finger while lifting the cover with the thumb."));
+        disableAlarm.addStep(8, new serStep("9.Locate the BLACK DISCONNECT and tether if to the TEHTER CABLE.", null, ""));
+        disableAlarm.addStep(9, new serStep("10. Remove the DISCONNECT and place it in STORAGE.", images[6], "CAUTION: Pull up with the index and middle fingers while pushing down on the FUSE ACCESS PANEL with the thumb."));
+        disableAlarm.addStep(10, new serStep("11. Tether the FUSE ACCESS OANEL to the TEHTER CABLE.", null, ""));
+        disableAlarm.addStep(11, new serStep("12. Remove the FUSE ACCESS PANEL by pulling straight up.", images[7], ""));
+        disableAlarm.addStep(12, new serStep("13. Place the FUSE ACCESS PANEL into STORAGE.", null, ""));
+        disableAlarm.addStep(13, new serStep("14. Tether the ALARM FUSE to the TETHER CABLE.", null, ""));
+        disableAlarm.addStep(14, new serStep("15. In STORAGE, locate the BLUE FUSE PULLER.", null, ""));
+        disableAlarm.addStep(15, new serStep("16. Use the BLUE FUSE PULLER to remove ONLY the ALARM FUSE.", images[8], "CAUTION: Rock the ALARM FUSE with the FUSE PULLER when pulling up."));
+        disableAlarm.addStep(16, new serStep("17. Return the ALARM FUSE and the FUSE PULLER to STORAGE.", null, ""));
+        disableAlarm.addStep(17, new serStep("18. In STORAGE, locate the FUSE ACCESS PANEL and reinstall it into the FUSIBLE DISCONNECT box.", images[9], ""));
+        disableAlarm.addStep(18, new serStep("19. Remove the FUSE ACCESS PANEL tether from the TETHER CABLE and stow inside.", null, "WARNING: All tethers are under spring tension and can retract quickly."));
+        disableAlarm.addStep(19, new serStep("20. In STORAGE, locate the DISCONNECT and reinstall it into the FUSIBLE DISCONNECT box.", images[10], "CAUTION: The DISCONNECT must read 'ON' in the upper right corner to restore conductivity."));
+        disableAlarm.addStep(20, new serStep("21. Remove the DISCONNECT tether form the TETHER CABLE.", null, "WARNING: All tethers are under spring tension and can retract quickly."));
+        disableAlarm.addStep(21, new serStep("22. Close the FUSIBLE DISCONNECT box cover.", null, ""));
+        disableAlarm.addStep(22, new serStep("23. In STORAGE, use the BLUE CARABINEER to clip and lock the FUSIBLE DISCONNECT box cover.", images[11], ""));
+        disableAlarm.addStep(23, new serStep("24. Remove the BLUE CARABINEER's tether from the TETHER CABLE.", null, "WARNING: All tethers are under spring tension and can retract quickly."));
+        
+        reroutPower.addStep(0, new serStep("1. Locate the AUX. POWER INPUT.", null, ""));
+        reroutPower.addStep(1, new serStep("2. Locate BATTER PACK and tether to TETHER CABLE.", null, ""));
+        reroutPower.addStep(2, new serStep("3. Undo the BATTERY PACK LEADS from the AUX. POWER INPUT.", images[12], "CAUTION: Depress the red and black plastic hammers on the side of the AUX. POWER INPUT and pull the leads straight up."));
+        reroutPower.addStep(3, new serStep("4. Remove BATTERY PACK from AUX.POWER INPUT.", null, ""));
+        reroutPower.addStep(4, new serStep("5. Locate the ON/OFF switch on the back of the BATTERY PACK and switch it to the OFF position", images[13], ""));
+        reroutPower.addStep(5, new serStep("6. Place the BATTERY PACK into STORAGE.", null, ""));
+        reroutPower.addStep(6, new serStep("7. In STORAGE, find the replacement BATTER PACK.", null, ""));
+        reroutPower.addStep(7, new serStep("8. Locate the ON/OFF switch on the back of the BATTERY PACK and switch it to the ON position.", null, ""));
+        reroutPower.addStep(8, new serStep("9. Attach the replacement BATTER PACK onto the AUX. POWER INPUT by the Velcro.", null, ""));
+        reroutPower.addStep(9, new serStep("10. Insert the BATTERY PACK leads back into the same colored ports.", null, "CAUTION: Depress the red and black plastic hammers on the side fo the AUX. POWER INPUT and push leads straight into their ports."));
+        reroutPower.addStep(10, new serStep("11. Conduct a GENTLE PUSH TEST on the wires.", null, ""));
+        reroutPower.addStep(11, new serStep("12. Remove the BATTERY PACK tether from the TETHER CABLE.", images[14], "WARNING: All tethers are under spring tension and can retract quickly."));
+        reroutPower.addStep(12, new serStep("13. In STORAGE, locate the GRAY 220 VOLT PLUG.", null, ""));
+        reroutPower.addStep(13, new serStep("14. Install it into the POWER OUT.", null, "CAUTION: Outlet and plug mate are stiff, ensure the full engagement of the plug into the outlet."));
+        reroutPower.addStep(14, new serStep("15. Loacte the metal BUSS BAR and verify there are BLACK, GREEN, & WHITE BUSSES, each with 2 openings.", null, ""));
+        reroutPower.addStep(15, new serStep("16. Insert the WHITE 220 VOLT LEAD into the LEFT WHITE BUSS opening and GENTLY TIGHTEN the thumbscrew.", images[15], "CAUTION: DO NOT over tighten the thumbscrew."));
+        reroutPower.addStep(16, new serStep("17. Insert the GREEN 220 VOLT LEAD into the LEFT GREEN BUSS opening.", images[16], "CAUTION: DO NOT overtighten the thumbscrew."));
+        reroutPower.addStep(17, new serStep("18. Insert the BLACK 220 VOLT LEAD into the LEFT BLACK BUSS opening.", images[17], "CAUTION: DO NOT over tighten the thumbscrew."));
+        reroutPower.addStep(18, new serStep("19. Make sure the METAL LEADS are not sticking out the BACK of the BUSS BAR.", null, ""));
+        reroutPower.addStep(19, new serStep("20. Cunduct a GENTLE PULL TEST on each cable.", null, ""));
+        reroutPower.addStep(20, new serStep("21. In STORAGE, locate the 110 VOLT PLUG and install it in POWER IN.", images[18], "CAUTION: Lift cover with one hand while installing PLUG into the outlet with the other. The lid is spring-loaded."));
+        reroutPower.addStep(21, new serStep("22. Insert the WHITE 110 VOLT PLUG LEAD into the RIGHT WHITE BUSS opening.", images[19], "CAUTION: DO NOT over tighten the thumbscrew."));
+        reroutPower.addStep(22, new serStep("23. Insert the GREEN 110 VOLT PLUG LEAD into the RIGHT GREEN BUS opening.", images[20], "CAUTION: DO NOT over tighten the thumbscrew."));
+        reroutPower.addStep(23, new serStep("24. Insert the BLACK 110 VOLT PLUB LEAD into the RIGHT BLACK BUSS opening.", images[21], "CAUTION: DO NOT over tighten the thumbscrew."));
+        reroutPower.addStep(24, new serStep("25. Conduct a GENTLE PULL TEST on each cable.", images[22], ""));
+        reroutPower.addStep(25, new serStep("26. In STORAGE, locate the E-STOP KEY.", images[23], ""));
+        reroutPower.addStep(26, new serStep("27. Insert the KEY into the E-STOP and TURN to the RIGHT and button will pop up.", null, ""));
+        reroutPower.addStep(27, new serStep("28. Remove the KEY and place it in STORAGE.", images[24], ""));
+        reroutPower.addStep(28, new serStep("29. Locate the AUX. POWER SWITCH on the POWER IN box and switch it to the 'ON' position.", null, ""));
+        reroutPower.addStep(29, new serStep("30. Can you please confirm YSE or NO that the SYSTEM GO indicator light is GREEN?", null, ""));
 
-        reroutPower.Add(new Step("1. Locate the AUX. POWER INPUT.", null, ""));
-        reroutPower.Add(new Step("2. Locate BATTER PACK and tether to TETHER CABLE.", null, ""));
-        reroutPower.Add(new Step("3. Undo the BATTERY PACK LEADS from the AUX. POWER INPUT.", images[12], "CAUTION: Depress the red and black plastic hammers on the side of the AUX. POWER INPUT and pull the leads straight up."));
-        reroutPower.Add(new Step("4. Remove BATTERY PACK from AUX.POWER INPUT.", null, ""));
-        reroutPower.Add(new Step("5. Locate the ON/OFF switch on the back of the BATTERY PACK and switch it to the OFF position", images[13], ""));
-        reroutPower.Add(new Step("6. Place the BATTERY PACK into STORAGE.", null, ""));
-        reroutPower.Add(new Step("7. In STORAGE, find the replacement BATTER PACK.", null, ""));
-        reroutPower.Add(new Step("8. Locate the ON/OFF switch on the back of the BATTERY PACK and switch it to the ON position.", null, ""));
-        reroutPower.Add(new Step("9. Attach the replacement BATTER PACK onto the AUX. POWER INPUT by the Velcro.", null, ""));
-        reroutPower.Add(new Step("10. Insert the BATTERY PACK leads back into the same colored ports.", null, "CAUTION: Depress the red and black plastic hammers on the side fo the AUX. POWER INPUT and push leads straight into their ports."));
-        reroutPower.Add(new Step("11. Conduct a GENTLE PUSH TEST on the wires.", null, ""));
-        reroutPower.Add(new Step("12. Remove the BATTERY PACK tether from the TETHER CABLE.", images[14], "WARNING: All tethers are under spring tension and can retract quickly."));
-        reroutPower.Add(new Step("13. In STORAGE, locate the GRAY 220 VOLT PLUG.", null, ""));
-        reroutPower.Add(new Step("14. Install it into the POWER OUT.", null, "CAUTION: Outlet and plug mate are stiff, ensure the full engagement of the plug into the outlet."));
-        reroutPower.Add(new Step("15. Loacte the metal BUSS BAR and verify there are BLACK, GREEN, & WHITE BUSSES, each with 2 openings.", null, ""));
-        reroutPower.Add(new Step("16. Insert the WHITE 220 VOLT LEAD into the LEFT WHITE BUSS opening and GENTLY TIGHTEN the thumbscrew.", images[15], "CAUTION: DO NOT over tighten the thumbscrew."));
-        reroutPower.Add(new Step("17. Insert the GREEN 220 VOLT LEAD into the LEFT GREEN BUSS opening.", images[16], "CAUTION: DO NOT overtighten the thumbscrew."));
-        reroutPower.Add(new Step("18. Insert the BLACK 220 VOLT LEAD into the LEFT BLACK BUSS opening.", images[17], "CAUTION: DO NOT over tighten the thumbscrew."));
-        reroutPower.Add(new Step("19. Make sure the METAL LEADS are not sticking out the BACK of the BUSS BAR.", null, ""));
-        reroutPower.Add(new Step("20. Cunduct a GENTLE PULL TEST on each cable.", null, ""));
-        reroutPower.Add(new Step("21. In STORAGE, locate the 110 VOLT PLUG and install it in POWER IN.", images[18], "CAUTION: Lift cover with one hand while installing PLUG into the outlet with the other. The lid is spring-loaded."));
-        reroutPower.Add(new Step("22. Insert the WHITE 110 VOLT PLUG LEAD into the RIGHT WHITE BUSS opening.", images[19], "CAUTION: DO NOT over tighten the thumbscrew."));
-        reroutPower.Add(new Step("23. Insert the GREEN 110 VOLT PLUG LEAD into the RIGHT GREEN BUS opening.", images[20], "CAUTION: DO NOT over tighten the thumbscrew."));
-        reroutPower.Add(new Step("24. Insert the BLACK 110 VOLT PLUB LEAD into the RIGHT BLACK BUSS opening.", images[21], "CAUTION: DO NOT over tighten the thumbscrew."));
-        reroutPower.Add(new Step("25. Conduct a GENTLE PULL TEST on each cable.", images[22], ""));
-        reroutPower.Add(new Step("26. In STORAGE, locate the E-STOP KEY.", images[23], ""));
-        reroutPower.Add(new Step("27. Insert the KEY into the E-STOP and TURN to the RIGHT and button will pop up.", null, ""));
-        reroutPower.Add(new Step("28. Remove the KEY and place it in STORAGE.", images[24], ""));
-        reroutPower.Add(new Step("29. Locate the AUX. POWER SWITCH on the POWER IN box and switch it to the 'ON' position.", null, ""));
-        reroutPower.Add(new Step("30. Can you please confirm YSE or NO that the SYSTEM GO indicator light is GREEN?", null, ""));
-
-        lightSwitch.Add(new Step("1. Locate the Aux. Power Switch", images[25], ""));
-        lightSwitch.Add(new Step("2. Flip Aux. power switch to OFF position", images[26], ""));
-        lightSwitch.Add(new Step("3. Locate Power Outlet Lock Key tethered to Tether Ubolt", images[27], ""));
-        lightSwitch.Add(new Step("4. Locate Power Outlet Lock", images[28], ""));
-        lightSwitch.Add(new Step("5. Unlock Power Outlet Lock with Power Outlet Lock Key", images[29], ""));
-        lightSwitch.Add(new Step("6. Retether Power Outlet Lock Key and Power Outlet Lock to Tether Ubolt", images[30], ""));
-        lightSwitch.Add(new Step("7. Above Power Outlets, locate the Power Plug", images[31], ""));
-        lightSwitch.Add(new Step("8. Locate the  Power Outlets inside the weather container.", images[32], ""));
-        lightSwitch.Add(new Step("9. Install Power Plug into Power Outlet", images[33], ""));
-        lightSwitch.Add(new Step("10. Close weather container", images[34], ""));
-        lightSwitch.Add(new Step("11. Insert volt lead in the right silver buss opening and gently tighten the thumb screw", images[35], "CAUTION: Ensure lead is completely inside the buss before tightening"));
-        lightSwitch.Add(new Step("12. Locate Wrench Tethered to Tether Ubolt", images[36], ""));
-        lightSwitch.Add(new Step("13. Insert the volt lead in the right terminal block and tighten the nut using the wrench", images[37], "CAUTION: Ensure lead is completely inside the buss before tightening"));
-        lightSwitch.Add(new Step("14. Insert the lead in the left silver buss opening and gently tighten the thumb screw", images[38], "CAUTION: Ensure lead is completely inside the buss before tightening"));
-        lightSwitch.Add(new Step("15. Insert the lead in the Left Terminal Block and tighten the nut using the wrench", images[39], "CAUTION: Ensure lead is completely inside the buss before tightening"));
-        lightSwitch.Add(new Step("16. Conduct a gentle pull test on each", images[40], ""));  
-        lightSwitch.Add(new Step("17. Once secure retether Wrench to Tether Ubolt.", images[41], "CAUTION: Ensure lead is completely inside the buss before tightening"));
-        lightSwitch.Add(new Step("18. Locate the AUX power switch and switch it to the ON position", images[42], "CAUTION: Ensure lead is completely inside the buss before tightening"));
-        lightSwitch.Add(new Step("19. Conform that LED indicator light is GREEN", images[43], ""));
-        lightSwitch.Add(new Step("Congratulations! You have completed the task.", images[44], ""));
+        lightSwitch.addStep(0, new serStep("1. Locate the Aux. Power Switch", images[25], ""));
+        lightSwitch.addStep(1, new serStep("2. Flip Aux. power switch to OFF position", images[26], ""));
+        lightSwitch.addStep(2, new serStep("3. Locate Power Outlet Lock Key tethered to Tether Ubolt", images[27], ""));
+        lightSwitch.addStep(3, new serStep("4. Locate Power Outlet Lock", images[28], ""));
+        lightSwitch.addStep(4, new serStep("5. Unlock Power Outlet Lock with Power Outlet Lock Key", images[29], ""));
+        lightSwitch.addStep(5, new serStep("6. Retether Power Outlet Lock Key and Power Outlet Lock to Tether Ubolt", images[30], ""));
+        lightSwitch.addStep(6, new serStep("7. Above Power Outlets, locate the Power Plug", images[31], ""));
+        lightSwitch.addStep(7, new serStep("8. Locate the  Power Outlets inside the weather container.", images[32], ""));
+        lightSwitch.addStep(8, new serStep("9. Install Power Plug into Power Outlet", images[33], ""));
+        lightSwitch.addStep(9, new serStep("10. Close weather container", images[34], ""));
+        lightSwitch.addStep(10, new serStep("11. Insert volt lead in the right silver buss opening and gently tighten the thumb screw", images[35], "CAUTION: Ensure lead is completely inside the buss before tightening"));
+        lightSwitch.addStep(11, new serStep("12. Locate Wrench Tethered to Tether Ubolt", images[36], ""));
+        lightSwitch.addStep(12, new serStep("13. Insert the volt lead in the right terminal block and tighten the nut using the wrench", images[37], "CAUTION: Ensure lead is completely inside the buss before tightening"));
+        lightSwitch.addStep(13, new serStep("14. Insert the lead in the left silver buss opening and gently tighten the thumb screw", images[38], "CAUTION: Ensure lead is completely inside the buss before tightening"));
+        lightSwitch.addStep(14, new serStep("15. Insert the lead in the Left Terminal Block and tighten the nut using the wrench", images[39], "CAUTION: Ensure lead is completely inside the buss before tightening"));
+        lightSwitch.addStep(15, new serStep("16. Conduct a gentle pull test on each", images[40], ""));  
+        lightSwitch.addStep(16, new serStep("17. Once secure retether Wrench to Tether Ubolt.", images[41], "CAUTION: Ensure lead is completely inside the buss before tightening"));
+        lightSwitch.addStep(17, new serStep("18. Locate the AUX power switch and switch it to the ON position", images[42], "CAUTION: Ensure lead is completely inside the buss before tightening"));
+        lightSwitch.addStep(18, new serStep("19. Conform that LED indicator light is GREEN", images[43], ""));
+        lightSwitch.addStep(19, new serStep("Congratulations! You have completed the task.", images[44], ""));
     }
 }
 
@@ -266,9 +228,35 @@ public class TaskManager : MonoBehaviour {
 public class Procedure 
 {
     public string procedure_title;
-    public string emergency;
-    public string num_steps;
-    public serStep[] steps; 
+    public bool emergency;
+    public int num_steps;
+    public serStep[] steps;
+
+    public Procedure(string title, bool emergency, int numSteps)
+    {
+        this.procedure_title = title;
+        this.emergency = emergency;
+        this.num_steps = numSteps;
+
+        this.steps = new serStep[numSteps]; 
+    }
+
+    public serStep getStep(int num)
+    {
+        try
+        {
+            return steps[num];
+        } catch (IndexOutOfRangeException)
+        {
+            return null;
+        }
+         
+    }
+
+    public void addStep(int index, serStep newStep)
+    {
+        steps[index] = newStep; 
+    }
 }
 
 [System.Serializable]
@@ -277,5 +265,34 @@ public class serStep
     public string text;
     public string type;
     public string warning;
-    public string image; 
+    public string image;
+
+    private Texture2D imageTex = null; 
+
+    public serStep(string content, string type, string warning, Texture2D image)
+    {
+        this.text = content;
+        this.type = type;
+        this.warning = warning;
+        this.imageTex = image; 
+    }
+
+    public serStep(string content, Texture2D image, string warning)
+    {
+        this.text = content;
+        this.warning = warning;
+        this.imageTex = image;
+    }
+
+    public Texture2D getImage()
+    {
+        if (this.imageTex == null)
+        {
+            // do magical stuff to convert the string to an texture
+            return null; 
+        } else
+        {
+            return imageTex; 
+        }
+    }
 }
