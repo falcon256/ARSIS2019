@@ -45,6 +45,10 @@ public class LineGraph : MonoBehaviour {
 
     public void AddLineDataPoint(LineData lineDataPoint) //send in min and max for data value
     {
+        if (m_LineData == null)
+        {
+            return; 
+        }
         float mappedXDataPoint = Map(Time.time, m_StartTime, (m_Width) + m_StartTime, 0.0f, m_Width);
         float mappedYDataPoint = Map(lineDataPoint.m_DataValue, m_MinRange, m_MaxRange, 0, m_Height);
 

@@ -167,7 +167,7 @@ public class VoiceManager : MonoBehaviour {
 
     public void Brightness()
     {
-        mc.ChangeMenu(mc.m_brightnessMenu);
+        mc.ChangeMenu(mc.m_brightnessMenu);   
     }
 
     public void Volume()

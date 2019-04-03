@@ -23,7 +23,7 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.P
 201e3fde670b00545944bb3db215c80a UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 e7a73f5f78ba6445195ec23b74a1ce2d Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventHandler
 821b3120ce91b146b12119a71310059e Assembly-CSharp.dll:.ServerConnect
-7bafe0be2c8fa58e66c8e112328c050c Assembly-CSharp.dll:.LineGraph
+de53cc3ef3e7d57a064a660c4bf306f6 Assembly-CSharp.dll:.LineGraph
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 5fc094978ce3e3591a7500ed380d854a UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -93,7 +93,7 @@ abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.Tou
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.SocketIOChatSample
 ef70f291f4568061e449f4f94d9b492a Assembly-CSharp.dll:.OutputErrorData
 64a3987bfe5c410cfafd6976a0748dbf Assembly-CSharp.dll:.HoloLensSnapshotTest
-8dc38f36fe3ebafe741234d27193ba92 Assembly-CSharp.dll:.TaskManager
+6f95ffe622042db608c81536e4230f59 Assembly-CSharp.dll:.TaskManager
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 06f0fef534ca4c1d6064fd77a26bf722 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 780e8f682b3221346c034a6712a0fd25 UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset

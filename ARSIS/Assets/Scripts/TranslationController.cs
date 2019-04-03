@@ -23,7 +23,7 @@ public class TranslationController : MonoBehaviour
             return;
         }
         waypoints = new List<Vector3>();
-        
+        stopPathCapture(); 
     }
     
     void FixedUpdate()

@@ -124,7 +124,7 @@ public class MenuController : MonoBehaviour
         Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
 
         holoMenu.transform.rotation = q;
-        holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x + 90, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
+        holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
 
         m_CurrentMenu = holoMenu;
     }
