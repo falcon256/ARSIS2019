@@ -1,6 +1,6 @@
 WindowsStoreApps
 PlayerPath?
-D:/Unity Projects/ARSIS2019/BSU-NASA-SUITS/ARSIS/App
+D:/ARSIS Unity 2018/ARSIS2019/ARSIS/App
 SceneListBegin?
 Assets/MenuAnchoring.unity
 SceneListEnd?
@@ -204,7 +204,7 @@ b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:BestHTTP.Examples.AssetBundleSample
 646fe5e9545a4a0d92a6995246c1bdc4 Assembly-CSharp.dll:.EnvelopeChameleon
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.Analytics.Editor.dll:UnityEditor.Analytics.AnalyticsEventTrackerEditor
-4deed2352961a3cda5dfbf114d4465ea Assembly-CSharp.dll:.MenuController
+b75ef8797765681b289b3853cf83df9e Assembly-CSharp.dll:.MenuController
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.TextMeshPro.dll:TMPro.TMP_SpriteAnimator
 e6ae40841db498b6e673877ac45ad208 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
@@ -242,7 +242,7 @@ ad9173d3a69d99153f38ed4b62226129 UnityEngine.Networking.dll:UnityEngine.Networki
 aa82b3ce4c0c9b227036c0337315c5d3 Unity.TextMeshPro.dll:TMPro.TMP_FontAsset
 e51c09a4cc447f11db225afcd8e3e490 Unity.TextMeshPro.dll:TMPro.TMP_Settings
 e8504ed449b2bcb9ef20a8aaa1b87569 Assembly-CSharp.dll:.MusicManager
-f1bab11a4d79e040c33f41f1aa907486 Assembly-CSharp.dll:.NetworkMeshSource
+c360fbd9300b10790f13a4df5a4e0965 Assembly-CSharp.dll:.NetworkMeshSource
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ConnectionStatusSample
 cf96e5f7b3d069bab453925bd41be04e UnityEngine.TestRunner.dll:UnityEngine.TestTools.EnumerableSetUpTearDownCommandState
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback

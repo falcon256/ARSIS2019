@@ -62,7 +62,7 @@ public class TaskManager : MonoBehaviour {
             retval = ""; 
         } catch (NullReferenceException)
         {
-            Debug.Log("Null reference exception"); 
+            Debug.Log("Null reference exception for task " + task + " step " + step); 
             retval = ""; 
         }
         return retval; 

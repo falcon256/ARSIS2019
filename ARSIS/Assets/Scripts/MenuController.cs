@@ -10,9 +10,9 @@ public class MenuController : MonoBehaviour
 {
     // Default menu; set as current menu on initialization 
     public GameObject m_OGMenu;
-
     public GameObject m_CurrentMenu;
     private GameObject m_PreviousMenu;
+    private ArrayList activeMenus;
 
     // Variables to keep track of your place in the procedure  
     public int currentStep;
@@ -30,7 +30,7 @@ public class MenuController : MonoBehaviour
     public GameObject m_biometricsMenu;
     public GameObject m_taskList;
     public GameObject m_musicMenu;
-
+    public GameObject m_overlapMessage;
     public GameObject m_blankTaskMenu;
 
     // Elements of task menu (procedurally populated) 
@@ -43,6 +43,10 @@ public class MenuController : MonoBehaviour
 
     public bool taskZoomedIn = false;
 
+    //Menu Size
+    float xScale = 0.2545305f;
+    float ySacle = 0.2971f;
+
     [Header("Audio")]
     public AudioSource m_Source;
     public AudioClip m_changeMenuSound; 
@@ -52,6 +56,7 @@ public class MenuController : MonoBehaviour
         //SpatialMapping.Instance.MappingEnabled = false; 
         
         m_CurrentMenu = m_OGMenu;
+        activeMenus = new ArrayList();
         currentStep = 1;
         currentTask = 1; 
     }
@@ -79,6 +84,31 @@ public class MenuController : MonoBehaviour
         m_Source.Play();
     }
 
+    public void toggleDisplay(GameObject holoMenu)
+    {
+
+        if (holoMenu.activeSelf == false)
+        {
+            holoMenu.transform.position = Camera.main.transform.position + (Camera.main.transform.forward);
+
+            holoMenu.transform.position += new Vector3(0, .125f, 0);
+
+            Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
+
+            holoMenu.transform.rotation = q;
+
+            holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
+            // OT Removed + 90
+            holoMenu.SetActive(true);
+            activeMenus.Add(holoMenu);
+        }
+
+        else
+        {
+            holoMenu.SetActive(false);
+        }
+    }
+
     // Zoom out of task menu 
     public void zoomOut()
     {
@@ -89,6 +119,113 @@ public class MenuController : MonoBehaviour
         m_stepPrevText.gameObject.SetActive(true);
         m_stepNextText.gameObject.SetActive(true);
         m_stepCurText.gameObject.SetActive(true); 
+    }
+
+    /* aads a menu to the field of view. 
+    * When user tries to place a menu over an existing menu,
+    * the option is given to replace the old menu with the new 
+    */
+    public void addMenu(GameObject holoMenu)
+    {
+
+        if (holoMenu.activeSelf == false)
+        {
+            // Check if current gaze interesects with an active menu
+            RaycastHit hit;
+
+            if (Physics.Raycast(Camera.main.transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            {
+                Debug.Log("Trying to place menu where one already exists!");
+                // if overlap move overlapping menu to the side
+                GameObject triggeredObj = hit.transform.gameObject;
+                // alert user: Do you want to replace the old menu with the new one
+                toggleDisplay(m_overlapMessage);
+                m_CurrentMenu = triggeredObj; // This is needed for the change menu functionality
+
+                // Get users answer
+                VoiceManager.S.Answer(holoMenu);
+
+                //----------------------------------------------------------------UNUSED CODE---------------------------------------------------------------------------------
+                // May want to implement one of these ideas if time
+                //Speech to text    
+                // The object for controlling the speech synthesis engine (voice).
+                /*
+#if !UNITY_EDITOR
+                var synth = new Windows.Media.SpeechSynthesis.SpeechSynthesizer();
+
+                // Generate the audio stream from plain text.
+                SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync("Menu Overlap Detected, Do you want to replace the ");
+
+                // Send the stream to the media object.
+                m_Source.clip = stream;
+                m_Source.Play();
+#endif
+*/
+                // this does move it
+                /* 
+                 triggeredObj.transform.Translate(new Vector3(-.35f, -.25f, 0));
+
+                 Quaternion qu = Quaternion.LookRotation(triggeredObj.transform.position - Camera.main.transform.position, Camera.main.transform.up);
+
+                 triggeredObj.transform.rotation = qu;
+                 triggeredObj.transform.rotation = Quaternion.Euler(triggeredObj.transform.eulerAngles.x + 90, triggeredObj.transform.eulerAngles.y, triggeredObj.transform.eulerAngles.z);
+                 */
+
+                //----------------------------------------------------------------END OF UNUSED CODE ----------------------------------------------------------------------------------------------------------------
+            }
+
+            else
+            {
+                // open new menu where the user is looking
+                holoMenu.transform.position = Camera.main.transform.position + (Camera.main.transform.forward);
+
+                holoMenu.transform.position += new Vector3(0, .125f, 0);
+
+                Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
+
+                holoMenu.transform.rotation = q;
+
+                holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
+                // OT Removed + 90
+                holoMenu.SetActive(true);
+                activeMenus.Add(holoMenu);
+            }
+        }
+
+        // stop dislpaying the menu
+        else
+        {
+            holoMenu.SetActive(false);
+            activeMenus.Remove(holoMenu);
+        }
+
+        // Play menu sound
+        m_Source.clip = m_changeMenuSound;
+        m_Source.Play();
+    }
+
+
+    // display a menu where someone is looking whether it is open or not
+    public void Retrieve(GameObject holoMenu)
+    {
+        //set it to false in case it was open
+        holoMenu.SetActive(false);
+
+        // display the menu where the user is looking
+        addMenu(holoMenu);
+    }
+
+    /*closes all open menus*/
+    public void closeAll()
+    {
+        // loop through the list of open menus and set the visibility to false
+
+        foreach (GameObject menu in activeMenus)
+        {
+            menu.SetActive(false);
+            activeMenus.Remove(menu);
+        }
+
     }
 
     // Zoom in to task menu 
@@ -125,6 +262,7 @@ public class MenuController : MonoBehaviour
 
         holoMenu.transform.rotation = q;
         holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
+        // OT Removed + 90 
 
         m_CurrentMenu = holoMenu;
     }

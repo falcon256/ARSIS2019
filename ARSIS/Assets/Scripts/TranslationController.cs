@@ -7,7 +7,7 @@ public class TranslationController : MonoBehaviour
     public LineRenderer lineRenderer = null;
     public float lineResolution = 0.1f; // resolution in meters, smaller is more accurate.
     private List<Vector3> waypoints = null;
-    private bool doCapture = true;
+    private bool doCapture = false;
 
     public static TranslationController S; 
 
@@ -23,7 +23,7 @@ public class TranslationController : MonoBehaviour
             return;
         }
         waypoints = new List<Vector3>();
-        stopPathCapture(); 
+        clearPath(); 
     }
     
     void FixedUpdate()
@@ -35,6 +35,7 @@ public class TranslationController : MonoBehaviour
     public void startPathCapture()
     {
         clearPath();
+        showPath(); 
         doCapture = true;
         Debug.Log("Starting path capture.");
     }
@@ -47,11 +48,13 @@ public class TranslationController : MonoBehaviour
 
     public void hidePath()
     {
+        Debug.Log("Hiding Path"); 
         lineRenderer.enabled = false;
     }
 
     public void showPath()
     {
+        Debug.Log("Showing Path"); 
         lineRenderer.enabled = true;
     }
 

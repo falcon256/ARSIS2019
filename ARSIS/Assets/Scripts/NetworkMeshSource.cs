@@ -11,11 +11,13 @@ using System.Collections.Concurrent;
 using Windows.Networking;
 using Windows.Networking.Connectivity;
 using Windows.Networking.Sockets;
+using Windows.UI.Core;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -31,7 +33,8 @@ public class NetworkMeshSource : MonoBehaviour
 
     public int serverPort = 32123;
     public int targetPort = 32123;
-    public string targetIP = "192.168.137.1";
+    public string targetIP = "";
+    public bool targetIPReady = false;
     public volatile bool connected = false;
     private ConcurrentQueue<messagePackage> outgoingQueue = null;
 #if !UNITY_EDITOR
@@ -39,6 +42,12 @@ public class NetworkMeshSource : MonoBehaviour
     public StreamSocket tcpClient = null;
     public Windows.Storage.Streams.IOutputStream outputStream = null;
     DataWriter writer = null;//new DataWriter(outputStream);
+
+    //udp broadcast listening
+    DatagramSocket listenerSocket = null;
+    const string udpPort = "32124";
+
+
 
 #endif
 
@@ -72,7 +81,12 @@ public class NetworkMeshSource : MonoBehaviour
         }
         outgoingQueue = new ConcurrentQueue<messagePackage>();
         networkMeshSourceSingleton = this;
-        setupSocket();
+#if !UNITY_EDITOR
+        Listen();
+#endif
+
+
+
     }
 
     public async void setupSocket()
@@ -106,6 +120,32 @@ public class NetworkMeshSource : MonoBehaviour
         }
 #endif
     }
+#if !UNITY_EDITOR
+
+    private async void Listen()
+    {
+        listenerSocket = new DatagramSocket();
+        listenerSocket.MessageReceived += udpMessageReceived;
+        await listenerSocket.BindServiceNameAsync(udpPort);
+    }
+
+    async void udpMessageReceived(DatagramSocket socket, DatagramSocketMessageReceivedEventArgs args)
+    {
+        DataReader reader = args.GetDataReader();
+        uint len = reader.UnconsumedBufferLength;
+        string msg = reader.ReadString(len);
+
+        string remoteHost = args.RemoteAddress.DisplayName;
+        reader.Dispose();
+
+        await Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+        {
+            targetIP = msg;
+            targetIPReady = true;
+        });
+
+    }
+#endif
     /*
 #if !UNITY_EDITOR
     public void captureImageData()
@@ -303,7 +343,12 @@ public class NetworkMeshSource : MonoBehaviour
 #if !UNITY_EDITOR
     void FixedUpdate()
     {
-        if(!outgoingQueue.IsEmpty)
+        if(!connected&&targetIPReady)
+            setupSocket();
+
+        if(!connected)
+            return;
+        if (!outgoingQueue.IsEmpty)
         {
             messagePackage mp = null;
             outgoingQueue.TryDequeue(out mp);

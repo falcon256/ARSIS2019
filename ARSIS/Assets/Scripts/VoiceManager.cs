@@ -17,6 +17,7 @@ public class VoiceManager : MonoBehaviour {
     private bool _visible = false;
     
     private MenuController mc;
+    private GameObject menuToUse;
 
     // Needed to check which settings menu is open for slider function 
     public GameObject m_brightnessMenu;
@@ -33,8 +34,9 @@ public class VoiceManager : MonoBehaviour {
     public AudioClip m_BackButton;
     public AudioClip m_ZoomIn;
     public AudioClip m_ZoomOut;
-    public AudioClip m_SliderSound; 
-    
+    public AudioClip m_SliderSound;
+    private DictationRecognizer dictationRecognizer;
+
     void Start () {
         S = this; 
 
@@ -49,6 +51,7 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Help", Help);
         _keywords.Add("Help", Help); 
         _keywords.Add("Adele Procedures", TaskList);
+        _keywords.Add("Adele Retrieve", Retrieve);
 
         // Navigation
         _keywords.Add("Adele Menu", Menu);
@@ -86,18 +89,17 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Eclipse", PlayEclipse);
         _keywords.Add("Adele Rocket Man", PlayRocketMan);
 
-        //Biometrics Navigation
-        _keywords.Add("Select A1", SelectA1);
-
         //Translation 
-        _keywords.Add("Record Path", StartTranslation);
-        _keywords.Add("Save Path", StopTranslation);
-        _keywords.Add("Show Path", ShowPath);
-        _keywords.Add("Hide Path", HidePath);
+        _keywords.Add("Adele Record Path", StartTranslation);
+        _keywords.Add("Adele End Path", StopTranslation);
+        _keywords.Add("Adele Show Path", ShowPath);
+        _keywords.Add("Adele Hide Path", HidePath);
 
         //Mesh 
         _keywords.Add("Enable Mesh", enableMesh);
         _keywords.Add("Disable Mesh", disableMesh);
+        _keywords.Add("Enable Mapping", enableMapping);
+        _keywords.Add("Disable Mapping", disableMapping); 
 
 #endregion
 
@@ -136,51 +138,139 @@ public class VoiceManager : MonoBehaviour {
 
     public void MainMenu()
     {
-        mc.ChangeMenu(mc.m_mainMenu); 
+        mc.addMenu(mc.m_mainMenu); 
     }
 
     public void musicMenu()
     {
-        mc.ChangeMenu(mc.m_musicMenu);
+        mc.addMenu(mc.m_musicMenu);
     }
 
     public void Settings()
     {
-        mc.ChangeMenu(mc.m_settingsMenu); 
+        mc.addMenu(mc.m_settingsMenu); 
     }
 
     public void Houston()
     {
-        mc.ChangeMenu(mc.m_sosMenu);
+        mc.addMenu(mc.m_sosMenu);
         ServerConnect.S.sos(); 
     }
 
     public void Help()
     {
-        mc.ChangeMenu(mc.m_helpMenu); 
+        mc.addMenu(mc.m_helpMenu); 
     }
 
     public void Biometrics()
     {
-        mc.ChangeMenu(mc.m_biometricsMenu); 
+        mc.addMenu(mc.m_biometricsMenu); 
     }
 
     public void Brightness()
     {
-        mc.ChangeMenu(mc.m_brightnessMenu);   
+        mc.addMenu(mc.m_brightnessMenu);   
     }
 
     public void Volume()
     {
-        mc.ChangeMenu(mc.m_volumeMenu);
+        mc.addMenu(mc.m_volumeMenu);
     }
 
     public void TaskList()
     {
-        mc.ChangeMenu(mc.m_taskList);  
+        mc.addMenu(mc.m_taskList);  
     }
 
-#endregion
+
+    // handles voice cmds to retreive menu based off menu name
+    public void Retrieve()
+    {
+
+        PhraseRecognitionSystem.Shutdown();
+
+        dictationRecognizer = new DictationRecognizer();
+
+        // start dictation reconizer
+        dictationRecognizer.Start();
+        Debug.Log("DicRec started");
+        dictationRecognizer.DictationResult += DictationRecognizer_DictationResult;
+    }
+
+    // handles voice cmds to decide to replace the menu
+    public void Answer(GameObject holoMenu)
+    {
+        Debug.Log("Made it to Answer!");
+        menuToUse = holoMenu;
+        PhraseRecognitionSystem.Shutdown();
+
+        dictationRecognizer = new DictationRecognizer();
+
+        // start dictation reconizer
+        dictationRecognizer.Start();
+        dictationRecognizer.DictationResult += Dictation_yesNo;
+    }
+
+
+
+    private void DictationRecognizer_DictationResult(string text, ConfidenceLevel confidence)
+    {
+        GameObject holoMenu = null;
+        Debug.Log("String heard: " + text);
+        dictationRecognizer.Stop();
+
+
+        // Cases to set holoMenu to the correct menu
+        if (text.ToLower().Equals("main") || text.ToLower().Equals("main menu") || text.ToLower().Equals("maine")) holoMenu = mc.m_mainMenu;
+        else if (text.ToLower().Equals("biometrics")) holoMenu = mc.m_biometricsMenu;
+        else if (text.ToLower().Equals("help")) holoMenu = mc.m_helpMenu;
+        else if (text.ToLower().Equals("music")) holoMenu = mc.m_musicMenu;
+        else if (text.ToLower().Equals("settings")) holoMenu = mc.m_settingsMenu;
+        else if (text.ToLower().Equals("brightness")) holoMenu = mc.m_brightnessMenu;
+        else if (text.ToLower().Equals("volume")) holoMenu = mc.m_volumeMenu;
+        else
+        {
+            Debug.Log("Cmd not reconized.");
+            return;
+            // This does not fail eloquently
+        }
+
+
+        // call function in MenuController to retrieve the specific menu
+        mc.Retrieve(holoMenu);
+
+        dictationRecognizer.Dispose();
+        PhraseRecognitionSystem.Restart();
+    }
+
+    private void Dictation_yesNo(string text, ConfidenceLevel confidence)
+    {
+
+
+        dictationRecognizer.Stop();
+        // dispose of dictation reconizer
+
+        if (text.ToLower().Equals("yes"))
+        {
+            Debug.Log("String heard: " + text);
+            mc.ChangeMenu(menuToUse);
+            //mc.toggleDisplay(menuToUse);
+            mc.toggleDisplay(mc.m_overlapMessage);
+
+        }
+
+        else if (text.ToLower().Equals("no"))
+        {
+            Debug.Log("String heard: " + text);
+            mc.toggleDisplay(mc.m_overlapMessage);
+        }
+
+
+        dictationRecognizer.Dispose();
+        PhraseRecognitionSystem.Restart();
+    }
+
+    #endregion
 
 #region Navigation Functions 
 
@@ -296,7 +386,7 @@ public class VoiceManager : MonoBehaviour {
 
     public void generateTaskMenu()
     {
-        mc.ChangeMenu(mc.m_blankTaskMenu);
+        mc.addMenu(mc.m_blankTaskMenu);
         displayStep();
 
         m_Source.clip = m_OpenMenu;
@@ -364,9 +454,18 @@ public class VoiceManager : MonoBehaviour {
         mc.m_warningText.text = warningText;
     }
 
-#endregion
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            Biometrics();
+        }
+    
+    }
 
-#region Task Names
+    #endregion
+
+    #region Task Names
 
     public void disableAlarm()
     {
@@ -434,15 +533,6 @@ public class VoiceManager : MonoBehaviour {
     }
 #endregion
 
-#region Biometrics Navigation
-
-    public void SelectA1()
-    {
-
-    }
-
-#endregion
-
 #region Translation 
 
     void StartTranslation()
@@ -478,6 +568,16 @@ public class VoiceManager : MonoBehaviour {
     public void disableMesh()
     {
         MeshDataGatherer.S.disableMeshDisplay();
+    }
+
+    public void enableMapping()
+    {
+
+    }
+
+    public void disableMapping()
+    {
+
     }
 
 #endregion
