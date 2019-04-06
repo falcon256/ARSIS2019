@@ -169,21 +169,24 @@ public class JSONParse : MonoBehaviour {
 
     private void UpdateUI(SuitData data)
     {
-        m_SuitDataUIElements[0].SetData("Internal Suit Pressure", data.t_water.ToString());
-        m_SuitDataUIElements[1].SetData("Time Life Battery", data.t_battery.ToString());
-        m_SuitDataUIElements[2].SetData("Time Life Oxygen", data.t_oxygen.ToString());
-        m_SuitDataUIElements[3].SetData("Time Life Water", data.t_water.ToString());
-        m_SuitDataUIElements[4].SetData("SUB Pressure", data.p_sub.ToString());
-        m_SuitDataUIElements[5].SetData("SUB Tempurature", data.t_sub.ToString());
-        m_SuitDataUIElements[6].SetData("Fan Tachometer", data.v_fan.ToString());
-        m_SuitDataUIElements[7].SetData("Extravehicular Activity Rate", data.p_o2.ToString());
-        m_SuitDataUIElements[8].SetData("Oxygen Pressure", data.p_o2.ToString());
-        m_SuitDataUIElements[9].SetData("Oxygen Rate", data.rate_o2.ToString());
-        m_SuitDataUIElements[10].SetData("Battery Capacity", data.cap_battery.ToString());
-        m_SuitDataUIElements[11].SetData("H20 Gas Pressure", data.p_h2o_g.ToString());
-        m_SuitDataUIElements[12].SetData("H20 Liquid Pressure", data.p_h2o_l.ToString());
-        m_SuitDataUIElements[13].SetData("SOP Pressure", data.p_sop.ToString());
-        m_SuitDataUIElements[14].SetData("SOP Rate", data.rate_sop.ToString());
+        float waterHours = float.Parse(data.t_water.Split(':')[0]);
+        float oxygenHours = float.Parse(data.t_oxygen.Split(':')[0]);
+        float batteryHours = float.Parse(data.t_battery.Split(':')[0]); 
+        m_SuitDataUIElements[0].SetData("Internal Suit Pressure", data.p_suit, 2.0f, 4.0f, "psid");
+        m_SuitDataUIElements[1].SetData("Time Life Battery", batteryHours, 0.0f, 10.0f, "hours");
+        m_SuitDataUIElements[2].SetData("Time Life Oxygen", oxygenHours, 0.0f, 10.0f, "hours");
+        m_SuitDataUIElements[3].SetData("Time Life Water", waterHours, 0.0f, 10.0f, "hours");
+        m_SuitDataUIElements[4].SetData("SUB Pressure", data.p_sub, 2.0f, 4.0f, "psia");
+        m_SuitDataUIElements[5].SetData("SUB Tempurature", data.t_sub, -148.0f, 248.0f, "° F");
+        m_SuitDataUIElements[6].SetData("Fan Tachometer", data.v_fan, 10000.0f, 40000.0f, "RPM");
+        m_SuitDataUIElements[7].SetData("Extravehicular Activity Rate", data.p_o2, 0.0f, 9.0f, "hours");
+        m_SuitDataUIElements[8].SetData("Oxygen Pressure", data.p_o2, 750.0f, 950.0f, "psia");
+        m_SuitDataUIElements[9].SetData("Oxygen Rate", data.rate_o2, 0.5f, 0.1f, "psi/min");
+        m_SuitDataUIElements[10].SetData("Battery Capacity", data.cap_battery, 0.0f, 30.0f, "ah");
+        m_SuitDataUIElements[11].SetData("H20 Gas Pressure", data.p_h2o_g, 14.0f, 16.0f, "psia");
+        m_SuitDataUIElements[12].SetData("H20 Liquid Pressure", data.p_h2o_l, 14.0f, 16.0f, "psia");
+        m_SuitDataUIElements[13].SetData("SOP Pressure", data.p_sop, 750.0f, 950.0f, "psia");
+        m_SuitDataUIElements[14].SetData("SOP Rate", data.rate_sop, 0.5f, 1.0f, "psi/min");
     }
 
     private void UpdateSwitchUI(SuitDataSwitch switchData)
