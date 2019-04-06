@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     // Default menu; set as current menu on initialization 
-    public GameObject m_OGMenu;
+    [HideInInspector]
     public GameObject m_CurrentMenu;
     private GameObject m_PreviousMenu;
     private ArrayList activeMenus;
@@ -55,7 +55,6 @@ public class MenuController : MonoBehaviour
     {
         //SpatialMapping.Instance.MappingEnabled = false; 
         
-        m_CurrentMenu = m_OGMenu;
         activeMenus = new ArrayList();
         currentStep = 1;
         currentTask = 1; 
@@ -69,12 +68,12 @@ public class MenuController : MonoBehaviour
         if (oldMenu != null)
         {
             m_PreviousMenu = oldMenu;
-            oldMenu.SetActive(false); 
+            oldMenu.SetActive(false);
+
+            // Set position and rotation of the new menu to be the same as the previous menu 
+            newMenu.transform.position = oldMenu.transform.position;
+            newMenu.transform.rotation = oldMenu.transform.rotation;
         }
-       
-        // Set position and rotation of the new menu to be the same as the previous menu 
-        newMenu.transform.position = oldMenu.transform.position;
-        newMenu.transform.rotation = oldMenu.transform.rotation;
         
         // Make the new menu visible 
         ToggleVisibility(newMenu);
@@ -90,8 +89,6 @@ public class MenuController : MonoBehaviour
         if (holoMenu.activeSelf == false)
         {
             holoMenu.transform.position = Camera.main.transform.position + (Camera.main.transform.forward);
-
-            holoMenu.transform.position += new Vector3(0, .125f, 0);
 
             Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
 
@@ -179,8 +176,6 @@ public class MenuController : MonoBehaviour
                 // open new menu where the user is looking
                 holoMenu.transform.position = Camera.main.transform.position + (Camera.main.transform.forward);
 
-                holoMenu.transform.position += new Vector3(0, .125f, 0);
-
                 Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
 
                 holoMenu.transform.rotation = q;
@@ -255,8 +250,6 @@ public class MenuController : MonoBehaviour
             Camera.main.transform.position + (Camera.main.transform.forward);
 
         Vector3 cameraPos = Camera.main.transform.position;
-
-        holoMenu.transform.position += new Vector3(0, .125f, 0);
 
         Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
 

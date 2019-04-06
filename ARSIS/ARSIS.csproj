@@ -1530,6 +1530,7 @@
     <Compile Include="Assets\Scripts\SimpleMeshSerializer.cs" />
     <Compile Include="Assets\Scripts\SliderMove.cs" />
     <Compile Include="Assets\Scripts\Step.cs" />
+    <Compile Include="Assets\Scripts\SuitDataElement.cs" />
     <Compile Include="Assets\Scripts\TaskManager.cs" />
     <Compile Include="Assets\Scripts\TranslationController.cs" />
     <Compile Include="Assets\Scripts\VoiceManager.cs" />

@@ -21,7 +21,8 @@ public class JSONParse : MonoBehaviour {
     [Header("Display Text")]
     public Text bioText;
 
-    public GameObject[] bubbles; 
+    public GameObject[] bubbles;
+    public SuitDataElement[] m_SuitDataUIElements;
 
     public Text timeLeftText;
 
@@ -126,14 +127,17 @@ public class JSONParse : MonoBehaviour {
             
             if (!json.Equals(""))
             {
-                NASADataType jsonObject = JsonUtility.FromJson<NASADataType>(json);
-                bubbles[0].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.heart_bpm);
+                SuitData jsonObject = JsonUtility.FromJson<SuitData>(json);
                 LineData data = new LineData();
+
                 data.m_DataValue = jsonObject.v_fan;
                 data.m_Time = Time.time; 
 
-                lineGraph.AddLineDataPoint(data); 
+                //lineGraph.AddLineDataPoint(data);
+                Debug.Log("Parsing");
+                UpdateUI(jsonObject);
 
+                /*
                 bubbles[1].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_suit);
                 bubbles[2].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_sub);
                 bubbles[3].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_sub);
@@ -147,12 +151,12 @@ public class JSONParse : MonoBehaviour {
 
                 bubbles[12].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_battery);
                 bubbles[13].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_oxygen); 
-                bubbles[14].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_water); 
-
+                bubbles[14].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_water);
+                */
                 // Get the lesser time between oxygen and battery 
                 string identifier = "";
                 string lesserTime = getLesserTime(jsonObject.t_oxygen, jsonObject.t_battery, out identifier);
-
+                
                 // Display Time Left 
                 timeLeftText.text = "Time Left: " + lesserTime + " (" + identifier + ")";
             } else
@@ -161,6 +165,42 @@ public class JSONParse : MonoBehaviour {
             }
             
         }
+    }
+
+    private void UpdateUI(SuitData data)
+    {
+        m_SuitDataUIElements[0].SetData("Internal Suit Pressure", data.t_water.ToString());
+        m_SuitDataUIElements[1].SetData("Time Life Battery", data.t_battery.ToString());
+        m_SuitDataUIElements[2].SetData("Time Life Oxygen", data.t_oxygen.ToString());
+        m_SuitDataUIElements[3].SetData("Time Life Water", data.t_water.ToString());
+        m_SuitDataUIElements[4].SetData("SUB Pressure", data.p_sub.ToString());
+        m_SuitDataUIElements[5].SetData("SUB Tempurature", data.t_sub.ToString());
+        m_SuitDataUIElements[6].SetData("Fan Tachometer", data.v_fan.ToString());
+        m_SuitDataUIElements[7].SetData("Extravehicular Activity Rate", data.p_o2.ToString());
+        m_SuitDataUIElements[8].SetData("Oxygen Pressure", data.p_o2.ToString());
+        m_SuitDataUIElements[9].SetData("Oxygen Rate", data.rate_o2.ToString());
+        m_SuitDataUIElements[10].SetData("Battery Capacity", data.cap_battery.ToString());
+        m_SuitDataUIElements[11].SetData("H20 Gas Pressure", data.p_h2o_g.ToString());
+        m_SuitDataUIElements[12].SetData("H20 Liquid Pressure", data.p_h2o_l.ToString());
+        m_SuitDataUIElements[13].SetData("SOP Pressure", data.p_sop.ToString());
+        m_SuitDataUIElements[14].SetData("SOP Rate", data.rate_sop.ToString());
+    }
+
+    private void UpdateSwitchUI(SuitDataSwitch switchData)
+    {
+        m_SuitDataUIElements[15].SetData("Battery Amp High", switchData.battery_amp_high.ToString());
+        m_SuitDataUIElements[16].SetData("Battery VDC Low", switchData.battery_vdc_low.ToString());
+        m_SuitDataUIElements[17].SetData("Suit Pressure Low", switchData.p_suit_low.ToString());
+        m_SuitDataUIElements[18].SetData("SOP On", switchData.p_sop_on.ToString());
+        m_SuitDataUIElements[19].SetData("Suit Pressure Emergency", switchData.p_suit_emergency.ToString());
+        m_SuitDataUIElements[20].SetData("Suit Pressure High", switchData.p_suit_high.ToString());
+        m_SuitDataUIElements[21].SetData("O2 Use High", switchData.o2_use_high.ToString());
+        m_SuitDataUIElements[22].SetData("SOP Pressure Low", switchData.p_suit_low.ToString());
+        m_SuitDataUIElements[23].SetData("Fan Failure", switchData.fan_error.ToString());
+        m_SuitDataUIElements[24].SetData("CO2 High", switchData.co2_high.ToString());
+        m_SuitDataUIElements[25].SetData("Vehicle Power Present", switchData.vehicle_power.ToString());
+        m_SuitDataUIElements[26].SetData("H20 Is Off", switchData.h2o_off.ToString());
+        m_SuitDataUIElements[27].SetData("O2 is Off", switchData.o2_off.ToString());
     }
 
     private string getLesserTime(string strOxygen, string strBattery, out string identifier)
@@ -239,13 +279,14 @@ public class JSONParse : MonoBehaviour {
 
             }
 
-            NASADataTypeSwitch jsonObject = JsonUtility.FromJson<NASADataTypeSwitch>(json);
+            SuitDataSwitch jsonObject = JsonUtility.FromJson<SuitDataSwitch>(json);
 
             CheckSuitSwitches(jsonObject);
+            UpdateSwitchUI(jsonObject);
         }
     }
 
-    private void CheckAllRanges(NASADataType ndt)
+    private void CheckAllRanges(SuitData ndt)
     {
         if (CheckValueRange(ndt.heart_bpm, m_HeartRateLow, m_HeartRateLow)) Debug.Log("Heart Rate going hardcore");
         if (CheckValueRange(ndt.p_suit, m_P_SuitLow, m_P_SuitHigh)) Debug.Log("Suit Pressure Bad, fix it");
@@ -261,7 +302,7 @@ public class JSONParse : MonoBehaviour {
         if (CheckValueRange(ndt.rate_sop, m_Rate_SOPLow, m_Rate_SOPHigh)) Debug.Log("Rate of SOP is bad, sorry about that");
     }
 
-    private void CheckSuitSwitches(NASADataTypeSwitch ndts)
+    private void CheckSuitSwitches(SuitDataSwitch ndts)
     {
         m_OutputErrorData.ClearText();
 
@@ -271,7 +312,7 @@ public class JSONParse : MonoBehaviour {
         if (ndts.vent_error == "true") m_OutputErrorData.OutputErrorText("NO VENT FLOW"); // Add vent rpms 
         if (ndts.vehicle_power == "true") m_OutputErrorData.OutputErrorText("VEHICLE POWER AVAIL");
         if (ndts.o2_off == "true") m_OutputErrorData.OutputErrorText("O2 IS OFF");
-        if (ndts.sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON"); 
+        if (ndts.p_sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON"); 
     }
 
     private string CleanUpJSON(string json)
@@ -306,7 +347,7 @@ public class JSONParse : MonoBehaviour {
 
 //////////////////////// All telemetry variables are defined here /////////////////////////////////
 [System.Serializable]
-public class NASADataType
+public class SuitData
 {
     public string create_date = "";
     public int heart_bpm = 0;
@@ -327,16 +368,26 @@ public class NASADataType
 }
 
 [System.Serializable]
-public class NASADataTypeSwitch
+public class SuitDataSwitch
 {
+    //TODO make enum Warning, Nominal, VeryBad
+
     public string create_date = "";
-    public string sop_on = "";   // SOP 02 ON TIME LF XX:XX   - secondary oxygen system on - meaning primary system is depleted 
     public string sspe = "";  // SUIT P EMERG    - out of oxygen or regulator is not working 
     public string fan_error = ""; // FAN SW OFF   - 
     public string vent_error = ""; // NO VENT FLOW  - <v_fan> rpm  
     public string vehicle_power = ""; // VEHICLE POWER AVAIL   - you should switch to save suit power 
     public string h2o_off = ""; // H20 IS OFF  - for cooling inside the suit 
-    public string o2_off = "";  // O2 IS OFF 
+    public string o2_off = "";  // O2 IS OFF
+    public string o2_use_high = "";  // O2 IS OFF
+    public string co2_high = "";  // O2 IS OFF
+    public string battery_amp_high = "";
+    public string battery_vdc_low = "";
+    public string p_suit_low = "";
+    public string p_sop_on = "";
+    public string p_suit_emergency = "";
+    public string p_suit_high = "";
+
 
     // BAT VDC LOW / VAT VDC XX.X - if battery is under 15 V 
 
