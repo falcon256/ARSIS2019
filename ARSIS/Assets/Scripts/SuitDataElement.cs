@@ -16,11 +16,11 @@ public class SuitDataElement : MonoBehaviour
     public string m_DataUnitName;
 
     [Header("Place your color threshholds here. Each value must be smaller than the next.")]
-    public float upperWarning = 4.0f;
-    public float upperCaution = 3.0f;
-    public float nominalValue = 2.0f;
-    public float lowerCaution = 1.0f;
-    public float lowerWarning = 0.0f;
+    public float upperWarning; 
+    public float upperCaution; 
+    public float nominalValue; 
+    public float lowerCaution; 
+    public float lowerWarning; 
 
     private Text m_BiometricTitle;
     private Text m_BiometricValue;
@@ -56,6 +56,12 @@ public class SuitDataElement : MonoBehaviour
 
         m_BiometricTitle.text = dataTitle;
         m_BiometricValue.text = dataValue;
+
+        lowerWarning = 1;
+        lowerCaution = 1.001f; 
+        nominalValue = 0;
+        upperCaution = 1.999f; 
+        upperWarning = 2; 
     }
 
     void Update()
@@ -93,8 +99,8 @@ public class SuitDataElement : MonoBehaviour
             float dif = Mathf.Abs(upperCaution - nominalValue);
             float val = Offset / dif;
             return Color.Lerp(nominalColor, cautionColor, val);
-        }
-        else if (m_DataValue < nominalValue && m_DataValue > lowerCaution)
+        } 
+        else if (m_DataValue <= nominalValue && m_DataValue >= lowerCaution)
         {
             // "Systems Nominal";
             float Offset = m_DataValue - lowerCaution;

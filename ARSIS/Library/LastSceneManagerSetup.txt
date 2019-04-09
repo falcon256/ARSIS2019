@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/MenuAnchoring.unity
-  isLoaded: 1
-  isActive: 1

@@ -19,7 +19,8 @@ public class TaskManager : MonoBehaviour {
     // Lists of individual steps 
     public Procedure disableAlarm = new Procedure("Disable Alarm", false, 24);
     public Procedure reroutPower = new Procedure("Reroute Power", false, 30);
-    public Procedure lightSwitch = new Procedure("Light Switch", false, 20); 
+    public Procedure lightSwitch = new Procedure("Light Switch", false, 20);
+    public Procedure superNova = new Procedure("Supernova", false, 11); 
 
     // Static Array of images for each task 
     public Texture2D[] images; 
@@ -34,15 +35,18 @@ public class TaskManager : MonoBehaviour {
     void Start () {
         S = this; 
         
-        populateProcedures(); 
+        populateProcedures();
 
+        allProcedures.Add(superNova);
         allProcedures.Add(disableAlarm);
         allProcedures.Add(reroutPower);
         allProcedures.Add(lightSwitch);
+      
         
         for (int i = 0; i < allProcedures.Count; i++)
         {
             VoiceManager.S.addProcedureCommand(allProcedures[i].procedure_title); 
+
         }
 
 
@@ -136,6 +140,12 @@ public class TaskManager : MonoBehaviour {
                 //Debug.Log(fromServer);
 
                 Procedure jsonObject = JsonUtility.FromJson<Procedure>(fromServer);
+
+                //Debug.Log(jsonObject.steps[0].image); 
+                //string image = (String)jsonObject.steps[0].image;
+                //Debug.Log(image); 
+
+                //String b64String = (String)fromSocket["image"];
             }
         }
     }
@@ -220,12 +230,24 @@ public class TaskManager : MonoBehaviour {
         lightSwitch.addStep(17, new serStep("18. Locate the AUX power switch and switch it to the ON position", images[42], "CAUTION: Ensure lead is completely inside the buss before tightening"));
         lightSwitch.addStep(18, new serStep("19. Conform that LED indicator light is GREEN", images[43], ""));
         lightSwitch.addStep(19, new serStep("Congratulations! You have completed the task.", images[44], ""));
+
+        superNova.addStep(0, new serStep("Say: Adele, show path", null, ""));
+        superNova.addStep(1, new serStep("Follow white line to find a key hanging on a command hook behind computer monitor.", images[52], ""));
+        superNova.addStep(2, new serStep("Pick up the key, and take it with you", null, ""));
+        superNova.addStep(3, new serStep("Follow white line to task board staging area", images[50], ""));
+        superNova.addStep(4, new serStep("Press the green dot side of the switch on right front end of task board.", images[47], ""));
+        superNova.addStep(5, new serStep("Use the key to unlock the lock over the grey safety cover on the front center of the task board and open the container.", images[46], ""));
+        superNova.addStep(6, new serStep("Press the green dot side of switch inside the unlocked safety cover down.", images[48], ""));
+        superNova.addStep(7, new serStep("Check that all four blue buttons on the board have lit up.", images[51], ""));
+        superNova.addStep(8, new serStep("Close and lock the safety cover over the front center switch.", images[46], ""));
+        superNova.addStep(9, new serStep("Return key by following the white line back to the white command hook behind the computer monitor.", images[52], ""));
+        superNova.addStep(10, new serStep("Procedure Complete! Good Job!", images[44], ""));
     }
 }
 
 // Used for parsing JSON from server 
 [System.Serializable]
-public class Procedure 
+public class Procedure
 {
     public string procedure_title;
     public bool emergency;
@@ -274,7 +296,7 @@ public class serStep
         this.text = content;
         this.type = type;
         this.warning = warning;
-        this.imageTex = image; 
+        this.imageTex = image;
     }
 
     public serStep(string content, Texture2D image, string warning)

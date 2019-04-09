@@ -130,7 +130,7 @@ public class MenuController : MonoBehaviour
             // Check if current gaze interesects with an active menu
             RaycastHit hit;
 
-            if (Physics.Raycast(Camera.main.transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, out hit, Mathf.Infinity) && hit.transform.tag == "Menu")
             {
                 Debug.Log("Trying to place menu where one already exists!");
                 // if overlap move overlapping menu to the side
@@ -268,5 +268,11 @@ public class MenuController : MonoBehaviour
 
         m_CurrentMenu.SetActive(false);
         m_PreviousMenu.SetActive(true);
+    }
+
+    private void Update()
+    {
+    
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, Color.green);
     }
 }

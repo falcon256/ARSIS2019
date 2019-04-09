@@ -37,6 +37,9 @@ public class VoiceManager : MonoBehaviour {
     public AudioClip m_SliderSound;
     private DictationRecognizer dictationRecognizer;
 
+    float dictationTimer = 5.0f;
+    bool dictationIsOn = false; 
+
     void Start () {
         S = this; 
 
@@ -195,6 +198,9 @@ public class VoiceManager : MonoBehaviour {
         dictationRecognizer.Start();
         Debug.Log("DicRec started");
         dictationRecognizer.DictationResult += DictationRecognizer_DictationResult;
+
+        dictationIsOn = true;
+        dictationTimer = 5.0f;
     }
 
     // handles voice cmds to decide to replace the menu
@@ -209,6 +215,9 @@ public class VoiceManager : MonoBehaviour {
         // start dictation reconizer
         dictationRecognizer.Start();
         dictationRecognizer.DictationResult += Dictation_yesNo;
+
+        dictationIsOn = true;
+        dictationTimer = 5.0f; 
     }
 
 
@@ -221,23 +230,25 @@ public class VoiceManager : MonoBehaviour {
 
 
         // Cases to set holoMenu to the correct menu
-        if (text.ToLower().Equals("main") || text.ToLower().Equals("main menu") || text.ToLower().Equals("maine")) holoMenu = mc.m_mainMenu;
+        if (text.ToLower().Equals("main") || text.ToLower().Equals("main menu") || text.ToLower().Equals("maine") || text.ToLower().Equals("mean")) holoMenu = mc.m_mainMenu;
         else if (text.ToLower().Equals("biometrics")) holoMenu = mc.m_biometricsMenu;
         else if (text.ToLower().Equals("help")) holoMenu = mc.m_helpMenu;
         else if (text.ToLower().Equals("music")) holoMenu = mc.m_musicMenu;
         else if (text.ToLower().Equals("settings")) holoMenu = mc.m_settingsMenu;
         else if (text.ToLower().Equals("brightness")) holoMenu = mc.m_brightnessMenu;
         else if (text.ToLower().Equals("volume")) holoMenu = mc.m_volumeMenu;
+        else if (text.ToLower().Equals("procedure")) holoMenu = mc.m_blankTaskMenu; 
         else
         {
-            Debug.Log("Cmd not reconized.");
-            return;
+            Debug.Log("Cmd not recognized.");
             // This does not fail eloquently
         }
 
 
         // call function in MenuController to retrieve the specific menu
-        mc.Retrieve(holoMenu);
+        if (holoMenu != null) {
+            mc.Retrieve(holoMenu);
+        }
 
         dictationRecognizer.Dispose();
         PhraseRecognitionSystem.Restart();
@@ -255,17 +266,15 @@ public class VoiceManager : MonoBehaviour {
             Debug.Log("String heard: " + text);
             mc.ChangeMenu(menuToUse);
             //mc.toggleDisplay(menuToUse);
-            mc.toggleDisplay(mc.m_overlapMessage);
 
         }
-
-        else if (text.ToLower().Equals("no"))
+        else 
         {
             Debug.Log("String heard: " + text);
-            mc.toggleDisplay(mc.m_overlapMessage);
+            
         }
 
-
+        mc.toggleDisplay(mc.m_overlapMessage);
         dictationRecognizer.Dispose();
         PhraseRecognitionSystem.Restart();
     }
@@ -276,7 +285,8 @@ public class VoiceManager : MonoBehaviour {
 
     public void Menu()
     {
-        mc.ChangeMenu(mc.m_CurrentMenu);
+        mc.m_blankTaskMenu.gameObject.SetActive(false); 
+        mc.ChangeMenu(mc.m_blankTaskMenu);
 
         m_Source.clip = m_OpenMenu;
         m_Source.Play();
@@ -456,11 +466,33 @@ public class VoiceManager : MonoBehaviour {
 
     private void Update()
     {
+        if (dictationIsOn)
+        {
+            dictationTimer -= Time.deltaTime;
+        }
+        if (dictationTimer < 0)
+        {
+            destroyDictationRecognizer();
+            dictationIsOn = false;
+            dictationTimer = 5.0f;
+            Debug.Log("Dictation stopped"); 
+        }
         if (Input.anyKeyDown)
         {
             Biometrics();
         }
     
+    }
+
+    void destroyDictationRecognizer()
+    {
+        if(mc.m_overlapMessage.gameObject.activeSelf)
+        {
+            mc.toggleDisplay(mc.m_overlapMessage);
+        }
+        dictationRecognizer.Stop();
+        dictationRecognizer.Dispose();
+        PhraseRecognitionSystem.Restart();
     }
 
     #endregion

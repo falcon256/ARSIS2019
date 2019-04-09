@@ -81,11 +81,25 @@ public class JSONParse : MonoBehaviour {
     public float m_Rate_SOPLow;
     public float m_Rate_SOPHigh;
 
+    bool weCanQuit = false; 
+
     void Start ()
     {
         m_OutputErrorData = FindObjectOfType<OutputErrorData>();
+        //StartCoroutine(RunStartWWW());
         InvokeRepeating("UpdateSystemData", 1, 5);
         InvokeRepeating("UpdateSystemSwitchData", 2, 3);
+        
+    }
+
+    private void OnApplicationQuit ()
+    {
+        /*
+        while(!weCanQuit)
+        {
+            //StartCoroutine(RunStopWWW()); 
+        }
+        */
     }
 
     private void UpdateSystemData()
@@ -96,9 +110,28 @@ public class JSONParse : MonoBehaviour {
 
     private void UpdateSystemSwitchData()
     {
-        StartCoroutine(RunSwitchWWW());
-    }
     
+        StartCoroutine(RunSwitchWWW());
+     
+    }
+/*
+    IEnumerator RunStartWWW()
+    {
+        weCanQuit = true;
+        using (UnityWebRequest www = UnityWebRequest.Get("https://agile-badlands-39994.herokuapp.com/api/start-sim"))
+        {
+            yield return www.SendWebRequest();
+        }
+    }
+
+    IEnumerator RunStopWWW()
+    {
+        using (UnityWebRequest www = UnityWebRequest.Get("https://agile-badlands-39994.herokuapp.com/api-stop-sim"))
+        {
+            yield return www.SendWebRequest();
+        }
+    }
+    */
     IEnumerator RunWWW()
     {
         using (UnityWebRequest www = UnityWebRequest.Get(url))
@@ -134,25 +167,9 @@ public class JSONParse : MonoBehaviour {
                 data.m_Time = Time.time; 
 
                 //lineGraph.AddLineDataPoint(data);
-                Debug.Log("Parsing");
+                //Debug.Log("Parsing");
                 UpdateUI(jsonObject);
 
-                /*
-                bubbles[1].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_suit);
-                bubbles[2].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_sub);
-                bubbles[3].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_sub);
-                bubbles[4].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.v_fan);
-                bubbles[5].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_o2);
-                bubbles[6].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.cap_battery);
-                bubbles[7].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_h2o_g);
-                bubbles[8].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_h2o_l);
-                bubbles[9].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.p_sop);
-                bubbles[10].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.rate_sop);
-
-                bubbles[12].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_battery);
-                bubbles[13].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_oxygen); 
-                bubbles[14].GetComponent<EnvelopeChameleon>().setCurrentValue(jsonObject.t_water);
-                */
                 // Get the lesser time between oxygen and battery 
                 string identifier = "";
                 string lesserTime = getLesserTime(jsonObject.t_oxygen, jsonObject.t_battery, out identifier);
@@ -315,7 +332,9 @@ public class JSONParse : MonoBehaviour {
         if (ndts.vent_error == "true") m_OutputErrorData.OutputErrorText("NO VENT FLOW"); // Add vent rpms 
         if (ndts.vehicle_power == "true") m_OutputErrorData.OutputErrorText("VEHICLE POWER AVAIL");
         if (ndts.o2_off == "true") m_OutputErrorData.OutputErrorText("O2 IS OFF");
-        if (ndts.p_sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON"); 
+        if (ndts.p_sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON");
+        //ebug.Log(ndts.temp_switch);
+        if (ndts.temp_switch == "true") m_OutputErrorData.OutputErrorText("FLIP BOTTOM LEFT SWITCH OF TASKBOARD ON"); 
     }
 
     private string CleanUpJSON(string json)
@@ -390,6 +409,7 @@ public class SuitDataSwitch
     public string p_sop_on = "";
     public string p_suit_emergency = "";
     public string p_suit_high = "";
+    public string temp_switch = ""; 
 
 
     // BAT VDC LOW / VAT VDC XX.X - if battery is under 15 V 
