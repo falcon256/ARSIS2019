@@ -208,6 +208,11 @@ public class JSONParse : MonoBehaviour {
 
     private void UpdateSwitchUI(SuitDataSwitch switchData)
     {
+        if (switchData == null)
+        {
+            return;
+        }
+
         m_SuitDataUIElements[15].SetData("Battery Amp High", switchData.battery_amp_high.ToString());
         m_SuitDataUIElements[16].SetData("Battery VDC Low", switchData.battery_vdc_low.ToString());
         m_SuitDataUIElements[17].SetData("Suit Pressure Low", switchData.p_suit_low.ToString());
@@ -325,6 +330,12 @@ public class JSONParse : MonoBehaviour {
     private void CheckSuitSwitches(SuitDataSwitch ndts)
     {
         m_OutputErrorData.ClearText();
+
+        if (ndts == null)
+        {
+            m_OutputErrorData.OutputErrorText("No Connection to Server");
+            return;
+        }
 
         if (ndts.h2o_off == "true") m_OutputErrorData.OutputErrorText("H2O IS OFF");
         if (ndts.sspe == "true") m_OutputErrorData.OutputErrorText("SUIT P EMERG");

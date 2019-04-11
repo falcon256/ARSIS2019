@@ -14,9 +14,10 @@ public class MenuController : MonoBehaviour
     private GameObject m_PreviousMenu;
     private ArrayList activeMenus;
 
-    // Variables to keep track of your place in the procedure  
-    public int currentStep;
+    // Variables to keep track of your place in the procedure
+    public int currentProcedure;
     public int currentTask;
+    public int currentSubTask;
     public int currentMaxSteps; 
     
     // Menus 
@@ -28,13 +29,15 @@ public class MenuController : MonoBehaviour
     public GameObject m_sosMenu;
     public GameObject m_helpMenu;
     public GameObject m_biometricsMenu;
+    public GameObject m_procedureList;
     public GameObject m_taskList;
     public GameObject m_musicMenu;
     public GameObject m_overlapMessage;
     public GameObject m_blankTaskMenu;
 
     // Elements of task menu (procedurally populated) 
-    public Text m_stepText;
+    public Text m_TaskText;
+    public Text m_SubTaskText;
     public RawImage m_stepImage;
     public Text m_stepPrevText;
     public Text m_stepCurText;
@@ -56,8 +59,9 @@ public class MenuController : MonoBehaviour
         //SpatialMapping.Instance.MappingEnabled = false; 
         
         activeMenus = new ArrayList();
-        currentStep = 1;
-        currentTask = 1; 
+        currentSubTask = 0;
+        currentTask = 0;
+        currentProcedure = 0;
     }
 
     //hide old menu, and switch to new menu
@@ -110,7 +114,7 @@ public class MenuController : MonoBehaviour
     public void zoomOut()
     {
         m_stepImage.gameObject.SetActive(false);
-        m_stepText.gameObject.SetActive(false);
+        m_SubTaskText.gameObject.SetActive(false);
         m_warningText.gameObject.SetActive(false); 
 
         m_stepPrevText.gameObject.SetActive(true);
@@ -227,7 +231,7 @@ public class MenuController : MonoBehaviour
     public void zoomIn()
     {
         m_stepImage.gameObject.SetActive(true);
-        m_stepText.gameObject.SetActive(true);
+        m_SubTaskText.gameObject.SetActive(true);
         m_warningText.gameObject.SetActive(true);
 
         m_stepPrevText.gameObject.SetActive(false);

@@ -53,7 +53,8 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Houston", Houston);
         _keywords.Add("Adele Help", Help);
         _keywords.Add("Help", Help); 
-        _keywords.Add("Adele Procedures", TaskList);
+        _keywords.Add("Adele Procedures", ProcedureList);
+        _keywords.Add("Adele Tasks", TaskList);
         _keywords.Add("Adele Retrieve", Retrieve);
 
         // Navigation
@@ -127,13 +128,13 @@ public class VoiceManager : MonoBehaviour {
     public void addProcedureCommand(string name)
     {
         _keywords.Add(name, () => {
-            mc.currentTask = TaskManager.S.getProcedureIndexByName(name);
-            mc.currentStep = 1;
+            mc.currentProcedure = TaskManager.S.getProcedureIndexByName(name);
+            mc.currentTask = 1;
+            mc.currentSubTask = 1;
             generateTaskMenu();
         });
         resetKeywordRecognizer();
     }
-
 
 
     // Keyword Functions 
@@ -180,9 +181,15 @@ public class VoiceManager : MonoBehaviour {
         mc.addMenu(mc.m_volumeMenu);
     }
 
+    public void ProcedureList()
+    {
+        mc.addMenu(mc.m_procedureList);
+    }
+
     public void TaskList()
     {
-        mc.addMenu(mc.m_taskList);  
+        mc.addMenu(mc.m_taskList);
+        displayStep();
     }
 
 
@@ -405,9 +412,25 @@ public class VoiceManager : MonoBehaviour {
 
     public void Next()
     {
+
+        mc.currentSubTask++;
         //int maxLength = TaskManager.S.allTasks[mc.currentTask];
-        mc.currentStep++;
+        if (mc.currentSubTask > TaskManager.S.GetTask(mc.currentProcedure, mc.currentTask).SubTasks.Length - 1)
+        {
+            //if there are no more subtasks, task is complete
+            mc.currentSubTask = 0;
+            mc.currentTask++;
+
+            if (mc.currentTask > TaskManager.S.GetProcedure(mc.currentProcedure).Tasks.Length - 1)
+            {
+                //when procedure is complete
+                mc.currentTask = 0;
+                mc.currentProcedure++;
+            }
+        }
+
         displayStep();
+        Debug.Log("sub task count: " + mc.currentSubTask);
 
         m_Source.clip = m_NextButton;
         m_Source.Play();
@@ -415,8 +438,8 @@ public class VoiceManager : MonoBehaviour {
 
     public void Back()
     {
-        if (mc.currentStep <= 0) { return; }
-        mc.currentStep--;
+        if (mc.currentSubTask <= 0) { return; }
+        mc.currentSubTask--;
         displayStep();
 
         m_Source.clip = m_BackButton;
@@ -441,26 +464,29 @@ public class VoiceManager : MonoBehaviour {
 
     public void displayStep()
     {
-        int curStep = mc.currentStep;
+        int curProcedure = mc.currentProcedure;
         int curTask = mc.currentTask;
+        int curSubTask = mc.currentSubTask;
 
-        Debug.Log("Trying to display procedure " + mc.currentTask + " step " + mc.currentStep);
+        Debug.Log("Trying to display procedure " + mc.currentProcedure + "task" + mc.currentTask + " subtask " + mc.currentSubTask);
 
-        string curText = TaskManager.S.getStep(curTask, curStep);
-        string prevText = TaskManager.S.getStep(curTask, curStep - 1);
-        string nextText = TaskManager.S.getStep(curTask, curStep + 1);
+        string taskText = TaskManager.S.GetTask(curProcedure, curTask).Title;
+        string curText = TaskManager.S.GetSubTask(curProcedure, curTask, curSubTask);
+        string prevText = TaskManager.S.GetSubTask(curProcedure, curTask, curSubTask - 1);
+        string nextText = TaskManager.S.GetSubTask(curProcedure, curTask, curSubTask + 1);
 
-        mc.m_stepText.text = curText;
+        mc.m_TaskText.text = taskText;
+        mc.m_SubTaskText.text = curText;
 
         mc.m_stepPrevText.text = prevText;
         mc.m_stepCurText.text = curText;
         mc.m_stepNextText.text = nextText;
 
-        Texture2D curImage = TaskManager.S.getPic(curTask, curStep);
+        Texture2D curImage = TaskManager.S.getPic(curProcedure, curTask, curSubTask);
 
         mc.m_stepImage.texture = curImage;
 
-        string warningText = TaskManager.S.getWarning(curTask, curStep);
+        string warningText = TaskManager.S.getWarning(curProcedure, curTask, curSubTask);
         mc.m_warningText.text = warningText;
     }
 
@@ -477,9 +503,16 @@ public class VoiceManager : MonoBehaviour {
             dictationTimer = 5.0f;
             Debug.Log("Dictation stopped"); 
         }
-        if (Input.anyKeyDown)
+
+        //For Debugging without voice
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            Biometrics();
+            TaskList();
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            Next();
         }
     
     }
@@ -499,26 +532,26 @@ public class VoiceManager : MonoBehaviour {
 
     #region Task Names
 
-    public void disableAlarm()
-    {
-        mc.currentTask = 1;
-        mc.currentStep = 1;
-        generateTaskMenu();
-    }
+    //public void disableAlarm()
+    //{
+    //    mc.currentTask = 1;
+    //    mc.currentStep = 1;
+    //    generateTaskMenu();
+    //}
 
-    public void reroutePower()
-    {
-        mc.currentTask = 2;
-        mc.currentStep = 1;
-        generateTaskMenu();
-    }
+    //public void reroutePower()
+    //{
+    //    mc.currentTask = 2;
+    //    mc.currentStep = 1;
+    //    generateTaskMenu();
+    //}
 
-    public void lightSwitch()
-    {
-        mc.currentTask = 3;
-        mc.currentStep = 1;
-        generateTaskMenu(); 
-    }
+    //public void lightSwitch()
+    //{
+    //    mc.currentTask = 3;
+    //    mc.currentStep = 1;
+    //    generateTaskMenu(); 
+    //}
 
 #endregion
 
