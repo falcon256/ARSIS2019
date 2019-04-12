@@ -37,6 +37,9 @@ public class VoiceManager : MonoBehaviour {
     public AudioClip m_SliderSound;
     private DictationRecognizer dictationRecognizer;
 
+    public Image dot;
+    public Text recognizedWord; 
+
     float dictationTimer = 5.0f;
     bool dictationIsOn = false; 
 
@@ -616,10 +619,25 @@ public class VoiceManager : MonoBehaviour {
     // Keyword Recognition 
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
+        dot.color = Color.red;
+        string input = args.text; 
+        if (input.ToLower().Contains("adele"))
+        {
+            input = input.Split(' ')[1];
+        }
+        recognizedWord.text = input;
+        Invoke("dotWhite", 1f);
+       
         System.Action keywordAction; 
         if (_keywords.TryGetValue(args.text, out keywordAction))
         {
             keywordAction.Invoke(); 
         }
+    }
+
+    private void dotWhite()
+    {
+        recognizedWord.text = "";
+        dot.color = Color.white; 
     }
 }

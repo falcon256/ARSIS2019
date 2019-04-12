@@ -15,7 +15,7 @@ public class TaskManager : MonoBehaviour {
 
     // List of all steps organized by procedure 
     public List<Procedure> allProcedures = new List<Procedure>(); 
-
+    
     // Lists of individual steps 
     public Procedure disableAlarm = new Procedure("Disable Alarm", false, 24);
     public Procedure reroutPower = new Procedure("Reroute Power", false, 30);
