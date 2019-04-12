@@ -60,11 +60,12 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Retrieve", Retrieve);
 
         // Navigation
-        _keywords.Add("Adele Menu", Menu);
-        _keywords.Add("Adele Move", Menu); 
+        //_keywords.Add("Adele Menu", Menu);
+        //_keywords.Add("Adele Move", Menu); 
         _keywords.Add("Adele Reset", ResetScene);
         _keywords.Add("Adele Clear", ResetScene);
-        _keywords.Add("Adele Previous", Previous); 
+        _keywords.Add("Adele Previous", Previous);
+        _keywords.Add("Adele Close", Close); 
 
         // Special Functions
         _keywords.Add("Increase", Increase);
@@ -75,6 +76,7 @@ public class VoiceManager : MonoBehaviour {
         // Task List 
         _keywords.Add("Adele Task", generateTaskMenu);
         _keywords.Add("Next", Next);
+        _keywords.Add("Continue", Next);
         _keywords.Add("Back", Back);
         _keywords.Add("Zoom Out", zoomOut);
         _keywords.Add("Zoom In", zoomIn);
@@ -306,6 +308,14 @@ public class VoiceManager : MonoBehaviour {
     public void Previous()
     {
         mc.GoBack(); 
+    }
+
+    public void Close()
+    {
+        m_Source.clip = m_CloseMenu;
+        m_Source.Play();
+
+        mc.closeMenu();
     }
 
 #endregion

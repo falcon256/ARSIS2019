@@ -1523,8 +1523,8 @@
     <Compile Include="Assets\Scripts\LineGraph.cs" />
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\MeshDataGatherer.cs" />
-    <Compile Include="Assets\Scripts\MicInput.cs" />
     <Compile Include="Assets\Scripts\MicrophoneFeed.cs" />
+    <Compile Include="Assets\Scripts\MicVolume.cs" />
     <Compile Include="Assets\Scripts\MusicManager.cs" />
     <Compile Include="Assets\Scripts\NetworkMeshSource.cs" />
     <Compile Include="Assets\Scripts\NetworkSimulator.cs" />

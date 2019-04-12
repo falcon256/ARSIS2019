@@ -11,7 +11,10 @@ public class MicInput : MonoBehaviour
     int sampleWindow = 128;
     bool isInitialized;
 
-    float highestVolume = 0; 
+    float highestVolume = 0;
+
+    float volumeBuffer = 0.1f;
+    float bufferDecrease = 0.1f; 
 
     public Image image;
 
@@ -49,13 +52,28 @@ public class MicInput : MonoBehaviour
     void Update()
     {
         MicLoudness = LevelMax();
- 
-        if (MicLoudness > highestVolume)
+
+        if (MicLoudness > volumeBuffer)
         {
-            highestVolume = MicLoudness; 
+            volumeBuffer = MicLoudness;
+            bufferDecrease = 0.005f; 
+        }
+        if (MicLoudness < volumeBuffer)
+        {
+            volumeBuffer -= bufferDecrease;
+            bufferDecrease *= 1.2f; 
+        }
+ 
+        if (volumeBuffer > highestVolume)
+        {
+            highestVolume = volumeBuffer; 
         }
 
-        float scale = map(MicLoudness, 0, highestVolume, 0.1f, 0.5f);
+        //Debug.Log(volumeBuffer);
+
+        float scale = map(volumeBuffer, 0, highestVolume, 0.1f, 0.5f);
+
+        Debug.Log(volumeBuffer + " " + scale); 
         
         image.transform.localScale = new Vector3(scale, scale, scale); 
     }

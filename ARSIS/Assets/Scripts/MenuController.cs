@@ -49,7 +49,9 @@ public class MenuController : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource m_Source;
-    public AudioClip m_changeMenuSound; 
+    public AudioClip m_changeMenuSound;
+
+    public GameObject currentMenuHit = null; 
 
     public void Start()
     {
@@ -118,15 +120,23 @@ public class MenuController : MonoBehaviour
         m_stepCurText.gameObject.SetActive(true); 
     }
 
+    public void closeMenu()
+    {
+       if (currentMenuHit != null)
+       {
+            currentMenuHit.transform.gameObject.SetActive(false);
+       }
+    } 
+
     /* aads a menu to the field of view. 
     * When user tries to place a menu over an existing menu,
     * the option is given to replace the old menu with the new 
     */
     public void addMenu(GameObject holoMenu)
     {
-
-        if (holoMenu.activeSelf == false)
-        {
+        // Commenting this out to disable toggling - OT 4/11
+      //  if (holoMenu.activeSelf == false)
+     //   {
             // Check if current gaze interesects with an active menu
             RaycastHit hit;
 
@@ -136,11 +146,14 @@ public class MenuController : MonoBehaviour
                 // if overlap move overlapping menu to the side
                 GameObject triggeredObj = hit.transform.gameObject;
                 // alert user: Do you want to replace the old menu with the new one
-                toggleDisplay(m_overlapMessage);
+                //toggleDisplay(m_overlapMessage);
                 m_CurrentMenu = triggeredObj; // This is needed for the change menu functionality
 
                 // Get users answer
-                VoiceManager.S.Answer(holoMenu);
+                //VoiceManager.S.Answer(holoMenu);
+
+                //OT 4/11 - just replacing the menu
+                ChangeMenu(holoMenu);
 
                 //----------------------------------------------------------------UNUSED CODE---------------------------------------------------------------------------------
                 // May want to implement one of these ideas if time
@@ -185,14 +198,15 @@ public class MenuController : MonoBehaviour
                 holoMenu.SetActive(true);
                 activeMenus.Add(holoMenu);
             }
-        }
+      //  }
 
         // stop dislpaying the menu
-        else
-        {
-            holoMenu.SetActive(false);
-            activeMenus.Remove(holoMenu);
-        }
+      //  else
+      //  {
+           
+            //holoMenu.SetActive(false);
+            //activeMenus.Remove(holoMenu);
+       // }
 
         // Play menu sound
         m_Source.clip = m_changeMenuSound;
@@ -272,7 +286,22 @@ public class MenuController : MonoBehaviour
 
     private void Update()
     {
-    
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, Color.green);
+        RaycastHit hit;
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, out hit, Mathf.Infinity) && hit.transform.tag == "Menu")
+        {
+            //Debug.Log("Hitting a thing");
+            if (currentMenuHit == null)
+            {
+                //Debug.Log("Forward!");
+                hit.transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z - 0.05f);
+                currentMenuHit = hit.transform.gameObject;
+            }
+        } else if (currentMenuHit != null)
+        {
+            //Debug.Log("Back you!");
+            currentMenuHit.transform.position = new Vector3(currentMenuHit.transform.position.x, currentMenuHit.transform.position.y, currentMenuHit.transform.position.z + 0.05f);
+            currentMenuHit = null;
+        }
     }
 }
