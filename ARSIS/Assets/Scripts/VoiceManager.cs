@@ -4,20 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows.Speech;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using System;
 
 /// <summary>
 /// Manages all ADELE voice commands. 
 /// </summary>
-public class VoiceManager : MonoBehaviour {
-    public static VoiceManager S; 
+public class VoiceManager : MonoBehaviour
+{
+    public static VoiceManager S;
 
-    private KeywordRecognizer _keywordRecognizer = null; 
+    private KeywordRecognizer _keywordRecognizer = null;
     private readonly Dictionary<string, System.Action> _keywords = new Dictionary<string, System.Action>();
     private bool _visible = false;
-    
+    // List of all the diagrams
+    public List<Image> allDiagrams = new List<Image>();
+
     private MenuController mc;
     private GameObject menuToUse;
+
 
     // Needed to check which settings menu is open for slider function 
     public GameObject m_brightnessMenu;
@@ -25,11 +30,11 @@ public class VoiceManager : MonoBehaviour {
 
     [Header("Audio")]
     public AudioSource m_Source;
-    public AudioSource m_musicSource; 
+    public AudioSource m_musicSource;
 
     public AudioClip m_OpenMenu;
     public AudioClip m_CloseMenu;
-    public AudioClip m_ChangeMenu; 
+    public AudioClip m_ChangeMenu;
     public AudioClip m_NextButton;
     public AudioClip m_BackButton;
     public AudioClip m_ZoomIn;
@@ -38,15 +43,16 @@ public class VoiceManager : MonoBehaviour {
     private DictationRecognizer dictationRecognizer;
 
     public Image dot;
-    public Text recognizedWord; 
+    public Text recognizedWord;
 
     float dictationTimer = 5.0f;
-    bool dictationIsOn = false; 
+    bool dictationIsOn = false;
 
-    void Start () {
-        S = this; 
+    void Start()
+    {
+        S = this;
 
-#region keywords
+        #region keywords
         // Menus 
         _keywords.Add("Adele Main", MainMenu);
         _keywords.Add("Adele Settings", Settings);
@@ -55,17 +61,18 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Biometrics", Biometrics);
         _keywords.Add("Adele Houston", Houston);
         _keywords.Add("Adele Help", Help);
-        _keywords.Add("Help", Help); 
+        _keywords.Add("Help", Help);
         _keywords.Add("Adele Procedures", ProcedureList);
         _keywords.Add("Adele Tasklist", TaskList);
-        //_keywords.Add("Adele Retrieve", Retrieve);
+        _keywords.Add("Adele Retrieve", Retrieve);
+        _keywords.Add("Adele Diagrams", DiagramList);
 
         // Navigation
-       // _keywords.Add("Adele Menu", Menu);
-       // _keywords.Add("Adele Move", Menu); 
+        // _keywords.Add("Adele Menu", Menu);
+        // _keywords.Add("Adele Move", Menu); 
         _keywords.Add("Adele Reset", ResetScene);
         _keywords.Add("Adele Clear", ResetScene);
-       // _keywords.Add("Adele Previous", Previous);
+        // _keywords.Add("Adele Previous", Previous);
         _keywords.Add("Adele Close", Close);
 
         // Special Functions
@@ -83,9 +90,9 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Zoom In", zoomIn);
 
         // Tasks 
-       // _keywords.Add("Disable Alarm", disableAlarm);
-       // _keywords.Add("Reroute Power", reroutePower);
-       // _keywords.Add("Light Switch", lightSwitch); 
+        // _keywords.Add("Disable Alarm", disableAlarm);
+        // _keywords.Add("Reroute Power", reroutePower);
+        // _keywords.Add("Light Switch", lightSwitch); 
 
         //Music
         _keywords.Add("Adele Hello", PlayAdele);
@@ -113,10 +120,17 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele uh", Help);
         _keywords.Add("Adele um", Help);
         _keywords.Add("uh", Help);
-        _keywords.Add("um", Help); 
-        _keywords.Add("Adele shut up", PlaySkyfall); 
+        _keywords.Add("um", Help);
+        _keywords.Add("Adele shut up", PlaySkyfall);
 
-#endregion
+        //Diagrams
+        _keywords.Add("Adele Diagram 1", Diagram1);
+        _keywords.Add("Adele Diagram 2", Diagram2);
+        _keywords.Add("Adele Diagram 3", Diagram3);
+        _keywords.Add("Adele Diagram 4", Diagram4);
+        _keywords.Add("Adele Diagram 5", Diagram5);
+
+        #endregion
 
         // Sets up keyword recognition 
         _keywordRecognizer = new KeywordRecognizer(_keywords.Keys.ToArray());
@@ -125,7 +139,12 @@ public class VoiceManager : MonoBehaviour {
 
         // Initializes menu controller 
         mc = FindObjectOfType(typeof(MenuController)) as MenuController;
+
+        //Add the diagrams to allDiagrams list
+
     }
+
+
 
     public void resetKeywordRecognizer()
     {
@@ -150,11 +169,11 @@ public class VoiceManager : MonoBehaviour {
 
 
     // Keyword Functions 
-#region Menu Functions
+    #region Menu Functions
 
     public void MainMenu()
     {
-        mc.addMenu(mc.m_mainMenu); 
+        mc.addMenu(mc.m_mainMenu);
     }
 
     public void musicMenu()
@@ -164,28 +183,28 @@ public class VoiceManager : MonoBehaviour {
 
     public void Settings()
     {
-        mc.addMenu(mc.m_settingsMenu); 
+        mc.addMenu(mc.m_settingsMenu);
     }
 
     public void Houston()
     {
         mc.addMenu(mc.m_sosMenu);
-        ServerConnect.S.sos(); 
+        ServerConnect.S.sos();
     }
 
     public void Help()
     {
-        mc.addMenu(mc.m_helpMenu); 
+        mc.addMenu(mc.m_helpMenu);
     }
 
     public void Biometrics()
     {
-        mc.addMenu(mc.m_biometricsMenu); 
+        mc.addMenu(mc.m_biometricsMenu);
     }
 
     public void Brightness()
     {
-        mc.addMenu(mc.m_brightnessMenu);   
+        mc.addMenu(mc.m_brightnessMenu);
     }
 
     public void Volume()
@@ -198,10 +217,66 @@ public class VoiceManager : MonoBehaviour {
         mc.addMenu(mc.m_procedureList);
     }
 
+    public void DiagramList()
+    {
+        mc.addMenu(mc.m_diagramList);
+    }
+
     public void TaskList()
     {
         mc.addMenu(mc.m_taskList);
         displayStep();
+    }
+
+    /*Functions to add Diagrams to the scene*/
+    private void Diagram1()
+    {
+        //Debug.Log("Diagram 1");
+        Texture2D diagram = mc.d_BGA_Hardware_Overview;
+
+        mc.diagramImage.texture = diagram;
+
+        mc.addMenu(mc.m_Diagram);
+    }
+
+    private void Diagram2()
+    {
+        //Debug.Log("Diagram 1");
+        Texture2D diagram = mc.d_BMRRM_Connectors;
+
+        mc.diagramImage.texture = diagram;
+
+        mc.addMenu(mc.m_Diagram);
+    }
+
+    private void Diagram3()
+    {
+        //Debug.Log("Diagram 1");
+        Texture2D diagram = mc.d_BMRRM_Fasterners;
+
+        mc.diagramImage.texture = diagram;
+
+        mc.addMenu(mc.m_Diagram);
+    }
+
+    private void Diagram4()
+    {
+        //Debug.Log("Diagram 1");
+        Texture2D diagram = mc.d_DCU;
+
+        mc.diagramImage.texture = diagram;
+
+        mc.addMenu(mc.m_Diagram);
+    }
+
+    private void Diagram5()
+    {
+        //Debug.Log("Diagram 1");
+        Texture2D diagram = mc.d_UIA;
+
+        mc.diagramImage.texture = diagram;
+
+        mc.addMenu(mc.m_Diagram);
     }
 
 
@@ -236,7 +311,7 @@ public class VoiceManager : MonoBehaviour {
         dictationRecognizer.DictationResult += Dictation_yesNo;
 
         dictationIsOn = true;
-        dictationTimer = 5.0f; 
+        dictationTimer = 5.0f;
     }
 
 
@@ -256,7 +331,7 @@ public class VoiceManager : MonoBehaviour {
         else if (text.ToLower().Equals("settings")) holoMenu = mc.m_settingsMenu;
         else if (text.ToLower().Equals("brightness")) holoMenu = mc.m_brightnessMenu;
         else if (text.ToLower().Equals("volume")) holoMenu = mc.m_volumeMenu;
-        else if (text.ToLower().Equals("procedure")) holoMenu = mc.m_blankTaskMenu; 
+        else if (text.ToLower().Equals("procedure")) holoMenu = mc.m_blankTaskMenu;
         else
         {
             Debug.Log("Cmd not recognized.");
@@ -265,7 +340,8 @@ public class VoiceManager : MonoBehaviour {
 
 
         // call function in MenuController to retrieve the specific menu
-        if (holoMenu != null) {
+        if (holoMenu != null)
+        {
             mc.Retrieve(holoMenu);
         }
 
@@ -287,10 +363,10 @@ public class VoiceManager : MonoBehaviour {
             //mc.toggleDisplay(menuToUse);
 
         }
-        else 
+        else
         {
             Debug.Log("String heard: " + text);
-            
+
         }
 
         mc.toggleDisplay(mc.m_overlapMessage);
@@ -300,11 +376,11 @@ public class VoiceManager : MonoBehaviour {
 
     #endregion
 
-#region Navigation Functions 
+    #region Navigation Functions 
 
     public void Menu()
     {
-        mc.m_blankTaskMenu.gameObject.SetActive(false); 
+        mc.m_blankTaskMenu.gameObject.SetActive(false);
         mc.ChangeMenu(mc.m_blankTaskMenu);
 
         m_Source.clip = m_OpenMenu;
@@ -321,7 +397,7 @@ public class VoiceManager : MonoBehaviour {
 
     public void Previous()
     {
-        mc.GoBack(); 
+        mc.GoBack();
     }
 
     public void Close()
@@ -375,7 +451,7 @@ public class VoiceManager : MonoBehaviour {
             if (m_Source.volume < 1)
             {
                 m_Source.volume += 0.2f;
-                m_musicSource.volume += 0.2f; 
+                m_musicSource.volume += 0.2f;
                 SliderMove sm = mc.m_CurrentMenu.GetComponent<SliderMove>();
                 sm.Increase();
 
@@ -417,9 +493,9 @@ public class VoiceManager : MonoBehaviour {
         }
     }
 
-#endregion
+    #endregion
 
-#region Task List Functions 
+    #region Task List Functions 
 
     public void generateTaskMenu()
     {
@@ -463,7 +539,7 @@ public class VoiceManager : MonoBehaviour {
         if (mc.currentSubTask < 0)
         {
             mc.currentTask--;
-            
+
             if (mc.currentTask < 0)//if there are no more subtasks, task is complete
             {
                 //when procedure is complete
@@ -548,7 +624,7 @@ public class VoiceManager : MonoBehaviour {
             destroyDictationRecognizer();
             dictationIsOn = false;
             dictationTimer = 5.0f;
-            Debug.Log("Dictation stopped"); 
+            Debug.Log("Dictation stopped");
         }
 
         //For Debugging without voice
@@ -561,12 +637,12 @@ public class VoiceManager : MonoBehaviour {
         {
             Next();
         }
-    
+
     }
 
     void destroyDictationRecognizer()
     {
-        if(mc.m_overlapMessage.gameObject.activeSelf)
+        if (mc.m_overlapMessage.gameObject.activeSelf)
         {
             mc.toggleDisplay(mc.m_overlapMessage);
         }
@@ -600,9 +676,9 @@ public class VoiceManager : MonoBehaviour {
     //    generateTaskMenu(); 
     //}
 
-#endregion
+    #endregion
 
-#region Music Functions 
+    #region Music Functions 
 
     public void PlayAdele()
     {
@@ -631,12 +707,12 @@ public class VoiceManager : MonoBehaviour {
 
     public void PlayEclipse()
     {
-        MusicManager.m_Instance.PlaySong(MusicManager.m_Instance.m_Eclipse); 
+        MusicManager.m_Instance.PlaySong(MusicManager.m_Instance.m_Eclipse);
     }
 
     public void PlayRocketMan()
     {
-        MusicManager.m_Instance.PlaySong(MusicManager.m_Instance.m_RocketMan); 
+        MusicManager.m_Instance.PlaySong(MusicManager.m_Instance.m_RocketMan);
     }
 
     public void StopMusic()
@@ -644,23 +720,23 @@ public class VoiceManager : MonoBehaviour {
         MusicManager.m_Instance.StopMusic();
         m_Source.Stop();
     }
-#endregion
+    #endregion
 
-#region Translation 
+    #region Translation 
 
     void StartTranslation()
     {
-        TranslationController.S.startPathCapture(); 
+        TranslationController.S.startPathCapture();
     }
 
     void StopTranslation()
     {
-        TranslationController.S.stopPathCapture(); 
+        TranslationController.S.stopPathCapture();
     }
 
     void ShowPath()
     {
-        TranslationController.S.showPath(); 
+        TranslationController.S.showPath();
     }
 
     void HidePath()
@@ -668,13 +744,13 @@ public class VoiceManager : MonoBehaviour {
         TranslationController.S.hidePath();
     }
 
-#endregion
+    #endregion
 
-#region Mesh
+    #region Mesh
 
     public void enableMesh()
     {
-        MeshDataGatherer.S.enableMeshDisplay(); 
+        MeshDataGatherer.S.enableMeshDisplay();
     }
 
 
@@ -693,12 +769,12 @@ public class VoiceManager : MonoBehaviour {
 
     }
 
-#endregion
+    #endregion
     // Keyword Recognition 
     private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)
     {
         dot.color = Color.red;
-        string input = args.text; 
+        string input = args.text;
         if (input.ToLower().Contains("adele"))
         {
             string[] array = input.Split(' ');
@@ -711,17 +787,17 @@ public class VoiceManager : MonoBehaviour {
         }
         recognizedWord.text = input;
         Invoke("dotWhite", 1f);
-       
-        System.Action keywordAction; 
+
+        System.Action keywordAction;
         if (_keywords.TryGetValue(args.text, out keywordAction))
         {
-            keywordAction.Invoke(); 
+            keywordAction.Invoke();
         }
     }
 
     private void dotWhite()
     {
         recognizedWord.text = "";
-        dot.color = Color.white; 
+        dot.color = Color.white;
     }
 }

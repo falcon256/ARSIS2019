@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 /// <summary>
 /// Controls all displaying of menus. 
@@ -18,14 +18,14 @@ public class MenuController : MonoBehaviour
     public int currentProcedure;
     public int currentTask;
     public int currentSubTask;
-    public int currentMaxSteps; 
-    
+    public int currentMaxSteps;
+
     // Menus 
     [Header("Set Menus Here")]
     public GameObject m_mainMenu;
     public GameObject m_settingsMenu;
     public GameObject m_brightnessMenu;
-    public GameObject m_volumeMenu; 
+    public GameObject m_volumeMenu;
     public GameObject m_sosMenu;
     public GameObject m_helpMenu;
     public GameObject m_biometricsMenu;
@@ -34,6 +34,18 @@ public class MenuController : MonoBehaviour
     public GameObject m_musicMenu;
     public GameObject m_overlapMessage;
     public GameObject m_blankTaskMenu;
+    public GameObject m_diagramList;
+    public GameObject m_Diagram;
+
+    //Diagrams
+    public Texture2D d_BGA_Hardware_Overview;
+    public Texture2D d_BMRRM_Connectors;
+    public Texture2D d_BMRRM_Fasterners;
+    public Texture2D d_DCU;
+    public Texture2D d_UIA;
+    public RawImage diagramImage;
+
+
 
     // Elements of task menu (procedurally populated) 
     public Text m_TaskText;
@@ -42,7 +54,7 @@ public class MenuController : MonoBehaviour
     public Text m_stepPrevText;
     public Text m_stepCurText;
     public Text m_stepNextText;
-    public Text m_warningText; 
+    public Text m_warningText;
 
     public bool taskZoomedIn = false;
 
@@ -59,7 +71,7 @@ public class MenuController : MonoBehaviour
     public void Start()
     {
         //SpatialMapping.Instance.MappingEnabled = false; 
-        
+
         activeMenus = new ArrayList();
         currentSubTask = 0;
         currentTask = 0;
@@ -69,7 +81,7 @@ public class MenuController : MonoBehaviour
     //hide old menu, and switch to new menu
     public void ChangeMenu(GameObject newMenu)
     {
-        GameObject oldMenu = m_CurrentMenu; 
+        GameObject oldMenu = m_CurrentMenu;
         m_CurrentMenu = newMenu;
         if (oldMenu != null)
         {
@@ -80,7 +92,7 @@ public class MenuController : MonoBehaviour
             newMenu.transform.position = oldMenu.transform.position;
             newMenu.transform.rotation = oldMenu.transform.rotation;
         }
-        
+
         // Make the new menu visible 
         ToggleVisibility(newMenu);
 
@@ -117,11 +129,11 @@ public class MenuController : MonoBehaviour
     {
         m_stepImage.gameObject.SetActive(false);
         m_SubTaskText.gameObject.SetActive(false);
-        m_warningText.gameObject.SetActive(false); 
+        m_warningText.gameObject.SetActive(false);
 
         m_stepPrevText.gameObject.SetActive(true);
         m_stepNextText.gameObject.SetActive(true);
-        m_stepCurText.gameObject.SetActive(true); 
+        m_stepCurText.gameObject.SetActive(true);
     }
 
     public void closeMenu()
@@ -306,3 +318,4 @@ public class MenuController : MonoBehaviour
         }
     }
 }
+
