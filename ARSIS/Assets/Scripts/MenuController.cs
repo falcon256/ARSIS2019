@@ -294,14 +294,14 @@ public class MenuController : MonoBehaviour
             if (currentMenuHit == null)
             {
                 //Debug.Log("Forward!");
-                hit.transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z - 0.05f);
+                //hit.transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z - 0.05f);
                 currentMenuHit = hit.transform.gameObject;
             }
         }
         else if (currentMenuHit != null)
         {
             //Debug.Log("Back you!");
-            currentMenuHit.transform.position = new Vector3(currentMenuHit.transform.position.x, currentMenuHit.transform.position.y, currentMenuHit.transform.position.z + 0.05f);
+            //currentMenuHit.transform.position = new Vector3(currentMenuHit.transform.position.x, currentMenuHit.transform.position.y, currentMenuHit.transform.position.z + 0.05f);
             currentMenuHit = null;
         }
     }

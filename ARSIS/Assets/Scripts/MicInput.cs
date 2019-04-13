@@ -71,7 +71,7 @@ public class MicInput : MonoBehaviour
 
         //Debug.Log(volumeBuffer);
 
-        float scale = map(volumeBuffer, 0, highestVolume, 0.1f, 0.5f);
+        float scale = map(volumeBuffer, 0, highestVolume, 0.3f, 0.5f);
 
         image.transform.localScale = new Vector3(scale, scale, scale);
     }

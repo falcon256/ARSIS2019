@@ -58,7 +58,7 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Help", Help); 
         _keywords.Add("Adele Procedures", ProcedureList);
         _keywords.Add("Adele Tasklist", TaskList);
-        _keywords.Add("Adele Retrieve", Retrieve);
+        //_keywords.Add("Adele Retrieve", Retrieve);
 
         // Navigation
        // _keywords.Add("Adele Menu", Menu);
@@ -354,7 +354,7 @@ public class VoiceManager : MonoBehaviour {
 
     public void Increase()
     {
-        if (mc.m_CurrentMenu.Equals(m_brightnessMenu))
+        if (mc.currentMenuHit.Equals(m_brightnessMenu))
         {
             Debug.Log("Increasing Brightness");
             GameObject GOlt = GameObject.Find("Point light");
@@ -369,7 +369,7 @@ public class VoiceManager : MonoBehaviour {
                 m_Source.Play();
             }
         }
-        if (mc.m_CurrentMenu.Equals(m_volumeMenu))
+        if (mc.currentMenuHit.Equals(m_volumeMenu))
         {
             Debug.Log("Increasing Volume");
             if (m_Source.volume < 1)
