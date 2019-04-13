@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 public class MicInput : MonoBehaviour
 {
     public static float MicLoudness;
-    public AudioClip clipRecord;  
+    public AudioClip clipRecord;
     int sampleWindow = 128;
     bool isInitialized;
 
-    float highestVolume = 0;
+    float highestVolume = 0.1f;
 
     float volumeBuffer = 0.1f;
-    float bufferDecrease = 0.1f; 
+    float bufferDecrease = 0.1f;
 
     public Image image;
 
@@ -56,26 +56,24 @@ public class MicInput : MonoBehaviour
         if (MicLoudness > volumeBuffer)
         {
             volumeBuffer = MicLoudness;
-            bufferDecrease = 0.005f; 
+            bufferDecrease = 0.005f;
         }
         if (MicLoudness < volumeBuffer)
         {
             volumeBuffer -= bufferDecrease;
-            bufferDecrease *= 1.2f; 
+            bufferDecrease *= 1.2f;
         }
- 
+
         if (volumeBuffer > highestVolume)
         {
-            highestVolume = volumeBuffer; 
+            highestVolume = volumeBuffer;
         }
 
         //Debug.Log(volumeBuffer);
 
         float scale = map(volumeBuffer, 0, highestVolume, 0.1f, 0.5f);
 
-        Debug.Log(volumeBuffer + " " + scale); 
-        
-        image.transform.localScale = new Vector3(scale, scale, scale); 
+        image.transform.localScale = new Vector3(scale, scale, scale);
     }
 
     private static float map(float value, float low1, float high1, float low2, float high2)
@@ -120,4 +118,3 @@ public class MicInput : MonoBehaviour
         }
     }
 }
-

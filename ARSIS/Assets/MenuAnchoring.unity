@@ -532,7 +532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 42209651}
   - component: {fileID: 42209650}
-  - component: {fileID: 42209652}
+  - component: {fileID: 42209654}
   m_Layer: 0
   m_Name: VoiceManager
   m_TagString: Untagged
@@ -580,7 +580,7 @@ Transform:
   m_Father: {fileID: 1848663718}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &42209652
+--- !u!114 &42209654
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -589,7 +589,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 42209649}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 061c344b44c0cb442bb75fcac92f49da, type: 3}
+  m_Script: {fileID: 11500000, guid: dff242fb24915574aab8380ee3fd4e7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   clipRecord: {fileID: 0}
@@ -885,85 +885,6 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef159f00fc1fa364e8682848bc1414ef, type: 3}
---- !u!1 &67876703
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 67876704}
-  - component: {fileID: 67876705}
-  - component: {fileID: 67876706}
-  m_Layer: 5
-  m_Name: DebugText
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &67876704
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 67876703}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 252957981}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 48.8, y: 23.8}
-  m_SizeDelta: {x: 385.7, y: 410.3}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &67876705
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 67876703}
-  m_CullTransparentMesh: 0
---- !u!114 &67876706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 67876703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: New Text
 --- !u!1001 &84438712
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1176,85 +1097,6 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef159f00fc1fa364e8682848bc1414ef, type: 3}
---- !u!1 &84839086
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 84839089}
-  - component: {fileID: 84839088}
-  - component: {fileID: 84839087}
-  m_Layer: 5
-  m_Name: Placeholder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &84839087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 84839086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 2
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: Enter text...
---- !u!222 &84839088
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 84839086}
-  m_CullTransparentMesh: 0
---- !u!224 &84839089
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 84839086}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 395020440}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.5}
-  m_SizeDelta: {x: -20, y: -13}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &90626648
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,7 +1238,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 4
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -2373,10 +2215,6 @@ RectTransform:
   - {fileID: 270566090}
   - {fileID: 682923082}
   - {fileID: 131085262}
-  - {fileID: 67876704}
-  - {fileID: 395020440}
-  - {fileID: 598245039}
-  - {fileID: 629847106}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3007,7 +2845,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ad9f012ab2c6bbc4dac7b8e5a305c73e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 34cfc5c10d854784fa4b6dd6f4b55ee6, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
@@ -3184,147 +3022,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &395020438
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 395020440}
-  - component: {fileID: 395020442}
-  - component: {fileID: 395020441}
-  - component: {fileID: 395020439}
-  m_Layer: 5
-  m_Name: InputField
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &395020439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395020438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 575553740, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 395020441}
-  m_TextComponent: {fileID: 758594432}
-  m_Placeholder: {fileID: 84839087}
-  m_ContentType: 0
-  m_InputType: 0
-  m_AsteriskChar: 42
-  m_KeyboardType: 0
-  m_LineType: 0
-  m_HideMobileInput: 0
-  m_CharacterValidation: 0
-  m_CharacterLimit: 0
-  m_OnEndEdit:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.InputField+OnChangeEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_CustomCaretColor: 0
-  m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
-  m_CaretBlinkRate: 0.85
-  m_CaretWidth: 1
-  m_ReadOnly: 0
---- !u!224 &395020440
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395020438}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 84839089}
-  - {fileID: 758594430}
-  m_Father: {fileID: 252957981}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -428, y: -201}
-  m_SizeDelta: {x: 160, y: 30}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &395020441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395020438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
---- !u!222 &395020442
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395020438}
-  m_CullTransparentMesh: 0
 --- !u!1 &395227994
 GameObject:
   m_ObjectHideFlags: 0
@@ -4193,6 +3890,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 529511696}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &531717526 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2049667433849304858, guid: dca7338774d647f42a3d753f11ec0e75,
+    type: 3}
+  m_PrefabInstance: {fileID: 1831416165}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &582025015
 GameObject:
   m_ObjectHideFlags: 0
@@ -4266,78 +3975,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 582025015}
-  m_CullTransparentMesh: 0
---- !u!1 &598245038
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 598245039}
-  - component: {fileID: 598245041}
-  - component: {fileID: 598245040}
-  m_Layer: 5
-  m_Name: Crosshair1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &598245039
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598245038}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.31505, y: 0.31505, z: 0.31505}
-  m_Children: []
-  m_Father: {fileID: 252957981}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.75, y: 1.33}
-  m_SizeDelta: {x: 44.31, y: 3.68}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &598245040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598245038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 2800000, guid: 68cb6bb16afa8bb40aba1e7891783d78, type: 3}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
---- !u!222 &598245041
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 598245038}
   m_CullTransparentMesh: 0
 --- !u!1 &602830400
 GameObject:
@@ -4415,78 +4052,6 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602830400}
-  m_CullTransparentMesh: 0
---- !u!1 &629847105
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 629847106}
-  - component: {fileID: 629847108}
-  - component: {fileID: 629847107}
-  m_Layer: 5
-  m_Name: Crosshair1 (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &629847106
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629847105}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.31505, y: 0.31505, z: 0.31505}
-  m_Children: []
-  m_Father: {fileID: 252957981}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.75, y: 1.33}
-  m_SizeDelta: {x: 44.31, y: 3.68}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &629847107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629847105}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 2800000, guid: 68cb6bb16afa8bb40aba1e7891783d78, type: 3}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
---- !u!222 &629847108
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629847105}
   m_CullTransparentMesh: 0
 --- !u!1 &642989434
 GameObject:
@@ -5830,7 +5395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_JSONString: 
-  url: https://agile-badlands-39994.herokuapp.com/api/suit/recent
+  url: 'https://agile-badlands-39994.herokuapp.com/api/suit/recent '
   switchUrl: https://agile-badlands-39994.herokuapp.com/api/suitswitch/recent
   bioText: {fileID: 1400558416}
   bubbles:
@@ -6015,85 +5580,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 742154645}
   m_CullTransparentMesh: 0
---- !u!1 &758594429
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 758594430}
-  - component: {fileID: 758594431}
-  - component: {fileID: 758594432}
-  m_Layer: 5
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &758594430
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 758594429}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 395020440}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.5}
-  m_SizeDelta: {x: -20, y: -13}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &758594431
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 758594429}
-  m_CullTransparentMesh: 0
---- !u!114 &758594432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 758594429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 0
-    m_HorizontalOverflow: 1
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
 --- !u!1 &761953056
 GameObject:
   m_ObjectHideFlags: 0
@@ -7741,367 +7227,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61fe3f43df0b28a41baeb89a16ed14fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allProcedures: []
-  disableAlarm:
-    procedure_title: Disable Alarm
+  allProcedures:
+  - procedure_title: 1.1 Prepare UIA
     emergency: 0
-    num_steps: 24
-    steps:
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-  reroutPower:
-    procedure_title: Reroute Power
+    num_steps: 0
+    Tasks:
+    - Title: '1.1.1 Ensure that:'
+      SubTasks:
+      - text: POWER EV-1 and 2 are set to OFF
+        type: 
+        warning: 
+        image: 
+      - text: POWER EV-1 and 2 EMU LEDs are OFF
+        type: 
+        warning: 
+        image: 
+      - text: WATER SUPPLY EV-1 and 2 is set to CLOSE
+        type: 
+        warning: 
+        image: 
+      - text: OXYGEN EV-1 and 2 are set to CLOSE
+        type: 
+        warning: 
+        image: 
+    - Title: Depressurize the UIA O2 supply lines
+      SubTasks:
+      - text: Switch O2 Vent to OPEN
+        type: 
+        warning: 
+        image: 
+      - text: When UIA Supply Press < 23 psi, proceed
+        type: 
+        warning: 
+        image: 
+    - Title: Close O2
+      SubTasks:
+      - text: O2 Vent -- CLOSE
+        type: 
+        warning: 
+        image: 
+  - procedure_title: 1.2 Fill and Dump UIA and SCU O2 Lines
     emergency: 0
-    num_steps: 30
-    steps:
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-  lightSwitch:
-    procedure_title: Light Switch
-    emergency: 0
-    num_steps: 20
-    steps:
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-  superNova:
-    procedure_title: Supernova
-    emergency: 0
-    num_steps: 11
-    steps:
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
-    - text: 
-      type: 
-      warning: 
-      image: 
+    num_steps: 0
+    Tasks:
+    - Title: Pressurize EVA 1
+      SubTasks:
+      - text: Check that O2 VENT is set to CLOSED
+        type: 
+        warning: 
+        image: 
+      - text: Switch OXYGEN EV-1 to OPEN
+        type: 
+        warning: 
+        image: 
+      - text: When UIA Supply Pressure is less than 23 and stable psi, proceed.
+        type: 
+        warning: 
+        image: 
+    - Title: Depressurize EVA-1
+      SubTasks:
+      - text: Switch OXYGEN EV-1 to CLOSE
+        type: 
+        warning: 
+        image: 
+      - text: Switch O2 Vent to OPEN
+        type: 
+        warning: 
+        image: 
+      - text: When UIA Supply Pressure < 23 psi, proceed
+        type: 
+        warning: 
+        image: 
   images:
   - {fileID: 2800000, guid: 213c2dc4c201eaa4eb2c8af5af1f41c5, type: 3}
   - {fileID: 2800000, guid: 5e5de2e33a2e5764fabdf3535e88edfb, type: 3}
@@ -8479,8 +7675,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_CurrentMenu: {fileID: 0}
-  currentStep: 0
+  currentProcedure: 0
   currentTask: 0
+  currentSubTask: 0
   currentMaxSteps: 0
   m_mainMenu: {fileID: 422149711}
   m_settingsMenu: {fileID: 512255607}
@@ -8489,11 +7686,13 @@ MonoBehaviour:
   m_sosMenu: {fileID: 0}
   m_helpMenu: {fileID: 1781954810}
   m_biometricsMenu: {fileID: 789639047}
-  m_taskList: {fileID: 1346646418}
+  m_procedureList: {fileID: 1346646418}
+  m_taskList: {fileID: 516229242}
   m_musicMenu: {fileID: 453105400}
   m_overlapMessage: {fileID: 642989434}
   m_blankTaskMenu: {fileID: 516229242}
-  m_stepText: {fileID: 1689255122}
+  m_TaskText: {fileID: 531717526}
+  m_SubTaskText: {fileID: 1689255122}
   m_stepImage: {fileID: 1232334646}
   m_stepPrevText: {fileID: 698107399}
   m_stepCurText: {fileID: 1689255122}
@@ -9538,7 +8737,6 @@ GameObject:
   - component: {fileID: 1323863874}
   - component: {fileID: 1323863876}
   - component: {fileID: 1323863875}
-  - component: {fileID: 1323863877}
   m_Layer: 0
   m_Name: MeshSendManager
   m_TagString: Untagged
@@ -9590,31 +8788,6 @@ MonoBehaviour:
   targetIP: 10.254.119.192
   targetIPReady: 0
   connected: 0
---- !u!114 &1323863877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1323863873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19eb6139df5c17741ac6d83003c9353d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serverPort: 32123
-  targetPort: 32123
-  targetIP: 192.168.137.1
-  targetIPReady: 0
-  socketStarted: 0
-  connected: 0
-  outputText: {fileID: 67876706}
-  currentOutput: 
-  LineRendererDefaultMaterial: {fileID: 2100000, guid: e6b25323af6f5954bb825bf8004eda82,
-    type: 2}
-  Derp: {fileID: 395020439}
-  debugText: 
-  trashUDP: 0
 --- !u!1 &1336772685
 GameObject:
   m_ObjectHideFlags: 0

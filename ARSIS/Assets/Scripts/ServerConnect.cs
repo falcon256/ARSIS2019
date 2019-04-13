@@ -161,13 +161,13 @@ public class ServerConnect : MonoBehaviour
                 VoiceManager.S.StopMusic();
                 break;
             case "disablealarm":
-                VoiceManager.S.disableAlarm();
+                //VoiceManager.S.disableAlarm();
                 break;
             case "reroutepower":
-                VoiceManager.S.reroutePower();
+                //VoiceManager.S.reroutePower();
                 break;
             case "lightswitch":
-                VoiceManager.S.lightSwitch();
+                //VoiceManager.S.lightSwitch();
                 break; 
             
         }

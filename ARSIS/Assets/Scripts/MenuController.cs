@@ -14,9 +14,10 @@ public class MenuController : MonoBehaviour
     private GameObject m_PreviousMenu;
     private ArrayList activeMenus;
 
-    // Variables to keep track of your place in the procedure  
-    public int currentStep;
+    // Variables to keep track of your place in the procedure
+    public int currentProcedure;
     public int currentTask;
+    public int currentSubTask;
     public int currentMaxSteps; 
     
     // Menus 
@@ -28,13 +29,15 @@ public class MenuController : MonoBehaviour
     public GameObject m_sosMenu;
     public GameObject m_helpMenu;
     public GameObject m_biometricsMenu;
+    public GameObject m_procedureList;
     public GameObject m_taskList;
     public GameObject m_musicMenu;
     public GameObject m_overlapMessage;
     public GameObject m_blankTaskMenu;
 
     // Elements of task menu (procedurally populated) 
-    public Text m_stepText;
+    public Text m_TaskText;
+    public Text m_SubTaskText;
     public RawImage m_stepImage;
     public Text m_stepPrevText;
     public Text m_stepCurText;
@@ -51,15 +54,16 @@ public class MenuController : MonoBehaviour
     public AudioSource m_Source;
     public AudioClip m_changeMenuSound;
 
-    public GameObject currentMenuHit = null; 
+    public GameObject currentMenuHit = null;
 
     public void Start()
     {
         //SpatialMapping.Instance.MappingEnabled = false; 
         
         activeMenus = new ArrayList();
-        currentStep = 1;
-        currentTask = 1; 
+        currentSubTask = 0;
+        currentTask = 0;
+        currentProcedure = 0;
     }
 
     //hide old menu, and switch to new menu
@@ -112,7 +116,7 @@ public class MenuController : MonoBehaviour
     public void zoomOut()
     {
         m_stepImage.gameObject.SetActive(false);
-        m_stepText.gameObject.SetActive(false);
+        m_SubTaskText.gameObject.SetActive(false);
         m_warningText.gameObject.SetActive(false); 
 
         m_stepPrevText.gameObject.SetActive(true);
@@ -122,91 +126,86 @@ public class MenuController : MonoBehaviour
 
     public void closeMenu()
     {
-       if (currentMenuHit != null)
-       {
+        if (currentMenuHit != null)
+        {
             currentMenuHit.transform.gameObject.SetActive(false);
-       }
-    } 
-
+        }
+    }
     /* aads a menu to the field of view. 
-    * When user tries to place a menu over an existing menu,
-    * the option is given to replace the old menu with the new 
-    */
+     * When user tries to place a menu over an existing menu,
+     * the option is given to replace the old menu with the new 
+     */
     public void addMenu(GameObject holoMenu)
     {
         // Commenting this out to disable toggling - OT 4/11
-      //  if (holoMenu.activeSelf == false)
-     //   {
-            // Check if current gaze interesects with an active menu
-            RaycastHit hit;
+        //  if (holoMenu.activeSelf == false)
+        //   {
+        // Check if current gaze interesects with an active menu
+        RaycastHit hit;
 
-            if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, out hit, Mathf.Infinity) && hit.transform.tag == "Menu")
-            {
-                Debug.Log("Trying to place menu where one already exists!");
-                // if overlap move overlapping menu to the side
-                GameObject triggeredObj = hit.transform.gameObject;
-                // alert user: Do you want to replace the old menu with the new one
-                //toggleDisplay(m_overlapMessage);
-                m_CurrentMenu = triggeredObj; // This is needed for the change menu functionality
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, out hit, Mathf.Infinity) && hit.transform.tag == "Menu")
+        {
+            Debug.Log("Trying to place menu where one already exists!");
+            // if overlap move overlapping menu to the side
+            GameObject triggeredObj = hit.transform.gameObject;
+            // alert user: Do you want to replace the old menu with the new one
+            //toggleDisplay(m_overlapMessage);
+            m_CurrentMenu = triggeredObj; // This is needed for the change menu functionality
 
-                // Get users answer
-                //VoiceManager.S.Answer(holoMenu);
+            // Get users answer
+            //VoiceManager.S.Answer(holoMenu);
 
-                //OT 4/11 - just replacing the menu
-                ChangeMenu(holoMenu);
+            //OT 4/11 - just replacing the menu
+            ChangeMenu(holoMenu);
 
-                //----------------------------------------------------------------UNUSED CODE---------------------------------------------------------------------------------
-                // May want to implement one of these ideas if time
-                //Speech to text    
-                // The object for controlling the speech synthesis engine (voice).
-                /*
+            //----------------------------------------------------------------UNUSED CODE---------------------------------------------------------------------------------
+            // May want to implement one of these ideas if time
+            //Speech to text    
+            // The object for controlling the speech synthesis engine (voice).
+            /*
 #if !UNITY_EDITOR
-                var synth = new Windows.Media.SpeechSynthesis.SpeechSynthesizer();
-
-                // Generate the audio stream from plain text.
-                SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync("Menu Overlap Detected, Do you want to replace the ");
-
-                // Send the stream to the media object.
-                m_Source.clip = stream;
-                m_Source.Play();
+            var synth = new Windows.Media.SpeechSynthesis.SpeechSynthesizer();
+            // Generate the audio stream from plain text.
+            SpeechSynthesisStream stream = await synth.SynthesizeTextToStreamAsync("Menu Overlap Detected, Do you want to replace the ");
+            // Send the stream to the media object.
+            m_Source.clip = stream;
+            m_Source.Play();
 #endif
 */
-                // this does move it
-                /* 
-                 triggeredObj.transform.Translate(new Vector3(-.35f, -.25f, 0));
+            // this does move it
+            /* 
+             triggeredObj.transform.Translate(new Vector3(-.35f, -.25f, 0));
+             Quaternion qu = Quaternion.LookRotation(triggeredObj.transform.position - Camera.main.transform.position, Camera.main.transform.up);
+             triggeredObj.transform.rotation = qu;
+             triggeredObj.transform.rotation = Quaternion.Euler(triggeredObj.transform.eulerAngles.x + 90, triggeredObj.transform.eulerAngles.y, triggeredObj.transform.eulerAngles.z);
+             */
 
-                 Quaternion qu = Quaternion.LookRotation(triggeredObj.transform.position - Camera.main.transform.position, Camera.main.transform.up);
+            //----------------------------------------------------------------END OF UNUSED CODE ----------------------------------------------------------------------------------------------------------------
+        }
 
-                 triggeredObj.transform.rotation = qu;
-                 triggeredObj.transform.rotation = Quaternion.Euler(triggeredObj.transform.eulerAngles.x + 90, triggeredObj.transform.eulerAngles.y, triggeredObj.transform.eulerAngles.z);
-                 */
+        else
+        {
+            // open new menu where the user is looking
+            holoMenu.transform.position = Camera.main.transform.position + (Camera.main.transform.forward);
 
-                //----------------------------------------------------------------END OF UNUSED CODE ----------------------------------------------------------------------------------------------------------------
-            }
+            Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
 
-            else
-            {
-                // open new menu where the user is looking
-                holoMenu.transform.position = Camera.main.transform.position + (Camera.main.transform.forward);
+            holoMenu.transform.rotation = q;
 
-                Quaternion q = Quaternion.LookRotation(holoMenu.transform.position - Camera.main.transform.position, Camera.main.transform.up);
-
-                holoMenu.transform.rotation = q;
-
-                holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
-                // OT Removed + 90
-                holoMenu.SetActive(true);
-                activeMenus.Add(holoMenu);
-            }
-      //  }
+            holoMenu.transform.rotation = Quaternion.Euler(holoMenu.transform.eulerAngles.x, holoMenu.transform.eulerAngles.y, holoMenu.transform.eulerAngles.z);
+            // OT Removed + 90
+            holoMenu.SetActive(true);
+            activeMenus.Add(holoMenu);
+        }
+        //  }
 
         // stop dislpaying the menu
-      //  else
-      //  {
-           
-            //holoMenu.SetActive(false);
-            //activeMenus.Remove(holoMenu);
-       // }
+        //  else
+        //  {
+
+        //holoMenu.SetActive(false);
+        //activeMenus.Remove(holoMenu);
+        // }
 
         // Play menu sound
         m_Source.clip = m_changeMenuSound;
@@ -241,7 +240,7 @@ public class MenuController : MonoBehaviour
     public void zoomIn()
     {
         m_stepImage.gameObject.SetActive(true);
-        m_stepText.gameObject.SetActive(true);
+        m_SubTaskText.gameObject.SetActive(true);
         m_warningText.gameObject.SetActive(true);
 
         m_stepPrevText.gameObject.SetActive(false);
@@ -286,6 +285,7 @@ public class MenuController : MonoBehaviour
 
     private void Update()
     {
+
         RaycastHit hit;
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.rotation * Vector3.forward, out hit, Mathf.Infinity) && hit.transform.tag == "Menu")
@@ -297,7 +297,8 @@ public class MenuController : MonoBehaviour
                 hit.transform.position = new Vector3(hit.transform.position.x, hit.transform.position.y, hit.transform.position.z - 0.05f);
                 currentMenuHit = hit.transform.gameObject;
             }
-        } else if (currentMenuHit != null)
+        }
+        else if (currentMenuHit != null)
         {
             //Debug.Log("Back you!");
             currentMenuHit.transform.position = new Vector3(currentMenuHit.transform.position.x, currentMenuHit.transform.position.y, currentMenuHit.transform.position.z + 0.05f);
