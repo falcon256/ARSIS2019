@@ -209,6 +209,7 @@ public class TaskManager : MonoBehaviour
 [System.Serializable]
 public class Procedure
 {
+    [Header("Procedure")]
     public string procedure_title;
     public bool emergency;
     public int num_steps;
@@ -229,6 +230,7 @@ public class Procedure
             return Tasks[index];
         } catch (IndexOutOfRangeException)
         {
+            Debug.Log("Get tasks in procedure: " + procedure_title + "is out of range");
             return null;
         }
          
@@ -244,6 +246,8 @@ public class Procedure
 [System.Serializable]
 public class Task
 {
+
+    [Header("Task")]
     public string Title;
     public SubTask[] SubTasks;
 
@@ -266,6 +270,7 @@ public class Task
         }
         catch (IndexOutOfRangeException)
         {
+            Debug.Log("Get subtask in task: " + Title + "is out of range");
             return null;
         }
 
@@ -275,6 +280,7 @@ public class Task
 [System.Serializable]
 public class SubTask
 {
+    [Header("SubTask")]
     public string text;
     public string type;
     public string warning;

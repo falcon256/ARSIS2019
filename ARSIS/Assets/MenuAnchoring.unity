@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7270,72 +7270,478 @@ MonoBehaviour:
     emergency: 0
     num_steps: 0
     Tasks:
-    - Title: '1.1.1 Ensure that:'
+    - Title: '1.1.1: Ensure that:'
       SubTasks:
       - text: POWER EV-1 and 2 are set to OFF
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
       - text: POWER EV-1 and 2 EMU LEDs are OFF
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
       - text: WATER SUPPLY EV-1 and 2 is set to CLOSE
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
       - text: OXYGEN EV-1 and 2 are set to CLOSE
         type: 
         warning: 
         image: 
-    - Title: Depressurize the UIA O2 supply lines
+        imageTex: {fileID: 0}
+    - Title: '1.1.2: Depressurize the UIA O2 supply lines'
       SubTasks:
       - text: Switch O2 Vent to OPEN
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
       - text: When UIA Supply Press < 23 psi, proceed
         type: 
         warning: 
         image: 
-    - Title: Close O2
+        imageTex: {fileID: 0}
+    - Title: '1.1.3: Close O2'
       SubTasks:
-      - text: O2 Vent -- CLOSE
+      - text: O2 Vent - CLOSE
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
   - procedure_title: '1.2: Fill and Dump UIA and SCU O2 Lines'
     emergency: 0
     num_steps: 0
     Tasks:
-    - Title: Pressurize EVA 1
+    - Title: '1.2.1: Pressurize EVA 1'
       SubTasks:
       - text: Check that O2 VENT is set to CLOSED
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
       - text: Switch OXYGEN EV-1 to OPEN
         type: 
         warning: 
         image: 
-      - text: When UIA Supply Pressure is less than 23 and stable psi, proceed.
+        imageTex: {fileID: 0}
+      - text: When UIA Supply Pressure is less than 3000 psi and stable, proceed.
         type: 
         warning: 
         image: 
-    - Title: Depressurize EVA-1
+        imageTex: {fileID: 0}
+    - Title: '1.2.2: Depressurize EVA 1'
       SubTasks:
       - text: Switch OXYGEN EV-1 to CLOSE
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
       - text: Switch O2 Vent to OPEN
         type: 
         warning: 
         image: 
-      - text: When UIA Supply Pressure < 23 psi, proceed
+        imageTex: {fileID: 0}
+      - text: When UIA Supply Pressure is < 23 psi and stable, proceed
         type: 
         warning: 
         image: 
+        imageTex: {fileID: 0}
+    - Title: '1.2.1: Pressurize EVA 1'
+      SubTasks:
+      - text: Check that O2 VENT is set to CLOSED
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch OXYGEN EV-1 to OPEN
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: When UIA Supply Pressure is > 3000 psi and stable, proceed.
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '1.2.2: Depressurize EVA 1'
+      SubTasks:
+      - text: Switch OXYGEN EV-1 to CLOSE
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch O2 Vent to OPEN
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: When UIA Supply Pressure is < 23 psi and stable, proceed.
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+  - procedure_title: '1.3: Final Pressurization'
+    emergency: 0
+    num_steps: 0
+    Tasks:
+    - Title: '1.3.1: Pressurize EVA 1'
+      SubTasks:
+      - text: Check that O2 VENT is set to CLOSED
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch OXYGEN EV-1 to OPEN
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: When UIA Supply Pressure is > 3000 psi and stable, proceed.
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '1.3.2: CLOSE OXYGEN'
+      SubTasks:
+      - text: Switch OXYGEN EV-1 to CLOSE
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+  - procedure_title: '1.4: Preparation for Donning'
+    emergency: 0
+    num_steps: 0
+    Tasks:
+    - Title: '1.4.1: EV-1 Powering up EMU'
+      SubTasks:
+      - text: Check that UIA POWER EV-1 is set to OFF
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Check that UIA POWER EV-1 EMU LED is OFF
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Check that O2 supply pressure gauge is > 3000 psi
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch DCU POWER to BATT
+        type: 
+        warning: Caution EMU must be ON battery power when UIA suit POWER is turned
+          ON
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch UIA POWER EV-1 to ON
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Check that EV-1 EMU LED is ON
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '1.4.2: Don the EMU'
+      SubTasks:
+      - text: Affix DCU to body
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '1.4.3: Prepare DCU'
+      SubTasks:
+      - text: Switch DCU POWER to SCU
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch DCU FAN to PRI
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch DCU RCA to CO2
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch Secondary O2 to OFF
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch PUMP to PRI
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Switch AUX LTC to ON
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+  - procedure_title: '1.5: Proceed to Translation Procedures'
+    emergency: 0
+    num_steps: 0
+    Tasks:
+    - Title: '1.5.1: Proceed to Translation Procedures'
+      SubTasks:
+      - text: Proceed to Translation Procedures
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+  - procedure_title: '2.1: Exit the airlock and begin translation toward the EVA worksite'
+    emergency: 0
+    num_steps: 0
+    Tasks:
+    - Title: '2.1.1: Exit airlock, and begin translation to EVA site'
+      SubTasks:
+      - text: Use QR codes numbers for handle recognition
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+  - procedure_title: '3.1: Remove Failed BMRRM'
+    emergency: 0
+    num_steps: 0
+    Tasks:
+    - Title: '3.1.1: Uninstall thermal cover'
+      SubTasks:
+      - text: Detach flap 9
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Detach flap 7
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Detach flap 2
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Detach flap 10
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Detach flap 4
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Detach flap 8
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Detach flap 6
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.1.2: Demate Connectors'
+      SubTasks:
+      - text: J1 (Primary POWER)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: J2 (Secondary POWER)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: J3 (1553 Ch. A)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: J4 (1553 Ch. B)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.1.3: Drive Dual Latch fasteners to "SAW LATCH" position (21-25 turns)'
+      SubTasks:
+      - text: H2
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H3
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H4
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.1.4: Unfasten housing fasteners (10-12 turns each)'
+      SubTasks:
+      - text: H6
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H7
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H8
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H9
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.1.5: Unfasten vise clamp bolt H5 (10-12 turns each)'
+      SubTasks:
+      - text: Unfasten vise clamp bolt H5 (10-12 turns each)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.1.6: Unfasten Center Fastener H1 (zip nut)'
+      SubTasks:
+      - text: Unfasten Center Fastener H1 (zip nut)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+  - procedure_title: '3.2: Install Replacement BMRRM'
+    emergency: 0
+    num_steps: 0
+    Tasks:
+    - Title: '3.2.1: Fasten Center Fasterner H1'
+      SubTasks:
+      - text: ' Fasten Center Fasterner H1'
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.2.2: Fasten Vise Clamp bolt H5 (18-20 turns)'
+      SubTasks:
+      - text: Fasten Vise Clamp bolt H5 (18-20 turns)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.2.3: Fasten housing fasteners (10-12 turns each)'
+      SubTasks:
+      - text: H6
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H7
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H8
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H9
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.2.4: Fasten Dual Latch fasteners to "BMRRM LATCH" position (21-25
+        turns )'
+      SubTasks:
+      - text: H2
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H3
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: H4
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.2.5: Mate Connectors'
+      SubTasks:
+      - text: J4 (1553 Ch. B)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: J3 (1553 Ch. A)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: J2 (Secondary POWER)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: J1 (PRIMARY POWER)
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+    - Title: '3.2.6: Install thermal cover'
+      SubTasks:
+      - text: Reattach flap 6
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Reattach flap 8
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Reattach flap 4
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Reattach flap 10
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Reattach flap 2
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Reattach flap 7
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
+      - text: Reattach flap 9
+        type: 
+        warning: 
+        image: 
+        imageTex: {fileID: 0}
   images:
   - {fileID: 2800000, guid: 213c2dc4c201eaa4eb2c8af5af1f41c5, type: 3}
   - {fileID: 2800000, guid: 5e5de2e33a2e5764fabdf3535e88edfb, type: 3}
