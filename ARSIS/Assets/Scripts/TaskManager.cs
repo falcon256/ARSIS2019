@@ -37,7 +37,8 @@ public class TaskManager : MonoBehaviour
         S = this;
         for (int i = 0; i < allProcedures.Count; i++)
         {
-            VoiceManager.S.addProcedureCommand(allProcedures[i].procedure_title);
+            string s = allProcedures[i].procedure_title.Split(':')[0]; 
+            VoiceManager.S.addProcedureCommand("Adele " + s, i);
         }
 
         m_OutputErrorData = FindObjectOfType<OutputErrorData>();
@@ -279,7 +280,7 @@ public class SubTask
     public string warning;
     public string image;
 
-    private Texture2D imageTex = null; 
+    public Texture2D imageTex = null; 
 
     public SubTask(string content, string type, string warning, Texture2D image)
     {
@@ -300,7 +301,7 @@ public class SubTask
     {
         if (this.imageTex == null)
         {
-            // do magical stuff to convert the string to an texture
+            // do magical stuff to convert the string to a texture
             return null; 
         } else
         {

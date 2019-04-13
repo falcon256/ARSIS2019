@@ -57,15 +57,15 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Adele Help", Help);
         _keywords.Add("Help", Help); 
         _keywords.Add("Adele Procedures", ProcedureList);
-        _keywords.Add("Adele Tasks", TaskList);
+        _keywords.Add("Adele Tasklist", TaskList);
         _keywords.Add("Adele Retrieve", Retrieve);
 
         // Navigation
-        _keywords.Add("Adele Menu", Menu);
-        _keywords.Add("Adele Move", Menu); 
+       // _keywords.Add("Adele Menu", Menu);
+       // _keywords.Add("Adele Move", Menu); 
         _keywords.Add("Adele Reset", ResetScene);
         _keywords.Add("Adele Clear", ResetScene);
-        _keywords.Add("Adele Previous", Previous);
+       // _keywords.Add("Adele Previous", Previous);
         _keywords.Add("Adele Close", Close);
 
         // Special Functions
@@ -111,6 +111,9 @@ public class VoiceManager : MonoBehaviour {
         _keywords.Add("Disable Mapping", disableMapping);
 
         _keywords.Add("Adele uh", Help);
+        _keywords.Add("Adele um", Help);
+        _keywords.Add("uh", Help);
+        _keywords.Add("um", Help); 
         _keywords.Add("Adele shut up", PlaySkyfall); 
 
 #endregion
@@ -133,13 +136,13 @@ public class VoiceManager : MonoBehaviour {
         _keywordRecognizer.Start();
     }
 
-    public void addProcedureCommand(string name)
+    public void addProcedureCommand(string name, int index)
     {
         Debug.Log("Adding command " + name);
         _keywords.Add(name, () => {
-            mc.currentProcedure = TaskManager.S.getProcedureIndexByName(name);
-            mc.currentTask = 1;
-            mc.currentSubTask = 1;
+            mc.currentProcedure = index;
+            mc.currentTask = 0;
+            mc.currentSubTask = 0;
             generateTaskMenu();
         });
         resetKeywordRecognizer();
@@ -455,8 +458,35 @@ public class VoiceManager : MonoBehaviour {
 
     public void Back()
     {
-        if (mc.currentSubTask <= 0) { return; }
         mc.currentSubTask--;
+        //int maxLength = TaskManager.S.allTasks[mc.currentTask];
+        if (mc.currentSubTask < 0)
+        {
+            mc.currentTask--;
+            
+            if (mc.currentTask < 0)//if there are no more subtasks, task is complete
+            {
+                //when procedure is complete
+                mc.currentProcedure--;
+
+                if (mc.currentProcedure < 0)
+                {
+                    mc.currentProcedure = 0; //ensure that procedure index is never less than 0
+                    mc.currentTask = TaskManager.S.GetProcedure(mc.currentProcedure).Tasks.Length - 1;
+                    mc.currentSubTask = TaskManager.S.GetTask(mc.currentProcedure, mc.currentTask).SubTasks.Length - 1;
+                }
+                else
+                {
+                    mc.currentTask = TaskManager.S.GetProcedure(mc.currentProcedure).Tasks.Length - 1;
+                    mc.currentSubTask = TaskManager.S.GetTask(mc.currentProcedure, mc.currentTask).SubTasks.Length - 1;
+                }
+            }
+            else
+            {
+                mc.currentSubTask = TaskManager.S.GetTask(mc.currentProcedure, mc.currentTask).SubTasks.Length - 1;
+            }
+        }
+
         displayStep();
 
         m_Source.clip = m_BackButton;
@@ -671,7 +701,13 @@ public class VoiceManager : MonoBehaviour {
         string input = args.text; 
         if (input.ToLower().Contains("adele"))
         {
-            input = input.Split(' ')[1];
+            string[] array = input.Split(' ');
+            input = "";
+            for (int i = 1; i < array.Length; i++)
+            {
+                input += array[i];
+                input += " ";
+            }
         }
         recognizedWord.text = input;
         Invoke("dotWhite", 1f);

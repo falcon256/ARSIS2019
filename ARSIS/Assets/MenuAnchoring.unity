@@ -6101,6 +6101,44 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.0003
       objectReference: {fileID: 0}
+    - target: {fileID: 6266437592835461107, guid: 6cfb80b9087bd764d9960d5d26f27da5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -85.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266437592835461107, guid: 6cfb80b9087bd764d9960d5d26f27da5,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 11454.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266437592835461107, guid: 6cfb80b9087bd764d9960d5d26f27da5,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 4944.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266437592835461107, guid: 6cfb80b9087bd764d9960d5d26f27da5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -66.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266437592835461108, guid: 6cfb80b9087bd764d9960d5d26f27da5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6266437592835461106, guid: 6cfb80b9087bd764d9960d5d26f27da5,
+        type: 3}
+      propertyPath: m_Text
+      value: "Adele <Menu Name> - Opens a menu. Options: main, settings, biometrics,
+        task list\nAdele Close - Closes the menu that you are currently looking at
+        \nAdele Task - Pulls up the current task \nContinue - Continue to next task
+        \nBack - Go to previous task \nAdele Capture - Take a picture and send it
+        to Mission Control \nAdele Toggle - Make the picture in the corner bigger
+        or smaller \nAdele Show Path - Show path to the next location \nAdele Hide
+        Path - Hide path to the next location \nAdele Record Path - Start recording
+        a new path \nAdele End Path - Stop recording path \nAdele Hello - Use this
+        command for a surprise \nAdele Stop - Turn off music \n"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cfb80b9087bd764d9960d5d26f27da5, type: 3}
 --- !u!224 &856752536 stripped
@@ -7228,7 +7266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allProcedures:
-  - procedure_title: 1.1 Prepare UIA
+  - procedure_title: '1.1: Prepare UIA'
     emergency: 0
     num_steps: 0
     Tasks:
@@ -7266,7 +7304,7 @@ MonoBehaviour:
         type: 
         warning: 
         image: 
-  - procedure_title: 1.2 Fill and Dump UIA and SCU O2 Lines
+  - procedure_title: '1.2: Fill and Dump UIA and SCU O2 Lines'
     emergency: 0
     num_steps: 0
     Tasks:
