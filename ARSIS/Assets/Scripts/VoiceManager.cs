@@ -526,7 +526,6 @@ public class VoiceManager : MonoBehaviour
         }
 
         displayStep();
-        Debug.Log("sub task count: " + mc.currentSubTask);
 
         m_Source.clip = m_NextButton;
         m_Source.Play();
