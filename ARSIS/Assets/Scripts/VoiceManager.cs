@@ -64,7 +64,7 @@ public class VoiceManager : MonoBehaviour
         _keywords.Add("Help", Help);
         _keywords.Add("Adele Procedures", ProcedureList);
         _keywords.Add("Adele Tasklist", TaskList);
-        _keywords.Add("Adele Retrieve", Retrieve);
+        //_keywords.Add("Adele Retrieve", Retrieve);
         _keywords.Add("Adele Diagrams", DiagramList);
 
         // Navigation

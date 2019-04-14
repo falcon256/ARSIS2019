@@ -35,20 +35,29 @@ public class NetworkMeshSource : MonoBehaviour
     public int targetPort = 32123;
     public string targetIP = "";
     public bool targetIPReady = false;
+    public bool socketStarted = false;
     public volatile bool connected = false;
     private ConcurrentQueue<messagePackage> outgoingQueue = null;
+    private byte[] incomingBuffer = null;
+    private Stack<LineRenderer> lineRenderers = null;
+    private ConcurrentQueue<lrStruct> incomingLineRenderers = null;
+    private bool undoLineRenderer = false;
+    public Material LineRendererDefaultMaterial = null;
+    public bool trashUDP = false;
+	
+	public Vector3 headsetLocation;
+	public Quaternion headsetRotation;
+	
 #if !UNITY_EDITOR
-    //public DatagramSocket udpClient = null;
     public StreamSocket tcpClient = null;
     public Windows.Storage.Streams.IOutputStream outputStream = null;
-    DataWriter writer = null;//new DataWriter(outputStream);
+    public Windows.Storage.Streams.IInputStream inputStream = null;
+    DataWriter writer = null;
+    DataReader reader = null;
 
     //udp broadcast listening
     DatagramSocket listenerSocket = null;
     const string udpPort = "32124";
-
-
-
 #endif
 
     private UnityEngine.XR.WSA.WebCam.PhotoCapture photoCaptureObject = null;
@@ -62,6 +71,11 @@ public class NetworkMeshSource : MonoBehaviour
     private Quaternion cameraEndRotation = Quaternion.identity;
 
 
+    private class lrStruct
+    {
+        public float r, g, b, a, pc, sw, ew;
+        public Vector3[] verts;
+    }
 
     private class messagePackage
     {
@@ -79,42 +93,102 @@ public class NetworkMeshSource : MonoBehaviour
             Destroy(this);
             return;
         }
+        lineRenderers = new Stack<LineRenderer>();
+        incomingLineRenderers = new ConcurrentQueue<lrStruct>();
         outgoingQueue = new ConcurrentQueue<messagePackage>();
         networkMeshSourceSingleton = this;
 #if !UNITY_EDITOR
         Listen();
 #endif
+    }
 
-
-
+    public void doSocketSetup()
+    {
+        //Task t = 
+        setupSocket();
+        //t.Start();
     }
 
     public async void setupSocket()
     {
 
 #if !UNITY_EDITOR
-        //udpClient = new DatagramSocket();
-        //udpClient.Control.DontFragment = true;
         tcpClient = new Windows.Networking.Sockets.StreamSocket();
-        tcpClient.Control.OutboundBufferSizeInBytes = 1500;
         tcpClient.Control.NoDelay = false;
         tcpClient.Control.KeepAlive = false;
         tcpClient.Control.OutboundBufferSizeInBytes = 1500;
-        while(!connected)
+        while (!connected)
         {
             try
             {
-                //await udpClient.BindServiceNameAsync("" + targetPort);
                 await tcpClient.ConnectAsync(new HostName(targetIP), "" + targetPort);
-            
                 outputStream = tcpClient.OutputStream;
+                inputStream = tcpClient.InputStream;
                 writer = new DataWriter(outputStream);
+                reader = new DataReader(inputStream);
+                reader.UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding.Utf8;
+                reader.ByteOrder = Windows.Storage.Streams.ByteOrder.LittleEndian;
+                reader.InputStreamOptions = InputStreamOptions.Partial;
                 connected = true;
-                //outputStream = await udpClient.GetOutputStreamAsync(new HostName(targetIP), "" + targetPort);
+
+                while (connected)
+                {
+                    await reader.LoadAsync(8192);
+                    if (reader.UnconsumedBufferLength > 4)
+                    {
+                        int incomingSize = reader.ReadInt32();
+                        if (incomingSize > 0 && incomingSize < 100000)
+                        {
+                            while (reader.UnconsumedBufferLength < incomingSize)
+                            {
+                                System.Threading.Tasks.Task.Delay(100).Wait();
+                                await reader.LoadAsync(8192);
+                            }
+                            
+                            int packetType = reader.ReadInt32();
+                            float r = reader.ReadSingle();
+                            float g = reader.ReadSingle();
+                            float b = reader.ReadSingle();
+                            float a = reader.ReadSingle();
+                            int count = reader.ReadInt32();
+                            float sw = reader.ReadSingle();
+                            float ew = reader.ReadSingle();
+                            byte[] packet = new byte[incomingSize - 36];// this differs from spatialmapvuforia
+                            if (packetType == 4 && packet.Length > 0)
+                            {
+                                lrStruct l = new lrStruct
+                                {
+                                    r = r,
+                                    g = g,
+                                    b = b,
+                                    a = a,
+                                    pc = count,
+                                    sw = sw,
+                                    ew = ew,
+                                    verts = new Vector3[count]
+                                };
+
+                                for (int i = 0; i < count; i++)//Dan Simplified this. Probably not bugged.
+                                {
+                                    l.verts[i] = new Vector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                                }
+                                incomingLineRenderers.Enqueue(l);
+                            }
+                            if (packetType == 5)
+                                undoLineRenderer = true;
+                        }
+                        else
+                        {
+                            //TODO Handle it.
+                        }
+                    }
+                }
             }
             catch (Exception e)
             {
-                Debug.Log(e.ToString());
+                Debug.LogError(e.ToString());
+                connected = false;
+                socketStarted = false;
                 return;
             }
         }
@@ -131,21 +205,23 @@ public class NetworkMeshSource : MonoBehaviour
 
     async void udpMessageReceived(DatagramSocket socket, DatagramSocketMessageReceivedEventArgs args)
     {
-        DataReader reader = args.GetDataReader();
-        uint len = reader.UnconsumedBufferLength;
-        string msg = reader.ReadString(len);
-
-        string remoteHost = args.RemoteAddress.DisplayName;
-        reader.Dispose();
-
-        await Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+        if (!targetIPReady && !connected && !trashUDP)
         {
+            trashUDP = true;
+            DataReader reader = args.GetDataReader();
+            uint len = reader.UnconsumedBufferLength;
+            string msg = reader.ReadString(len);
+            string remoteHost = args.RemoteAddress.DisplayName;
             targetIP = msg;
             targetIPReady = true;
-        });
-
+            await listenerSocket.CancelIOAsync();
+            listenerSocket.MessageReceived -= udpMessageReceived;
+            listenerSocket.Dispose();
+            listenerSocket = null;
+        }
     }
 #endif
+    //TODO DAN Check to see if this comment should be deleted as stale code.
     /*
 #if !UNITY_EDITOR
     public void captureImageData()
@@ -234,7 +310,7 @@ public class NetworkMeshSource : MonoBehaviour
         
         try
         {
-            SendHeadsetLocation();
+            //SendHeadsetLocation();
             List<Mesh> meshes = new List<Mesh>();
             meshes.Add(m);
             byte[] meshData =  SimpleMeshSerializer.Serialize(meshes);
@@ -262,47 +338,11 @@ public class NetworkMeshSource : MonoBehaviour
 
 }
 #endif
+
+
 #if !UNITY_EDITOR
-    public static byte[] Compress(byte[] raw)
-    {
-        using (MemoryStream memory = new MemoryStream())
-        {
-            using (GZipStream gzip = new GZipStream(memory, CompressionMode.Compress, true))
-            {
-                gzip.Write(raw, 0, raw.Length);
-            }
-            return memory.ToArray();
-        }
-    }
-
-    static byte[] Decompress(byte[] gzip)
-    {
-        using (GZipStream stream = new GZipStream(new MemoryStream(gzip), CompressionMode.Decompress))
-        {
-            const int size = 4096;
-            byte[] buffer = new byte[size];
-            using (MemoryStream memory = new MemoryStream())
-            {
-                int count = 0;
-                do
-                {
-                    count = stream.Read(buffer, 0, size);
-                    if (count > 0)
-                    {
-                        memory.Write(buffer, 0, count);
-                    }
-                }
-                while (count > 0);
-                return memory.ToArray();
-            }
-        }
-    }
+    
 #endif
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
 
 
@@ -314,8 +354,8 @@ public class NetworkMeshSource : MonoBehaviour
             return;
         try
         {
-            Vector3 location = new Vector3();
-            Quaternion rotation = new Quaternion();
+            Vector3 location = headsetLocation;
+            Quaternion rotation = headsetRotation;
             byte[] bytes = new byte[36]; // 4 bytes per float
             System.Buffer.BlockCopy(BitConverter.GetBytes(36), 0, bytes, 0, 4);
             System.Buffer.BlockCopy(BitConverter.GetBytes(2), 0, bytes, 4, 4);//type of packet
@@ -343,18 +383,74 @@ public class NetworkMeshSource : MonoBehaviour
 #if !UNITY_EDITOR
     void FixedUpdate()
     {
-        if(!connected&&targetIPReady)
-            setupSocket();
-
-        if(!connected)
-            return;
+		if(Camera.main!=null)
+		{
+			headsetLocation = Camera.main.transform.position;
+			headsetRotation = Camera.main.transform.rotation;
+		}
+	
+	
+        if (!socketStarted && targetIPReady)
+        {
+            socketStarted = true;
+            doSocketSetup();
+        }
         if (!outgoingQueue.IsEmpty)
         {
             messagePackage mp = null;
             outgoingQueue.TryDequeue(out mp);
-            if(mp!=null)
+            if (mp != null)
             {
                 sendOutgoingPacket(mp);
+            }
+        }
+
+        if (!incomingLineRenderers.IsEmpty)
+        {
+
+            lrStruct l = new lrStruct();
+            if (incomingLineRenderers.TryDequeue(out l))
+            {
+                if(l==null)
+                    return;
+                GameObject go = new GameObject();
+                go.transform.parent = this.gameObject.transform;
+                LineRenderer lr = go.AddComponent<LineRenderer>();
+                lr.material = new Material(LineRendererDefaultMaterial);//copy
+                lr.material.color = new Color(l.r, l.g, l.b, l.a);
+                lr.startWidth = l.sw;
+                lr.endWidth = l.ew;
+                lr.widthMultiplier = 1.0f;
+                lr.endColor = lr.startColor = new Color(l.r, l.g, l.b, l.a);
+                lr.SetVertexCount( l.verts.Length);
+                //lr.positionCount = l.verts.Length;
+                for(int i = 0; i < l.verts.Length; i++)
+                {
+                    lr.SetPosition(i,l.verts[i]);
+                }
+               
+                go.active=true;
+                Gradient gradient = new Gradient();
+                gradient.SetKeys(
+                    new GradientColorKey[] { new GradientColorKey(lr.material.color, 0.0f), new GradientColorKey(lr.material.color, 1.0f) },
+                    new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
+                );
+                lr.colorGradient = gradient;
+                /* some helpful notes
+                LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
+                lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                lineRenderer.widthMultiplier = 0.2f;
+                lineRenderer.positionCount = lengthOfLineRenderer;
+
+                // A simple 2 color gradient with a fixed alpha of 1.0f.
+                float alpha = 1.0f;
+                Gradient gradient = new Gradient();
+                gradient.SetKeys(
+                    new GradientColorKey[] { new GradientColorKey(c1, 0.0f), new GradientColorKey(c2, 1.0f) },
+                    new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+                );
+                lineRenderer.colorGradient = gradient;
+                */
             }
         }
         //SendHeadsetLocation();
@@ -402,23 +498,6 @@ public class NetworkMeshSource : MonoBehaviour
 #endif
 
 
-    void OnDestroy()
-    {
-#if !UNITY_EDITOR
-        //if (tcpClient != null)
-        //{
-            //tcpClient.Close();
-       //     tcpClient = null;
-        //}
-
-        //if (udpClient != null)
-        //{
-            //udpClient.Close();
-        //    udpClient = null;
-        //}
-#endif
-    }
-
     //stolen useful code.
     public static byte[] Combine(byte[] first, byte[] second)
     {
@@ -436,6 +515,4 @@ public class NetworkMeshSource : MonoBehaviour
                          third.Length);
         return ret;
     }
-
-
 }

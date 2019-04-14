@@ -1209,7 +1209,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 510, y: -262}
+  m_AnchoredPosition: {x: 499, y: -262}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &131085263
@@ -5181,7 +5181,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 575, y: -297}
+  m_AnchoredPosition: {x: 564, y: -297}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &682923083
@@ -8590,7 +8590,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 576, y: 179.7}
+  m_AnchoredPosition: {x: 555, y: 179.7}
   m_SizeDelta: {x: 100, y: 60.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1120507470
@@ -10085,8 +10085,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1323863874}
+  - component: {fileID: 1323863877}
   - component: {fileID: 1323863876}
-  - component: {fileID: 1323863875}
   m_Layer: 0
   m_Name: MeshSendManager
   m_TagString: Untagged
@@ -10108,19 +10108,6 @@ Transform:
   m_Father: {fileID: 1848663718}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1323863875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1323863873}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef3812cc3a6de6c478d501ecaf9e7b10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_drawMat: {fileID: 2100000, guid: 4b0f3315a044218428165ca0893aa0b5, type: 2}
 --- !u!114 &1323863876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10130,14 +10117,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 1323863873}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0916187a99ad3c244bb8c74799c3755e, type: 3}
+  m_Script: {fileID: 11500000, guid: df432a7b45a8c894388392270f9addb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serverPort: 32123
   targetPort: 32123
-  targetIP: 10.254.119.192
+  targetIP: 
   targetIPReady: 0
+  socketStarted: 0
   connected: 0
+  LineRendererDefaultMaterial: {fileID: 2100000, guid: 300e8012cc210c74ab2011bf1c8842d2,
+    type: 2}
+  trashUDP: 0
+  headsetLocation: {x: 0, y: 0, z: 0}
+  headsetRotation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1323863877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323863873}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c2e62e5a2e65484a9a1df82a53c3c9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_drawMat: {fileID: 2100000, guid: 1975ce6bc1a68504d84c72993a5bbc58, type: 2}
 --- !u!1 &1336772685
 GameObject:
   m_ObjectHideFlags: 0
@@ -13645,7 +13651,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1840579689}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de7166308c622ed45aa7d7d3cb948943, type: 3}
+  m_Script: {fileID: 11500000, guid: 3637027eabfb5604da52c5d29d23d1b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   lastCaptureTime: 0
@@ -14301,7 +14307,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 575, y: 261}
+  m_AnchoredPosition: {x: 554, y: 261}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1945489480

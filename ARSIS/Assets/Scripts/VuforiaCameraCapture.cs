@@ -17,7 +17,7 @@ public class VuforiaCameraCapture : MonoBehaviour
     //private bool mAccessCameraImage = true;
     private bool mFormatRegistered = false;
     private bool mAccessCameraImage = true;
-
+	private bool timedCaptureEnabled = true;
     //test variable
     public float lastCaptureTime = 0f;
 
@@ -46,6 +46,7 @@ public class VuforiaCameraCapture : MonoBehaviour
         if(S!=null)
         {
             Debug.LogError("Vuforia Camera Capture Singleton attempted to make duplicate (Static reference not null)");
+            return;
         }
         else
         {
@@ -124,27 +125,43 @@ public class VuforiaCameraCapture : MonoBehaviour
                 Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
                 if (image != null && image.IsValid())
                 {
+                    /*
                     string imageInfo = mPixelFormat + " image: \n";
                     imageInfo += " size: " + image.Width + " x " + image.Height + "\n";
                     imageInfo += " bufferSize: " + image.BufferWidth + " x " + image.BufferHeight + "\n";
                     imageInfo += " stride: " + image.Stride;
-                    Debug.Log(imageInfo);
+                    Debug.Log(imageInfo);*/
                     byte[] pixels = image.Pixels;
 
                     if (pixels != null && pixels.Length > 0)
                     {
                         if (display)
                         {
-                            Debug.Log("Image pixels: " + pixels[0] + "," + pixels[1] + "," + pixels[2] + ",...");
+                            //Debug.Log("Image pixels: " + pixels[0] + "," + pixels[1] + "," + pixels[2] + ",...");
                             Texture2D tex = new Texture2D(image.BufferWidth, image.BufferHeight, TextureFormat.RGB24, false); // RGB24
                             tex.LoadRawTextureData(pixels);
                             tex.Apply();
                             m_Texture = tex;
-                            m_RawImageBig.texture = tex;
-                            m_RawImageSmall.texture = tex;
-                            m_RawImageBig.material.mainTexture = tex;
-                            m_RawImageSmall.material.mainTexture = tex;
-                            ServerConnect.S.sendPicture(m_Texture);
+                            //since I noticed this was set to null in the main scene, I decided to save my network code if someone derps.
+                            if(m_RawImageBig)
+                            {
+                                m_RawImageBig.texture = tex;
+                                m_RawImageBig.material.mainTexture = tex;
+                            }
+                            else
+                            {
+                                Debug.LogError("You didn't assign m_RawImageBig");
+                            }
+                            if(m_RawImageSmall)
+                            { 
+                                m_RawImageSmall.texture = tex;                         
+                                m_RawImageSmall.material.mainTexture = tex;
+                            }
+                            else
+                            {
+                                Debug.LogError("You didn't assign m_RawImageSmall");
+                            }
+                            ServerConnect.S.sendPicture(m_Texture);                           
                         }
                     }
                 }
@@ -152,9 +169,18 @@ public class VuforiaCameraCapture : MonoBehaviour
         }
     }
 
+	public void enableTimedCapture()
+	{
+		timedCaptureEnabled=true;
+	}
+	public void disableTimedCapture()
+	{
+		timedCaptureEnabled=false;
+	}
+	
     void FixedUpdate()
     {
-        if (lastCaptureTime + 10.0f < Time.realtimeSinceStartup)
+        if (lastCaptureTime + 30.0f < Time.realtimeSinceStartup && timedCaptureEnabled)
         {
 #if !UNITY_EDITOR
             TrackerManager.Instance.GetTracker<ObjectTracker>().Stop();
@@ -167,9 +193,12 @@ public class VuforiaCameraCapture : MonoBehaviour
             TrackerManager.Instance.GetTracker<ObjectTracker>().Start();
 #endif
             CameraDevice.Instance.Start();
-#if !UNITY_EDITOR
+            //Debug.Log(QRCodeChecker.getSingleton().findQRCodeInImage(m_Texture));
+#if !UNITY_EDITOR           
             NetworkMeshSource.getSingleton().sendImage(m_Texture,Camera.main.transform.position, Camera.main.transform.rotation);
 #endif
+            //check for qr code
+
             //m_RawImageBig.texture = m_Texture;
             //m_RawImageBig.mainTexture = m_Texture;
             //m_RawImageBig.SetNativeSize(); holy giant plane batman.

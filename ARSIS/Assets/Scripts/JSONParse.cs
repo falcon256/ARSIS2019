@@ -333,7 +333,7 @@ public class JSONParse : MonoBehaviour {
 
         if (ndts == null)
         {
-            m_OutputErrorData.OutputErrorText("No Connection to Server");
+            //m_OutputErrorData.OutputErrorText("No Connection to Server");
             return;
         }
 

@@ -67,7 +67,7 @@ public class MeshDataGatherer : MonoBehaviour
         isRendering = false; 
         for (int i = 0; i < SurfacesList.Count; i++)
         {
-            SurfacesList[i].m_Surface.SetActive(isRendering); 
+            SurfacesList[i].m_Surface.GetComponent<MeshRenderer>().enabled = isRendering; // SetActive(isRendering); 
         }
     }
 
@@ -76,13 +76,13 @@ public class MeshDataGatherer : MonoBehaviour
         isRendering = true;
         for (int i = 0; i < SurfacesList.Count; i++)
         {
-            SurfacesList[i].m_Surface.SetActive(isRendering);
+            SurfacesList[i].m_Surface.GetComponent<MeshRenderer>().enabled = isRendering; 
         }
     }
 
     private void FixedUpdate()
     {
-        if (lastMeshDownlinkTime + 10.0f < Time.realtimeSinceStartup)
+        if (lastMeshDownlinkTime + 30.0f < Time.realtimeSinceStartup)
         {
             // you can't block here and wait for the camera capture.
             // Send the old data and trigger a new capture.
@@ -234,14 +234,15 @@ public class MeshDataGatherer : MonoBehaviour
                     entry.m_UpdateTime = updateTime;
                     entry.m_Id = id.handle;
                     entry.m_Surface = new GameObject(System.String.Format("Surface-{0}", id.handle));
-                    entry.m_Surface.SetActive(isRendering); 
+                     // SetActive(isRendering); 
                     entry.m_Surface.AddComponent<MeshFilter>();
-                    entry.m_Surface.AddComponent<MeshCollider>();
+                    //entry.m_Surface.AddComponent<MeshCollider>();
                     MeshRenderer mr = entry.m_Surface.AddComponent<MeshRenderer>();
                     mr.shadowCastingMode = ShadowCastingMode.Off;
                     mr.receiveShadows = false;
                     entry.m_Surface.AddComponent<WorldAnchor>();
                     entry.m_Surface.GetComponent<MeshRenderer>().sharedMaterial = m_drawMat;
+                    entry.m_Surface.GetComponent<MeshRenderer>().enabled = isRendering;
                     m_Surfaces[id.handle] = entry;
                     if(!SurfacesList.Contains(entry))
                         SurfacesList.Add(entry);
