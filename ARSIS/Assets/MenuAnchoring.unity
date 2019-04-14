@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8208,7 +8208,7 @@ MonoBehaviour:
     emergency: 0
     num_steps: 0
     Tasks:
-    - Title: '1.1.1 Ensure that:'
+    - Title: '1.1.1: Ensure that:'
       SubTasks:
       - text: POWER EV-1 and 2 are set to OFF
         type: 
@@ -8244,7 +8244,7 @@ MonoBehaviour:
         imageTex: {fileID: 0}
     - Title: Close O2
       SubTasks:
-      - text: O2 Vent -- CLOSE
+      - text: O2 Vent - CLOSE
         type: 
         warning: 
         image: 
@@ -8253,7 +8253,7 @@ MonoBehaviour:
     emergency: 0
     num_steps: 0
     Tasks:
-    - Title: Pressurize EVA 1
+    - Title: '1.2.1: Pressurize EVA 1'
       SubTasks:
       - text: Check that O2 VENT is set to CLOSED
         type: 
