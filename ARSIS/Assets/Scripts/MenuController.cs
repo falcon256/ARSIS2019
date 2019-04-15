@@ -55,6 +55,7 @@ public class MenuController : MonoBehaviour
     public Text m_stepCurText;
     public Text m_stepNextText;
     public Text m_warningText;
+    public Text m_QRScanData;
 
     public bool taskZoomedIn = false;
 
@@ -76,6 +77,14 @@ public class MenuController : MonoBehaviour
         currentSubTask = 0;
         currentTask = 0;
         currentProcedure = 0;
+    }
+
+    private void FixedUpdate()
+    {
+        if (VoiceManager.S.m_IsQRCodeScanning)
+        {
+            m_QRScanData.text = VuforiaCameraCapture.S.GetQRStringData();
+        }
     }
 
     //hide old menu, and switch to new menu

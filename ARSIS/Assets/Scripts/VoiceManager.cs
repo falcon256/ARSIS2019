@@ -40,6 +40,10 @@ public class VoiceManager : MonoBehaviour
     public AudioClip m_ZoomIn;
     public AudioClip m_ZoomOut;
     public AudioClip m_SliderSound;
+
+    public bool m_IsQRCodeScanning = false;
+    private float m_QRCodeStartTime = 0.0f;
+
     private DictationRecognizer dictationRecognizer;
 
     public Image dot;
@@ -89,6 +93,7 @@ public class VoiceManager : MonoBehaviour
         _keywords.Add("Adele End Path", StopTranslation);
         _keywords.Add("Adele Show Path", ShowPath);
         _keywords.Add("Adele Hide Path", HidePath);
+        _keywords.Add("Adele Scan Code", ScanQRCode);
 
         ///////////////////// Special Functions /////////////////////
         _keywords.Add("Increase", Increase);
@@ -625,6 +630,15 @@ public class VoiceManager : MonoBehaviour
 
     }
 
+    private void FixedUpdate()
+    {
+        //if QR code has finished scanning
+        if (m_QRCodeStartTime - Time.realtimeSinceStartup > 10.0f)
+        {
+            m_IsQRCodeScanning = false;
+        }
+    }
+
     void destroyDictationRecognizer()
     {
         if (mc.m_overlapMessage.gameObject.activeSelf)
@@ -709,24 +723,32 @@ public class VoiceManager : MonoBehaviour
 
     #region Translation 
 
-    void StartTranslation()
+    public void StartTranslation()
     {
         TranslationController.S.startPathCapture();
     }
 
-    void StopTranslation()
+    public void StopTranslation()
     {
         TranslationController.S.stopPathCapture();
     }
 
-    void ShowPath()
+    public void ShowPath()
     {
         TranslationController.S.showPath();
     }
 
-    void HidePath()
+    public void HidePath()
     {
         TranslationController.S.hidePath();
+    }
+
+    public void ScanQRCode()
+    {
+        VuforiaCameraCapture.S.BeginScanQRCode();
+        m_IsQRCodeScanning = true;
+
+        Debug.Log("Scanning QR Code");
     }
 
     #endregion

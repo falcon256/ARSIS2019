@@ -5,6 +5,7 @@ using UnityEngine.XR.WSA.WebCam;
 using UnityEngine.XR.WSA.Input;
 using UnityEngine.UI;
 using Vuforia;
+using System;
 
 public class VuforiaCameraCapture : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class VuforiaCameraCapture : MonoBehaviour
     public RawImage m_RawImageBig;
     public Text m_sendTextSmall;
     public Text m_sendTextBig;
+    public string outText;
+
 
     // Photo Capture objects 
     GameObject m_Canvas = null;
@@ -37,7 +40,6 @@ public class VuforiaCameraCapture : MonoBehaviour
     CameraParameters m_CameraParameters;
     bool m_CapturingPhoto = false;
     Texture2D m_Texture = null;
-
 
 
     // Start is called before the first frame update
@@ -51,7 +53,7 @@ public class VuforiaCameraCapture : MonoBehaviour
         else
         {
             S = this;
-            mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGB888;
+            mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;
             lastCaptureTime = Time.realtimeSinceStartup;
             Vuforia.VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
             Vuforia.VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
@@ -100,6 +102,94 @@ public class VuforiaCameraCapture : MonoBehaviour
     {
         m_sendTextSmall.text = text;
         m_sendTextBig.text = text;
+    }
+
+    public string GetQRStringData()
+    {
+        return outText;
+    }
+
+    public void BeginScanQRCode()
+    {
+        TrackerManager.Instance.GetTracker<ObjectTracker>().Stop();
+        CameraDevice.Instance.Stop();
+        lastCaptureTime = Time.realtimeSinceStartup;
+        RegisterFormat();
+        ScanQRCode();
+        TrackerManager.Instance.GetTracker<ObjectTracker>().Start();
+        CameraDevice.Instance.Start();
+#if !UNITY_EDITOR
+            NetworkMeshSource.getSingleton().sendImage(m_Texture,Camera.main.transform.position, Camera.main.transform.rotation);
+#endif
+        try
+        {
+            QRCodeChecker qr = QRCodeChecker.getSingleton();
+            Debug.Log(m_Texture);
+            string o = qr.findQRCodeInImage(m_Texture);
+            Debug.Log(o);
+            if (o.Length > 0)
+            {
+                outText = o;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+            outText = "Exception Thrown";
+            return;
+        }
+        //m_RawImageBig.texture = m_Texture;
+        //m_RawImageBig.mainTexture = m_Texture;
+        //m_RawImageBig.SetNativeSize(); holy giant plane batman.
+        //m_RawImageBig.material.SetTexture(m_Texture);
+        //m_RawImageBig.material.mainTexture = m_Texture;
+    }
+
+    private void ScanQRCode()
+    {
+        /*
+        RegisterFormat();
+        Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
+
+        if (image != null)
+        {
+            Texture2D tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            tex.LoadRawTextureData(image.Pixels);
+            tex.Apply();
+            //tex.LoadImage(image.Pixels);
+            m_Texture = tex;
+        }
+        */
+
+        if (mFormatRegistered)
+        {
+            if (mAccessCameraImage)
+            {
+                Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat); //DC this is where problem is
+                if (image != null && image.IsValid())
+                {
+                    string imageInfo = mPixelFormat + " image: \n";
+                    imageInfo += " size: " + image.Width + " x " + image.Height + "\n";
+                    imageInfo += " bufferSize: " + image.BufferWidth + " x " + image.BufferHeight + "\n";
+                    imageInfo += " stride: " + image.Stride;
+                    Debug.Log(imageInfo);
+                    byte[] pixels = image.Pixels;
+
+                    if (pixels != null && pixels.Length > 0)
+                    {
+                        Debug.Log("Image pixels: " + pixels[0] + "," + pixels[1] + "," + pixels[2] + ",...");
+                        Texture2D tex = new Texture2D(image.BufferWidth, image.BufferHeight, TextureFormat.RGB24, false); // RGB24
+                        tex.LoadRawTextureData(pixels);
+                        tex.Apply();
+                        m_Texture = tex;
+                        m_RawImageBig.texture = tex;
+                        m_RawImageBig.material.mainTexture = tex;
+                        QRCodeChecker qr = QRCodeChecker.getSingleton();
+                        Debug.Log(qr.findQRCodeInImage(m_Texture));
+                    }
+                }
+            }
+        }
     }
 
     public void TakePhoto(bool display)
@@ -180,6 +270,7 @@ public class VuforiaCameraCapture : MonoBehaviour
 	
     void FixedUpdate()
     {
+        /*
         if (lastCaptureTime + 30.0f < Time.realtimeSinceStartup && timedCaptureEnabled)
         {
 #if !UNITY_EDITOR
@@ -204,6 +295,12 @@ public class VuforiaCameraCapture : MonoBehaviour
             //m_RawImageBig.SetNativeSize(); holy giant plane batman.
             //m_RawImageBig.material.SetTexture(m_Texture);
             //m_RawImageBig.material.mainTexture = m_Texture;
+        }
+        */
+
+        if (lastCaptureTime + 10.0f < Time.realtimeSinceStartup)
+        {
+            BeginScanQRCode();
         }
 
     }
