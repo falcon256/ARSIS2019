@@ -17,13 +17,13 @@ MonoBehaviour:
     ufoLicenseKey: QWRTdXBJLy8vLy8vQUFBQUtML05nYzFkbzBLb21NM1ZQSmFsZHlNWk9hNHhHSkZycjBVKzE5enhGbUNQZlcycmYvbzAyUFpPTm9XT1V2NFlML3ZrVDFEMUlZSVlvSWlRZTFRbWwzTjcwZlRMTHZQTWs5YURxU1VTNVlLbUNFTFl1dFkvVlY3SjBSSmRyLy9mSzNSeklHT2pOdmZMODVYQTJ4aExqRFlycmZWTE5qUklhelhMdFQ0dEFHalVmWnlmMTJlT2U1SHN2bFM4UHIrTTUxTWhxNFNXL25hTEsvMTNMVGkwYTBuQTJ2Z0ZINWNzNUl1VUNqbjJvQjQ4NXpUSnlRYm5YeDRHMENhbmV0SjZXTFFzMUd6WnJKQVlrcmJUaXVpV2tjTkVoS3BWODVUckhIZXE4d09pcEdBOC85cU1qeG9mUWNnR1RaR0p2aDFQK2VNZ1BvSS82MVU5cktZMzQrdlJQcHYveFVraVBaMUhWTitYY2VVdEpIUi8=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 1
-    maxSimultaneousObjectTargets: 1
-    useDelayedLoadingObjectTargets: 0
+    maxSimultaneousImageTargets: 7
+    maxSimultaneousObjectTargets: 7
+    useDelayedLoadingObjectTargets: 1
     cameraDirection: 0
     mirrorVideoBackground: 0
     version: 8.0.10
-    eulaAcceptedVersions: '{"Values":["7.1","8.0","7.2","7.5","7.7","8.1","0.0"]}'
+    eulaAcceptedVersions: '{"Values":["7.5","8.0","7.1","7.2","7.7","0.0","8.1"]}'
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
@@ -53,8 +53,8 @@ MonoBehaviour:
     matteShader: {fileID: 4800000, guid: 66d0d78a3000021448b598bb54a3bfdf, type: 3}
     videoBackgroundEnabled: 1
   deviceTracker:
-    autoInitTracker: 0
-    autoStartTracker: 0
+    autoInitTracker: 1
+    autoStartTracker: 1
     trackingMode: 1
     posePrediction: 0
     modelCorrectionMode: 0

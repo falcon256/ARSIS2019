@@ -71,6 +71,8 @@ public class NetworkMeshSource : MonoBehaviour
     private Quaternion cameraEndRotation = Quaternion.identity;
 
 
+    private float lastCamPosSendTime = 0;
+
     private class lrStruct
     {
         public float r, g, b, a, pc, sw, ew;
@@ -387,9 +389,17 @@ public class NetworkMeshSource : MonoBehaviour
 		{
 			headsetLocation = Camera.main.transform.position;
 			headsetRotation = Camera.main.transform.rotation;
-		}
-	
-	
+
+            if (lastCamPosSendTime + 0.5f < Time.realtimeSinceStartup)
+            {
+                SendHeadsetLocation();
+                lastCamPosSendTime = Time.realtimeSinceStartup;
+            }
+
+
+        }
+
+
         if (!socketStarted && targetIPReady)
         {
             socketStarted = true;

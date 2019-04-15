@@ -53,7 +53,7 @@ public class VuforiaCameraCapture : MonoBehaviour
         else
         {
             S = this;
-            mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;
+            mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGB888;
             lastCaptureTime = Time.realtimeSinceStartup;
             Vuforia.VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
             Vuforia.VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
@@ -147,20 +147,6 @@ public class VuforiaCameraCapture : MonoBehaviour
 
     private void ScanQRCode()
     {
-        /*
-        RegisterFormat();
-        Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
-
-        if (image != null)
-        {
-            Texture2D tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
-            tex.LoadRawTextureData(image.Pixels);
-            tex.Apply();
-            //tex.LoadImage(image.Pixels);
-            m_Texture = tex;
-        }
-        */
-
         if (mFormatRegistered)
         {
             if (mAccessCameraImage)
@@ -194,20 +180,6 @@ public class VuforiaCameraCapture : MonoBehaviour
 
     public void TakePhoto(bool display)
     {
-        /*
-        RegisterFormat();
-        Vuforia.Image image = CameraDevice.Instance.GetCameraImage(mPixelFormat);
-
-        if (image != null)
-        {
-            Texture2D tex = new Texture2D(1280, 720, TextureFormat.RGB24, false);
-            tex.LoadRawTextureData(image.Pixels);
-            tex.Apply();
-            //tex.LoadImage(image.Pixels);
-            m_Texture = tex;
-        }
-        */
-
         if (mFormatRegistered)
         {
             if (mAccessCameraImage)
@@ -298,10 +270,11 @@ public class VuforiaCameraCapture : MonoBehaviour
         }
         */
 
-        if (lastCaptureTime + 10.0f < Time.realtimeSinceStartup)
-        {
-            BeginScanQRCode();
-        }
+        //if (lastCaptureTime + 10.0f < Time.realtimeSinceStartup)
+        //{
+        //    lastCaptureTime = Time.realtimeSinceStartup;
+        //    BeginScanQRCode();
+        //}
 
     }
 

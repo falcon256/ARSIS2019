@@ -36,7 +36,7 @@ public class MeshDataGatherer : MonoBehaviour
     // This is the material with which the baked surfaces are drawn.  
     public Material m_drawMat;
 
-    bool isRendering = false; 
+    bool isRendering = true; 
 
     // This flag is used to postpone requests if a bake is in progress.  Baking mesh
     // data can take multiple frames.  This sample prioritizes baking request
@@ -82,7 +82,7 @@ public class MeshDataGatherer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (lastMeshDownlinkTime + 30.0f < Time.realtimeSinceStartup)
+        if (lastMeshDownlinkTime + 10.0f < Time.realtimeSinceStartup)
         {
             // you can't block here and wait for the camera capture.
             // Send the old data and trigger a new capture.
@@ -128,9 +128,9 @@ public class MeshDataGatherer : MonoBehaviour
         {
             // This block makes the observation volume follow the camera.
             Vector3 extents;
-            extents.x = SurfaceEntry.c_Extents * 4.0f;
-            extents.y = SurfaceEntry.c_Extents * 4.0f;
-            extents.z = SurfaceEntry.c_Extents * 4.0f;
+            extents.x = SurfaceEntry.c_Extents * 8.0f;
+            extents.y = SurfaceEntry.c_Extents * 8.0f;
+            extents.z = SurfaceEntry.c_Extents * 8.0f;
             m_Observer.SetVolumeAsAxisAlignedBox(Camera.main.transform.position, extents);
             
             try
@@ -234,9 +234,9 @@ public class MeshDataGatherer : MonoBehaviour
                     entry.m_UpdateTime = updateTime;
                     entry.m_Id = id.handle;
                     entry.m_Surface = new GameObject(System.String.Format("Surface-{0}", id.handle));
-                     // SetActive(isRendering); 
+                    //SetActive(isRendering); 
                     entry.m_Surface.AddComponent<MeshFilter>();
-                    //entry.m_Surface.AddComponent<MeshCollider>();
+                    entry.m_Surface.AddComponent<MeshCollider>();
                     MeshRenderer mr = entry.m_Surface.AddComponent<MeshRenderer>();
                     mr.shadowCastingMode = ShadowCastingMode.Off;
                     mr.receiveShadows = false;
