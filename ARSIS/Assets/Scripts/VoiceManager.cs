@@ -53,7 +53,7 @@ public class VoiceManager : MonoBehaviour
         S = this;
 
         #region keywords
-        // Menus 
+        ///////////////////// Main Menus ///////////////////// 
         _keywords.Add("Adele Main", MainMenu);
         _keywords.Add("Adele Settings", Settings);
         _keywords.Add("Adele Brightness", Brightness);
@@ -62,68 +62,58 @@ public class VoiceManager : MonoBehaviour
         _keywords.Add("Adele Houston", Houston);
         _keywords.Add("Adele Help", Help);
         _keywords.Add("Help", Help);
-        _keywords.Add("Adele Procedures", ProcedureList);
-        _keywords.Add("Adele Tasklist", TaskList);
-        //_keywords.Add("Adele Retrieve", Retrieve);
+        _keywords.Add("Adele uh", Help);
+        _keywords.Add("Adele um", Help);
+        _keywords.Add("uh", Help);
+        _keywords.Add("um", Help);
         _keywords.Add("Adele Diagrams", DiagramList);
+        _keywords.Add("Adele Procedures", ProcedureList);
+        _keywords.Add("Adele Music", musicMenu);
+        _keywords.Add("Adele Tasklist", TaskList);
 
-        // Navigation
-        // _keywords.Add("Adele Menu", Menu);
-        // _keywords.Add("Adele Move", Menu); 
+        ///////////////////// Menu Navigation /////////////////////
         _keywords.Add("Adele Reset", ResetScene);
         _keywords.Add("Adele Clear", ResetScene);
-        // _keywords.Add("Adele Previous", Previous);
         _keywords.Add("Adele Close", Close);
-
-        // Special Functions
-        _keywords.Add("Increase", Increase);
-        _keywords.Add("Decrease", Decrease);
-        _keywords.Add("Adele Capture", TakePhoto);
-        _keywords.Add("Adele Toggle", Toggle);
-
-        // Task List 
         _keywords.Add("Adele Task", generateTaskMenu);
         _keywords.Add("Next", Next);
         _keywords.Add("Continue", Next);
+        _keywords.Add("Complete", Next);
         _keywords.Add("Back", Back);
-        _keywords.Add("Zoom Out", zoomOut);
         _keywords.Add("Zoom In", zoomIn);
+        _keywords.Add("Zoom Out", zoomOut);
+        // _keywords.Add("Adele Retrieve", Retrieve);
 
-        // Tasks 
-        // _keywords.Add("Disable Alarm", disableAlarm);
-        // _keywords.Add("Reroute Power", reroutePower);
-        // _keywords.Add("Light Switch", lightSwitch); 
-
-        //Music
-        _keywords.Add("Adele Hello", PlayAdele);
-        _keywords.Add("Adele Africa", PlayAfrica);
-        _keywords.Add("Adele Skyfall", PlaySkyfall);
-        _keywords.Add("Adele Space Oddity", PlaySpaceOddity);
-        _keywords.Add("Adele Thunderstruck", PlayThunderstruck);
-        _keywords.Add("Adele Stop", StopMusic);
-        _keywords.Add("Adele Music", musicMenu);
-        _keywords.Add("Adele Eclipse", PlayEclipse);
-        _keywords.Add("Adele Rocket Man", PlayRocketMan);
-
-        //Translation 
+        ///////////////////// Translation /////////////////////
         _keywords.Add("Adele Record Path", StartTranslation);
         _keywords.Add("Adele End Path", StopTranslation);
         _keywords.Add("Adele Show Path", ShowPath);
         _keywords.Add("Adele Hide Path", HidePath);
 
-        //Mesh 
+        ///////////////////// Special Functions /////////////////////
+        _keywords.Add("Increase", Increase);
+        _keywords.Add("Decrease", Decrease);
+        _keywords.Add("Adele Capture", TakePhoto);
+        _keywords.Add("Adele Toggle", Toggle);
+
+        ///////////////////// Music /////////////////////
+        _keywords.Add("Adele Hello", PlayAdele);
+        _keywords.Add("Adele Africa", PlayAfrica);
+        _keywords.Add("Adele Skyfall", PlaySkyfall);
+        _keywords.Add("Adele Space Oddity", PlaySpaceOddity);
+        _keywords.Add("Adele Thunderstruck", PlayThunderstruck);
+        _keywords.Add("Adele Eclipse", PlayEclipse);
+        _keywords.Add("Adele Rocket Man", PlayRocketMan);
+        _keywords.Add("Adele Stop", StopMusic);
+        _keywords.Add("Adele shut up", PlaySkyfall);
+
+        ///////////////////// Mesh /////////////////////
         _keywords.Add("Enable Mesh", enableMesh);
         _keywords.Add("Disable Mesh", disableMesh);
         _keywords.Add("Enable Mapping", enableMapping);
         _keywords.Add("Disable Mapping", disableMapping);
 
-        _keywords.Add("Adele uh", Help);
-        _keywords.Add("Adele um", Help);
-        _keywords.Add("uh", Help);
-        _keywords.Add("um", Help);
-        _keywords.Add("Adele shut up", PlaySkyfall);
-
-        //Diagrams
+        ///////////////////// Diagrams /////////////////////
         _keywords.Add("Adele Diagram 1", Diagram1);
         _keywords.Add("Adele Diagram 2", Diagram2);
         _keywords.Add("Adele Diagram 3", Diagram3);
@@ -283,27 +273,23 @@ public class VoiceManager : MonoBehaviour
     // handles voice cmds to retreive menu based off menu name
     public void Retrieve()
     {
-
         PhraseRecognitionSystem.Shutdown();
-
         dictationRecognizer = new DictationRecognizer();
 
         // start dictation reconizer
         dictationRecognizer.Start();
-        Debug.Log("DicRec started");
         dictationRecognizer.DictationResult += DictationRecognizer_DictationResult;
-
         dictationIsOn = true;
+        
+        //you have 5 seconds to say the menu name following the retrieve keyword
         dictationTimer = 5.0f;
     }
 
     // handles voice cmds to decide to replace the menu
     public void Answer(GameObject holoMenu)
     {
-        Debug.Log("Made it to Answer!");
         menuToUse = holoMenu;
         PhraseRecognitionSystem.Shutdown();
-
         dictationRecognizer = new DictationRecognizer();
 
         // start dictation reconizer

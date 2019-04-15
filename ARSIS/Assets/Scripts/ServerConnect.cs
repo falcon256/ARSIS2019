@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 
 /// <summary>
 /// Handles socket.io connection with picture server 
-/// Current web address to view, draw on, and send back pictures: http://321letsjam.com:3000/public
+/// Current web address to communicate with server: https://agile-badlands-39994.herokuapp.com/
 /// Socket connection URI denoted on line 89
 /// </summary>
 public class ServerConnect : MonoBehaviour
@@ -43,9 +43,7 @@ public class ServerConnect : MonoBehaviour
         socketManager.Socket.On("connect_error", onConnectError);
         socketManager.Socket.On("connect_timeout", onConnectTimeout); 
         socketManager.Socket.On(SocketIOEventTypes.Error, OnError);
-
         socketManager.Socket.On("picture", getPicture);
-
         socketManager.Socket.On("command", onCommand);
 
         //StartCoroutine(RunSwitchWWW());
@@ -86,7 +84,7 @@ public class ServerConnect : MonoBehaviour
         }
     }*/
 
-    ////////////////////// Public functions that emit socket messages ////////////////////////////
+    ///////////////////// Public functions that emit socket messages /////////////////////
     public void sendPicture(Texture2D tx)
     {
         Debug.Log("Sending Message"); 
@@ -98,7 +96,7 @@ public class ServerConnect : MonoBehaviour
         socketManager.GetSocket().Emit("SOS"); 
     }
 
-    ///////////////////// Handlers for recieved socket messages //////////////////////////////////
+    ///////////////////// Handlers for recieved socket messages from voice command override /////////////////////
     void onCommand(Socket socket, Packet packet, params object[] args)
     {
         string command = (string)args[0];
@@ -106,6 +104,7 @@ public class ServerConnect : MonoBehaviour
 
         switch (command)
         {
+            ///////////////////// Main Menus /////////////////////
             case "main":
                 VoiceManager.S.MainMenu(); 
                 break;
@@ -121,35 +120,62 @@ public class ServerConnect : MonoBehaviour
             case "biometrics":
                 VoiceManager.S.Biometrics();
                 break;
-            case "move":
-                VoiceManager.S.Menu();
-                break;
-            case "menu":
-                VoiceManager.S.Menu();
-                break;
             case "help":
                 VoiceManager.S.Help();
                 break;
+            case "diagrams":
+                VoiceManager.S.DiagramList();
+                break;
+            case "procedures":
+                VoiceManager.S.ProcedureList();
+                break;
+            case "music":
+                VoiceManager.S.musicMenu();
+                break;
+            case "tasks":
+                VoiceManager.S.TaskList();
+                break;
+
+            ///////////////////// Menu Navigation /////////////////////
             case "reset":
                 VoiceManager.S.ResetScene();
                 break;
-            case "clear":
-                VoiceManager.S.ResetScene();
+            case "close":
+                VoiceManager.S.Close();
                 break;
-            case "next":
+            case "complete":
                 VoiceManager.S.Next();
                 break;
-            case "previous":
+            case "back":
                 VoiceManager.S.Back();
                 break;
+            case "zoom_in":
+                VoiceManager.S.zoomIn();
+                break;
+            case "zoom_out":
+                VoiceManager.S.zoomOut();
+                break;
+
+            ///////////////////// Translation /////////////////////
+            case "show":
+                VoiceManager.S.ShowPath();
+                break;
+            case "hide":
+                VoiceManager.S.HidePath();
+                break;
+            case "record":
+                VoiceManager.S.StartTranslation();
+                break;
+            case "end":
+                VoiceManager.S.StopTranslation();
+                break;
+
+            ///////////////////// Special Functions /////////////////////
             case "increase":
                 VoiceManager.S.Increase();
                 break;
             case "decrease":
                 VoiceManager.S.Decrease();
-                break;
-            case "procedures":
-                VoiceManager.S.TaskList();
                 break;
             case "capture":
                 VoiceManager.S.TakePhoto();
@@ -157,25 +183,38 @@ public class ServerConnect : MonoBehaviour
             case "toggle":
                 VoiceManager.S.Toggle();
                 break;
-            case "musicoff":
+
+            ///////////////////// Music /////////////////////
+            case "hello":
+                VoiceManager.S.PlayAdele();
+                break;
+            case "africa":
+                VoiceManager.S.PlayAfrica();
+                break;
+            case "skyfall":
+                VoiceManager.S.PlaySkyfall();
+                break;
+            case "oddity":
+                VoiceManager.S.PlaySpaceOddity();
+                break;
+            case "thunderstruck":
+                VoiceManager.S.PlayThunderstruck();
+                break;
+            case "eclipse":
+                VoiceManager.S.PlayEclipse();
+                break;
+            case "rocketman":
+                VoiceManager.S.PlayRocketMan();
+                break;
+            case "stop_music":
                 VoiceManager.S.StopMusic();
                 break;
-            case "disablealarm":
-                //VoiceManager.S.disableAlarm();
-                break;
-            case "reroutepower":
-                //VoiceManager.S.reroutePower();
-                break;
-            case "lightswitch":
-                //VoiceManager.S.lightSwitch();
-                break; 
-            
         }
     }
 
     void getPicture(Socket socket, Packet packet, params object[] args)
     {
-        Debug.Log("Picture Gotten"); 
+        Debug.Log("Picture recieved from web server"); 
         // Convert picture to correct format 
         Dictionary<String, object> fromSocket = (Dictionary<String, object>)args[0];
         String b64String = (String)fromSocket["image"];
