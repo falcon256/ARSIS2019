@@ -214,10 +214,11 @@ public class JSONParse : MonoBehaviour {
             return;
         }
 
+        /*
         m_SuitDataUIElements[15].SetData("Battery Amp High", switchData.battery_amp_high.ToString());
         m_SuitDataUIElements[16].SetData("Battery VDC Low", switchData.battery_vdc_low.ToString());
         m_SuitDataUIElements[17].SetData("Suit Pressure Low", switchData.p_suit_low.ToString());
-        m_SuitDataUIElements[18].SetData("SOP On", switchData.p_sop_on.ToString());
+        m_SuitDataUIElements[18].SetData("SOP On", switchData.sop_on.ToString());
         m_SuitDataUIElements[19].SetData("Suit Pressure Emergency", switchData.p_suit_emergency.ToString());
         m_SuitDataUIElements[20].SetData("Suit Pressure High", switchData.p_suit_high.ToString());
         m_SuitDataUIElements[21].SetData("O2 Use High", switchData.o2_use_high.ToString());
@@ -226,7 +227,7 @@ public class JSONParse : MonoBehaviour {
         m_SuitDataUIElements[24].SetData("CO2 High", switchData.co2_high.ToString());
         m_SuitDataUIElements[25].SetData("Vehicle Power Present", switchData.vehicle_power.ToString());
         m_SuitDataUIElements[26].SetData("H20 Is Off", switchData.h2o_off.ToString());
-        m_SuitDataUIElements[27].SetData("O2 is Off", switchData.o2_off.ToString());
+        m_SuitDataUIElements[27].SetData("O2 is Off", switchData.o2_off.ToString());*/
     }
 
     private string getLesserTime(string strOxygen, string strBattery, out string identifier)
@@ -351,14 +352,14 @@ public class JSONParse : MonoBehaviour {
         if (ndts.vent_error == "true") m_OutputErrorData.OutputErrorText("NO VENT FLOW"); // Add vent rpms 
         if (ndts.vehicle_power == "true") m_OutputErrorData.OutputErrorText("VEHICLE POWER AVAIL");
         if (ndts.o2_off == "true") m_OutputErrorData.OutputErrorText("O2 IS OFF");
-        if (ndts.p_sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON");
-        //ebug.Log(ndts.temp_switch);
-        if (ndts.temp_switch == "true") m_OutputErrorData.OutputErrorText("FLIP BOTTOM LEFT SWITCH OF TASKBOARD ON");
+        if (ndts.sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON");
 
         if (m_SwitchUIElements.Length <= 0)
         {
             return;
         }
+
+        Debug.Log(ndts.sop_on);
 
         m_SwitchUIElements[0].SetActive(GetSwitchState(ndts.h2o_off));
         m_SwitchUIElements[1].SetActive(GetSwitchState(ndts.sspe));
@@ -366,8 +367,14 @@ public class JSONParse : MonoBehaviour {
         m_SwitchUIElements[3].SetActive(GetSwitchState(ndts.vent_error));
         m_SwitchUIElements[4].SetActive(GetSwitchState(ndts.vehicle_power));
         m_SwitchUIElements[5].SetActive(GetSwitchState(ndts.o2_off));
-        m_SwitchUIElements[6].SetActive(GetSwitchState(ndts.p_sop_on));
-        m_SwitchUIElements[7].SetActive(GetSwitchState(ndts.temp_switch));
+        m_SwitchUIElements[6].SetActive(GetSwitchState(ndts.sop_on));
+        m_SwitchUIElements[7].SetActive(GetSwitchState(ndts.battery_amp_high));
+        m_SwitchUIElements[8].SetActive(GetSwitchState(ndts.battery_vdc_low));
+        m_SwitchUIElements[9].SetActive(GetSwitchState(ndts.suit_pressure_low));
+        m_SwitchUIElements[10].SetActive(GetSwitchState(ndts.suit_pressure_high));
+        m_SwitchUIElements[11].SetActive(GetSwitchState(ndts.o2_use_high));
+        m_SwitchUIElements[12].SetActive(GetSwitchState(ndts.sop_pressure_low));
+        m_SwitchUIElements[13].SetActive(GetSwitchState(ndts.co2_high));
 
     }
 
@@ -441,15 +448,14 @@ public class SuitDataSwitch
     public string vehicle_power = ""; // VEHICLE POWER AVAIL   - you should switch to save suit power 
     public string h2o_off = ""; // H20 IS OFF  - for cooling inside the suit 
     public string o2_off = "";  // O2 IS OFF
-    public string o2_use_high = "";  // O2 IS OFF
-    public string co2_high = "";  // O2 IS OFF
     public string battery_amp_high = "";
     public string battery_vdc_low = "";
-    public string p_suit_low = "";
-    public string p_sop_on = "";
-    public string p_suit_emergency = "";
-    public string p_suit_high = "";
-    public string temp_switch = ""; 
+    public string suit_pressure_low = "";
+    public string suit_pressure_high = "";
+    public string o2_use_high = "";
+    public string sop_pressure_low = "";
+    public string sop_on = "";
+    public string co2_high = "";
 
 
     // BAT VDC LOW / VAT VDC XX.X - if battery is under 15 V 

@@ -16,7 +16,7 @@ public class OutputErrorData : MonoBehaviour {
     {
         m_ErrorText.text += s + "\n";
         m_Source.clip = m_bad;
-        m_Source.loop = true;
+        m_Source.loop = false;
         m_Source.Play();
     }
 
