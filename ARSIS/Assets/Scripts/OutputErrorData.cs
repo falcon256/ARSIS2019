@@ -7,6 +7,8 @@ public class OutputErrorData : MonoBehaviour {
 
     public Text m_ErrorText;
 
+    public float m_LastSirenTime;
+
     [Header("Audio")]
     public AudioSource m_Source;
 
@@ -14,10 +16,16 @@ public class OutputErrorData : MonoBehaviour {
 
     public void OutputErrorText(string s)
     {
-        m_ErrorText.text += s + "\n";
-        m_Source.clip = m_bad;
-        m_Source.loop = false;
-        m_Source.Play();
+        if (Time.realtimeSinceStartup - m_LastSirenTime >= 30f)
+        {
+            m_LastSirenTime = Time.realtimeSinceStartup;
+
+            m_ErrorText.text += s + "\n";
+            m_Source.clip = m_bad;
+            m_Source.loop = false;
+            m_Source.Play();
+        }
+
     }
 
     public void ClearText()
