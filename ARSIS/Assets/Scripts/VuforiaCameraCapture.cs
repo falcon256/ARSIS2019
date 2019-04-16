@@ -124,7 +124,6 @@ public class VuforiaCameraCapture : MonoBehaviour
         try
         {
             QRCodeChecker qr = QRCodeChecker.getSingleton();
-            Debug.Log(m_Texture);
             string o = qr.findQRCodeInImage(m_Texture);
             Debug.Log(o);
             if (o.Length > 0)

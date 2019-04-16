@@ -152,7 +152,6 @@ public class VoiceManager : MonoBehaviour
 
     public void addProcedureCommand(string name, int index)
     {
-        Debug.Log("Adding command " + name);
         _keywords.Add(name, () => {
             mc.currentProcedure = index;
             mc.currentTask = 0;
@@ -626,6 +625,11 @@ public class VoiceManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.O))
         {
             Next();
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            Biometrics();
         }
 
     }

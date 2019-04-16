@@ -23,6 +23,7 @@ public class JSONParse : MonoBehaviour {
 
     public GameObject[] bubbles;
     public SuitDataElement[] m_SuitDataUIElements;
+    public GameObject[] m_SwitchUIElements; //0-7  will be set in editor
 
     public Text timeLeftText;
 
@@ -307,7 +308,7 @@ public class JSONParse : MonoBehaviour {
             SuitDataSwitch jsonObject = JsonUtility.FromJson<SuitDataSwitch>(json);
 
             CheckSuitSwitches(jsonObject);
-            UpdateSwitchUI(jsonObject);
+            //UpdateSwitchUI(jsonObject);
         }
     }
 
@@ -329,6 +330,13 @@ public class JSONParse : MonoBehaviour {
 
     private void CheckSuitSwitches(SuitDataSwitch ndts)
     {
+        if (m_OutputErrorData == null)
+        {
+            m_OutputErrorData = FindObjectOfType<OutputErrorData>();
+        }
+
+        Debug.Log("Output Error Data" + m_OutputErrorData.gameObject.transform);
+
         m_OutputErrorData.ClearText();
 
         if (ndts == null)
@@ -345,7 +353,28 @@ public class JSONParse : MonoBehaviour {
         if (ndts.o2_off == "true") m_OutputErrorData.OutputErrorText("O2 IS OFF");
         if (ndts.p_sop_on == "true") m_OutputErrorData.OutputErrorText("SECONDARY OXYGEN TANK ON");
         //ebug.Log(ndts.temp_switch);
-        if (ndts.temp_switch == "true") m_OutputErrorData.OutputErrorText("FLIP BOTTOM LEFT SWITCH OF TASKBOARD ON"); 
+        if (ndts.temp_switch == "true") m_OutputErrorData.OutputErrorText("FLIP BOTTOM LEFT SWITCH OF TASKBOARD ON");
+
+        if (m_SwitchUIElements.Length <= 0)
+        {
+            return;
+        }
+
+        m_SwitchUIElements[0].SetActive(GetSwitchState(ndts.h2o_off));
+        m_SwitchUIElements[1].SetActive(GetSwitchState(ndts.sspe));
+        m_SwitchUIElements[2].SetActive(GetSwitchState(ndts.fan_error));
+        m_SwitchUIElements[3].SetActive(GetSwitchState(ndts.vent_error));
+        m_SwitchUIElements[4].SetActive(GetSwitchState(ndts.vehicle_power));
+        m_SwitchUIElements[5].SetActive(GetSwitchState(ndts.o2_off));
+        m_SwitchUIElements[6].SetActive(GetSwitchState(ndts.p_sop_on));
+        m_SwitchUIElements[7].SetActive(GetSwitchState(ndts.temp_switch));
+
+    }
+
+    //returns true if state is string dataName is set to true
+    private bool GetSwitchState(string dataName)
+    {
+        return dataName == "true" ? true : false;
     }
 
     private string CleanUpJSON(string json)
