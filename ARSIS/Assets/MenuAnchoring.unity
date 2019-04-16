@@ -7688,8 +7688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_JSONString: 
-  url: 'https://agile-badlands-39994.herokuapp.com/api/suit/recent '
-  switchUrl: https://agile-badlands-39994.herokuapp.com/api/suitswitch/recent
+  url: https://x-15-program.herokuapp.com/api/suit/recent
+  switchUrl: https://x-15-program.herokuapp.com/api/suitswitch/recent
   bioText: {fileID: 1400558416}
   bubbles:
   - {fileID: 1248878595}

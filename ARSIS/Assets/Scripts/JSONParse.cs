@@ -90,7 +90,6 @@ public class JSONParse : MonoBehaviour {
         //StartCoroutine(RunStartWWW());
         InvokeRepeating("UpdateSystemData", 1, 5);
         InvokeRepeating("UpdateSystemSwitchData", 2, 3);
-        
     }
 
     private void OnApplicationQuit ()
@@ -161,6 +160,8 @@ public class JSONParse : MonoBehaviour {
             
             if (!json.Equals(""))
             {
+                json = json.Substring(1, json.Length - 2);
+
                 SuitData jsonObject = JsonUtility.FromJson<SuitData>(json);
                 LineData data = new LineData();
 
@@ -305,6 +306,9 @@ public class JSONParse : MonoBehaviour {
                 json = www.downloadHandler.text;
 
             }
+
+            json = json.Substring(1, json.Length - 2);
+
             //Debug.Log(json); 
             SuitDataSwitch jsonObject = JsonUtility.FromJson<SuitDataSwitch>(json);
 
