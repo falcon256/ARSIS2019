@@ -32,6 +32,11 @@ public class ServerConnect : MonoBehaviour
 
         CreateSocketRef();
 
+        if (socketManager == null)
+        {
+            Debug.Log("Socket Manager Unable to find Reference");
+        }
+
         // Socket messages that we are listening for 
         socketManager.Socket.On("connect", OnConnect);
         socketManager.Socket.On("connecting", OnConnecting);

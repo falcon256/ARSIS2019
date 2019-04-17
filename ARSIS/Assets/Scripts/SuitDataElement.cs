@@ -142,7 +142,7 @@ public class SuitDataElement : MonoBehaviour
         }
         else
         {
-            Debug.Log("Returning bad telemetry value " + m_DataValue + " in " + name);
+            //Debug.Log("Returning bad telemetry value " + m_DataValue + " in " + name);
             return warningColor;
         }
     }

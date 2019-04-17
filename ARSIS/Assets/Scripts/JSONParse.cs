@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using System;
 
 /// <summary>
 /// Recieves and parses telemetry data from a server. 
@@ -17,6 +18,8 @@ public class JSONParse : MonoBehaviour {
     public const int OBJECTID_LENGTH = 47;
 
     private OutputErrorData m_OutputErrorData;
+    private bool m_bGettingSuitData;
+    private bool m_bGettingSwitchData;
 
     [Header("Display Text")]
     public Text bioText;
@@ -105,14 +108,16 @@ public class JSONParse : MonoBehaviour {
     private void UpdateSystemData()
     {
         StartCoroutine(RunWWW());
-        
     }
 
     private void UpdateSystemSwitchData()
     {
-    
-        StartCoroutine(RunSwitchWWW());
-     
+        if (m_bGettingSuitData)
+        {
+            StopCoroutine(RunSwitchWWW());
+        }
+
+        StartCoroutine(RunSwitchWWW());   
     }
 /*
     IEnumerator RunStartWWW()
@@ -134,30 +139,38 @@ public class JSONParse : MonoBehaviour {
     */
     IEnumerator RunWWW()
     {
+        if (m_bGettingSuitData == true) yield break;
+
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
             yield return www.SendWebRequest();
 
+            m_bGettingSuitData = true;
             string json = ""; 
             if (www.isNetworkError)
             {
                 bioText.text = "NETWORK ERROR Not connected to server :(\n"; 
-                bioText.text += www.error; 
-                
-            } else if (www.isHttpError)
+                bioText.text += www.error;
+                m_bGettingSuitData = false;
+            }
+            else if (www.isHttpError)
             {
                 bioText.text = "HTTP ERROR Not connected to server :( :( :(";
-                bioText.text += www.error; 
-            } else 
+                bioText.text += www.error;
+                m_bGettingSuitData = false;
+            }
+            else 
             {
                 // We are connected to the server 
 
                 // Use line below only if the JSON comes in with brackets around it 
                 //json = RemoveBrackets(www.downloadHandler.text);
                 json = www.downloadHandler.text;
+                m_bGettingSuitData = false;
+
                 //Debug.Log("Connected to biometrics server");
             }
-            
+
             if (!json.Equals(""))
             {
                 json = json.Substring(1, json.Length - 2);
@@ -178,11 +191,17 @@ public class JSONParse : MonoBehaviour {
                 
                 // Display Time Left 
                 timeLeftText.text = "Time Left: " + lesserTime + " (" + identifier + ")";
-            } else
-            {
-                Debug.Log("no data recieved from the server"); 
+                m_bGettingSuitData = false;
+
             }
-            
+            else
+            {
+                Debug.Log("no data recieved from the server");
+                m_bGettingSuitData = false;
+
+            }
+
+
         }
     }
 
@@ -214,7 +233,6 @@ public class JSONParse : MonoBehaviour {
         {
             return;
         }
-
         /*
         m_SuitDataUIElements[15].SetData("Battery Amp High", switchData.battery_amp_high.ToString());
         m_SuitDataUIElements[16].SetData("Battery VDC Low", switchData.battery_vdc_low.ToString());
@@ -281,21 +299,27 @@ public class JSONParse : MonoBehaviour {
 
     IEnumerator RunSwitchWWW()
     {
+        if (m_bGettingSwitchData == true) yield break;
+
         using (UnityWebRequest www = UnityWebRequest.Get(switchUrl))
         {
             yield return www.SendWebRequest();
+            m_bGettingSwitchData = true;
 
             string json = "";
             if (www.isNetworkError)
             {
                 bioText.text = "NETWORK ERROR Not connected to server :(\n";
                 bioText.text += www.error;
+                m_bGettingSwitchData = false;
 
             }
             else if (www.isHttpError)
             {
                 bioText.text = "HTTP ERROR Not connected to server :( :( :(";
                 bioText.text += www.error;
+                m_bGettingSwitchData = false;
+
             }
             else
             {
@@ -314,7 +338,10 @@ public class JSONParse : MonoBehaviour {
 
             CheckSuitSwitches(jsonObject);
             //UpdateSwitchUI(jsonObject);
+            m_bGettingSwitchData = false;
+
         }
+
     }
 
     private void CheckAllRanges(SuitData ndt)
