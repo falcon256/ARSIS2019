@@ -42,8 +42,8 @@ public class SuitDataElement : MonoBehaviour
         lowerWarning = lower;
         nominalValue = (lower + upper) / 2.0f;
         upperWarning = upper;
-        upperCaution = (upper + nominalValue) / 2.0f;
-        lowerCaution = (lower + nominalValue) / 2.0f;
+        upperCaution = upperWarning - ((upperWarning - nominalValue) * .15f); //get 15% of distance between nominal and warning
+        lowerCaution = lowerWarning - ((nominalValue - lowerWarning) * .15f); //get 15% of distance between nominal and warning
 
         m_DataValue = dataValue; 
         m_DataUnitName = unit; 
@@ -79,6 +79,7 @@ public class SuitDataElement : MonoBehaviour
 
     public Color GetCurrentColor()
     {
+        /*
         if (m_DataValue > upperWarning)
         {
             // "SYSTEM CRITICAL";
@@ -92,7 +93,7 @@ public class SuitDataElement : MonoBehaviour
             float val = Offset / dif;
             return Color.Lerp(cautionColor, warningColor, val);
         }
-        else if (m_DataValue < upperCaution && m_DataValue > nominalValue)
+        else if (m_DataValue < upperCaution && m_DataValue >= nominalValue)
         {
             // "Systems Nominal";
             float Offset = m_DataValue - nominalValue;
@@ -117,6 +118,32 @@ public class SuitDataElement : MonoBehaviour
             return Color.Lerp(warningColor, cautionColor, val);
         }
         // "SYSTEM CRITICAL";
-        return warningColor;
+        return warningColor;*/
+
+        if (m_DataValue > upperWarning)
+        {
+            return warningColor;
+        }
+        else if (m_DataValue <= upperWarning && m_DataValue > upperCaution)
+        {
+            return cautionColor;
+        }
+        else if (m_DataValue <= upperCaution && m_DataValue > lowerCaution)
+        {
+            return nominalColor;
+        }
+        else if (m_DataValue > lowerWarning && m_DataValue <= lowerCaution)
+        {
+            return cautionColor;
+        }
+        else if (m_DataValue < lowerWarning)
+        {
+            return warningColor;
+        }
+        else
+        {
+            Debug.Log("Returning bad telemetry value " + m_DataValue + " in " + name);
+            return warningColor;
+        }
     }
 }

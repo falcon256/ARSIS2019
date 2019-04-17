@@ -106,6 +106,7 @@ public class ServerConnect : MonoBehaviour
         {
             ///////////////////// Main Menus /////////////////////
             case "main":
+                Debug.Log("Main Menu Overrided");
                 VoiceManager.S.MainMenu(); 
                 break;
             case "settings":

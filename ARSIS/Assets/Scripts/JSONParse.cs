@@ -200,7 +200,7 @@ public class JSONParse : MonoBehaviour {
         m_SuitDataUIElements[6].SetData("Fan Tachometer", data.v_fan, 10000.0f, 40000.0f, "RPM");
         m_SuitDataUIElements[7].SetData("Extravehicular Activity Rate", data.p_o2, 0.0f, 9.0f, "hours");
         m_SuitDataUIElements[8].SetData("Oxygen Pressure", data.p_o2, 750.0f, 950.0f, "psia");
-        m_SuitDataUIElements[9].SetData("Oxygen Rate", data.rate_o2, 0.5f, 0.1f, "psi/min");
+        m_SuitDataUIElements[9].SetData("Oxygen Rate", data.rate_o2, 0.5f, 1.0f, "psi/min");
         m_SuitDataUIElements[10].SetData("Battery Capacity", data.cap_battery, 0.0f, 30.0f, "ah");
         m_SuitDataUIElements[11].SetData("H20 Gas Pressure", data.p_h2o_g, 14.0f, 16.0f, "psia");
         m_SuitDataUIElements[12].SetData("H20 Liquid Pressure", data.p_h2o_l, 14.0f, 16.0f, "psia");
