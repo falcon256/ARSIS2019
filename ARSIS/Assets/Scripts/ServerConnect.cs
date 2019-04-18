@@ -19,10 +19,10 @@ public class ServerConnect : MonoBehaviour
 
     public string socketURI; 
     public bool useLocalHost;
-    public bool useOliviasTestServer; 
-
-    public SocketOptions options;
-    public SocketManager socketManager;
+    public bool useOliviasTestServer;
+    public bool attempted = false;
+    public SocketOptions options = null;
+    public SocketManager socketManager = null;
 
     public AudioClip m_messageRecievedAudio; 
     
@@ -35,6 +35,7 @@ public class ServerConnect : MonoBehaviour
         if (socketManager == null)
         {
             Debug.Log("Socket Manager Unable to find Reference");
+            return;
         }
 
         // Socket messages that we are listening for 
@@ -57,7 +58,16 @@ public class ServerConnect : MonoBehaviour
         request.Send();*/
     }
 
-
+    public void FixedUpdate()
+    {
+        /*
+        if(!attempted)
+        {
+            attempted = true;
+            socketManager.Open();
+        }
+        */
+    }
     /*IEnumerator RunSwitchWWW()
     {
         using (UnityWebRequest www = UnityWebRequest.Get("http://db45ecb7.ngrok.io/socket.io/?EIO=4&transport=polling"))
@@ -92,12 +102,16 @@ public class ServerConnect : MonoBehaviour
     ///////////////////// Public functions that emit socket messages /////////////////////
     public void sendPicture(Texture2D tx)
     {
+        if (socketManager == null)
+            return;
         Debug.Log("Sending Message"); 
         socketManager.GetSocket().Emit("pictureFromHolo", tx.EncodeToPNG()); 
     }
 
     public void sos()
     {
+        if (socketManager == null)
+            return;
         socketManager.GetSocket().Emit("SOS"); 
     }
 
@@ -296,15 +310,18 @@ public class ServerConnect : MonoBehaviour
 
     public void CreateSocketRef()
     {
-        TimeSpan miliSecForReconnect = TimeSpan.FromMilliseconds(1000);
+        if (socketManager != null)
+            return;
+        TimeSpan miliSecForReconnect = TimeSpan.FromMilliseconds(10000);
 
         options = new SocketOptions();
-        options.ReconnectionAttempts = 3;
+        options.ReconnectionAttempts = 5;
+
         options.AutoConnect = true;
         options.ReconnectionDelay = miliSecForReconnect;
         
         //options.ConnectWith = BestHTTP.SocketIO.Transports.TransportTypes.Polling; 
-        //options.Timeout = TimeSpan.FromMilliseconds(100); // set this to much faster than default, should probably remove 
+        options.Timeout = TimeSpan.FromMilliseconds(5000); // set this to much faster than default, should probably remove 
 
         //Server URI
         if (useLocalHost)
@@ -328,11 +345,15 @@ public class ServerConnect : MonoBehaviour
     public void DisconnectMySocket()
     {
         //Debug.Log("Disconnected from Socket Server"); 
+        if (socketManager == null)
+            return;
         socketManager.GetSocket().Disconnect();
     }
 
     public void LeaveRoomFromServer()
     {
+        if (socketManager == null)
+            return;
         socketManager.GetSocket().Emit("leave", OnSendEmitDataToServerCallBack);
     }
 

@@ -37,6 +37,7 @@ public class NetworkMeshSource : MonoBehaviour
     public bool targetIPReady = false;
     public bool socketStarted = false;
     public volatile bool connected = false;
+    private bool doReconnect = false;
     private ConcurrentQueue<messagePackage> outgoingQueue = null;
     private byte[] incomingBuffer = null;
     private Stack<LineRenderer> lineRenderers = null;
@@ -191,9 +192,11 @@ public class NetworkMeshSource : MonoBehaviour
                 Debug.LogError(e.ToString());
                 connected = false;
                 socketStarted = false;
+                doReconnect = true;
                 return;
             }
         }
+        doReconnect = true;
 #endif
     }
 #if !UNITY_EDITOR
@@ -405,6 +408,15 @@ public class NetworkMeshSource : MonoBehaviour
             socketStarted = true;
             doSocketSetup();
         }
+
+        if (doReconnect)
+        {
+            doReconnect = false;
+            socketStarted = false;
+            connected = false;
+            doSocketSetup();
+        }
+
         if (!outgoingQueue.IsEmpty)
         {
             messagePackage mp = null;
@@ -412,6 +424,24 @@ public class NetworkMeshSource : MonoBehaviour
             if (mp != null)
             {
                 sendOutgoingPacket(mp);
+            }
+        }
+
+        if(undoLineRenderer)
+        {
+
+            undoLineRenderer = false;
+            try
+            {
+
+                LineRenderer lr = lineRenderers.Pop();
+                lr.enabled = false;
+                Destroy(lr.gameObject);
+
+            }
+            catch (Exception e)
+            {
+
             }
         }
 
@@ -446,6 +476,7 @@ public class NetworkMeshSource : MonoBehaviour
                     new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 1.0f) }
                 );
                 lr.colorGradient = gradient;
+                lineRenderers.Push(lr);
                 /* some helpful notes
                 LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
                 lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
