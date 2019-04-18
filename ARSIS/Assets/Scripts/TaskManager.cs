@@ -48,7 +48,6 @@ public class TaskManager : MonoBehaviour
             for (int j = 0; j < allProcedures[i].Tasks.Length; j++)
             {
                 string s = allProcedures[i].Tasks[j].Title.Split(':')[0];
-                Debug.Log("Task: " + s);
                 VoiceManager.S.addProcedureCommand("Adele " + s + " Task", i, j);
             }
         }

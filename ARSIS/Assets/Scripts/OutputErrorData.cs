@@ -14,8 +14,14 @@ public class OutputErrorData : MonoBehaviour {
 
     public AudioClip m_bad;
 
+    public void Start()
+    {
+        m_LastSirenTime = -30f; //so first error text can trigger alarm
+    }
+
     public void OutputErrorText(string s)
     {
+        Debug.Log("Logging evilness");
         if (Time.realtimeSinceStartup - m_LastSirenTime >= 30f)
         {
             m_LastSirenTime = Time.realtimeSinceStartup;
