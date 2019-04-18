@@ -26,7 +26,8 @@ public class JSONParse : MonoBehaviour {
 
     public GameObject[] bubbles;
     public SuitDataElement[] m_SuitDataUIElements;
-    public GameObject[] m_SwitchUIElements; //0-7  will be set in editor
+    public GameObject[] m_SwitchUIElements;
+    public GameObject m_BiometricInCautionElement;
 
     public Text timeLeftText;
 
@@ -192,6 +193,8 @@ public class JSONParse : MonoBehaviour {
                 // Display Time Left 
                 timeLeftText.text = "Time Left: " + lesserTime + " (" + identifier + ")";
                 m_bGettingSuitData = false;
+
+                m_BiometricInCautionElement.SetActive(WarningSingleton.m_Singleton.m_DataInWarning);
 
             }
             else
