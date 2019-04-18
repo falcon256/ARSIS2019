@@ -21,7 +21,6 @@ public class OutputErrorData : MonoBehaviour {
 
     public void OutputErrorText(string s)
     {
-        Debug.Log("Logging evilness");
         if (Time.realtimeSinceStartup - m_LastSirenTime >= 30f)
         {
             m_LastSirenTime = Time.realtimeSinceStartup;

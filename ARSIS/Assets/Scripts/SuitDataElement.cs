@@ -122,32 +122,32 @@ public class SuitDataElement : MonoBehaviour
 
         if (m_DataValue > upperWarning)
         {
-            WarningSingleton.m_Singleton.BiometricInWarning();
+            WarningSingleton.m_Singleton.BiometricInWarning(m_DataTitle);
             return warningColor;
         }
         else if (m_DataValue <= upperWarning && m_DataValue > upperCaution)
         {
-            WarningSingleton.m_Singleton.BiometricInNominal();
+            WarningSingleton.m_Singleton.BiometricInNominal(m_DataTitle);
             return cautionColor;
         }
         else if (m_DataValue <= upperCaution && m_DataValue > lowerCaution)
         {
-            WarningSingleton.m_Singleton.BiometricInNominal();
+            WarningSingleton.m_Singleton.BiometricInNominal(m_DataTitle);
             return nominalColor;
         }
         else if (m_DataValue > lowerWarning && m_DataValue <= lowerCaution)
         {
-            WarningSingleton.m_Singleton.BiometricInNominal();
+            WarningSingleton.m_Singleton.BiometricInNominal(m_DataTitle);
             return cautionColor;
         }
         else if (m_DataValue < lowerWarning)
         {
-            WarningSingleton.m_Singleton.BiometricInWarning();
+            WarningSingleton.m_Singleton.BiometricInWarning(m_DataTitle);
             return warningColor;
         }
         else
         {
-            WarningSingleton.m_Singleton.BiometricInWarning();
+            WarningSingleton.m_Singleton.BiometricInWarning(m_DataTitle);
             //Debug.Log("Returning bad telemetry value " + m_DataValue + " in " + name);
             return warningColor;
         }
