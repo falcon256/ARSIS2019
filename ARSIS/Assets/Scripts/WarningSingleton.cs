@@ -24,6 +24,8 @@ public class WarningSingleton : MonoBehaviour
         m_Warnings.Add(s);
         m_DataInWarning = true;
         FindObjectOfType<OutputErrorData>().OutputErrorText("Warning in Biometrics");
+
+        Debug.Log("Adding error");
     }
 
     public void BiometricInNominal(string s)

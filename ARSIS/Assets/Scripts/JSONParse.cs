@@ -212,7 +212,23 @@ public class JSONParse : MonoBehaviour {
     {
         float waterHours = float.Parse(data.t_water.Split(':')[0]);
         float oxygenHours = float.Parse(data.t_oxygen.Split(':')[0]);
-        float batteryHours = float.Parse(data.t_battery.Split(':')[0]); 
+        float batteryHours = float.Parse(data.t_battery.Split(':')[0]);
+        CheckOffNominalRange("Internal Suit Pressure", data.p_suit, 2.0f, 4.0f, "psid");
+        CheckOffNominalRange("Time Life Battery", batteryHours, 0.0f, 10.0f, "hours");
+        CheckOffNominalRange("Time Life Oxygen", oxygenHours, 0.0f, 10.0f, "hours");
+        CheckOffNominalRange("Time Life Water", waterHours, 0.0f, 10.0f, "hours");
+        CheckOffNominalRange("SUB Pressure", data.p_sub, 2.0f, 4.0f, "psia");
+        CheckOffNominalRange("SUB Tempurature", data.t_sub, -148.0f, 248.0f, "° F");
+        CheckOffNominalRange("Fan Tachometer", data.v_fan, 10000.0f, 40000.0f, "RPM");
+        CheckOffNominalRange("Extravehicular Activity Rate", data.p_o2, 0.0f, 9.0f, "hours");
+        CheckOffNominalRange("Oxygen Pressure", data.p_o2, 750.0f, 950.0f, "psia");
+        CheckOffNominalRange("Oxygen Rate", data.rate_o2, 0.5f, 1.0f, "psi/min");
+        CheckOffNominalRange("Battery Capacity", data.cap_battery, 0.0f, 30.0f, "ah");
+        CheckOffNominalRange("H20 Gas Pressure", data.p_h2o_g, 14.0f, 16.0f, "psia");
+        CheckOffNominalRange("H20 Liquid Pressure", data.p_h2o_l, 14.0f, 16.0f, "psia");
+        CheckOffNominalRange("SOP Pressure", data.p_sop, 750.0f, 950.0f, "psia");
+        CheckOffNominalRange("SOP Rate", data.rate_sop, 0.5f, 1.0f, "psi/min");
+
         m_SuitDataUIElements[0].SetData("Internal Suit Pressure", data.p_suit, 2.0f, 4.0f, "psid");
         m_SuitDataUIElements[1].SetData("Time Life Battery", batteryHours, 0.0f, 10.0f, "hours");
         m_SuitDataUIElements[2].SetData("Time Life Oxygen", oxygenHours, 0.0f, 10.0f, "hours");
@@ -228,6 +244,14 @@ public class JSONParse : MonoBehaviour {
         m_SuitDataUIElements[12].SetData("H20 Liquid Pressure", data.p_h2o_l, 14.0f, 16.0f, "psia");
         m_SuitDataUIElements[13].SetData("SOP Pressure", data.p_sop, 750.0f, 950.0f, "psia");
         m_SuitDataUIElements[14].SetData("SOP Rate", data.rate_sop, 0.5f, 1.0f, "psi/min");
+    }
+
+    private void CheckOffNominalRange(string dataTitle, float dataValue, float lower, float upper, string unit)
+    {
+        if (dataValue > upper || dataValue < lower)
+        {
+            WarningSingleton.m_Singleton.BiometricInWarning(dataTitle);
+        }
     }
 
     private void UpdateSwitchUI(SuitDataSwitch switchData)

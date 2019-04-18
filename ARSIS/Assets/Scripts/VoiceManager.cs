@@ -59,6 +59,8 @@ public class VoiceManager : MonoBehaviour
         #region keywords
         ///////////////////// Main Menus ///////////////////// 
         _keywords.Add("Adele Main", MainMenu);
+        _keywords.Add("Adele Menu", MainMenu);
+        _keywords.Add("Adele Main Menu", MainMenu);
         _keywords.Add("Adele Settings", Settings);
         _keywords.Add("Adele Brightness", Brightness);
         _keywords.Add("Adele Volume", Volume);
