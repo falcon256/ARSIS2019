@@ -3387,7 +3387,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 333976191}
-  m_PlaneDistance: 40
+  m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -10010,6 +10010,7 @@ MonoBehaviour:
   socketURI: https://agile-badlands-39994.herokuapp.com/socket.io/
   useLocalHost: 0
   useOliviasTestServer: 0
+  attempted: 0
   m_messageRecievedAudio: {fileID: 8300000, guid: f38e59be73b54fb40b4bb87219afb160,
     type: 3}
 --- !u!4 &739110214
