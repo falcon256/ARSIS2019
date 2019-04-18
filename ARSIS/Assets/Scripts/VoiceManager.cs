@@ -80,12 +80,12 @@ public class VoiceManager : MonoBehaviour
         _keywords.Add("Adele Clear", ResetScene);
         _keywords.Add("Adele Close", Close);
         _keywords.Add("Adele Task", generateTaskMenu);
-        _keywords.Add("Next", Next);
-        _keywords.Add("Continue", Next);
-        _keywords.Add("Complete", Next);
-        _keywords.Add("Back", Back);
-        _keywords.Add("Zoom In", zoomIn);
-        _keywords.Add("Zoom Out", zoomOut);
+        _keywords.Add("Adele Next", Next);
+        _keywords.Add("Adele Continue", Next);
+        _keywords.Add("Adele Complete", Next);
+        _keywords.Add("Adele Back", Back);
+        _keywords.Add("Adele Zoom In", zoomIn);
+        _keywords.Add("Adele Zoom Out", zoomOut);
         // _keywords.Add("Adele Retrieve", Retrieve);
 
         ///////////////////// Translation /////////////////////
@@ -150,11 +150,13 @@ public class VoiceManager : MonoBehaviour
         _keywordRecognizer.Start();
     }
 
-    public void addProcedureCommand(string name, int index)
+    public void addProcedureCommand(string name, int procedureIndex, int taskIndex)
     {
+        if (_keywords.ContainsKey(name)) return;
+
         _keywords.Add(name, () => {
-            mc.currentProcedure = index;
-            mc.currentTask = 0;
+            mc.currentProcedure = procedureIndex;
+            mc.currentTask = taskIndex;
             mc.currentSubTask = 0;
             generateTaskMenu();
         });
@@ -591,12 +593,15 @@ public class VoiceManager : MonoBehaviour
         mc.m_SubTaskText.text = curText;
 
         mc.m_stepPrevText.text = prevText;
-        mc.m_stepCurText.text = curText;
+        //mc.m_stepCurText.text = curText;
         mc.m_stepNextText.text = nextText;
 
         Texture2D curImage = TaskManager.S.getPic(curProcedure, curTask, curSubTask);
 
-        mc.m_stepImage.texture = curImage;
+        if (curImage != null)
+        {
+            mc.m_stepImage.texture = curImage;
+        }
 
         string warningText = TaskManager.S.getWarning(curProcedure, curTask, curSubTask);
         mc.m_warningText.text = warningText;

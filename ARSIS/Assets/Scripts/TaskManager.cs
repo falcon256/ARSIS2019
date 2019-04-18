@@ -35,10 +35,22 @@ public class TaskManager : MonoBehaviour
     void Start()
     {
         S = this;
+        //add procedure voice commands
         for (int i = 0; i < allProcedures.Count; i++)
         {
-            string s = allProcedures[i].procedure_title.Split(':')[0]; 
-            VoiceManager.S.addProcedureCommand("Adele " + s, i);
+            string s = allProcedures[i].procedure_title.Split(':')[0];
+            VoiceManager.S.addProcedureCommand("Adele " + s + " Procedure", i, 0);
+        }
+
+        //add task voice commands
+        for (int i = 0; i < allProcedures.Count; i++)
+        {
+            for (int j = 0; j < allProcedures[i].Tasks.Length; j++)
+            {
+                string s = allProcedures[i].Tasks[j].Title.Split(':')[0];
+                Debug.Log("Task: " + s);
+                VoiceManager.S.addProcedureCommand("Adele " + s + " Task", i, j);
+            }
         }
 
         m_OutputErrorData = FindObjectOfType<OutputErrorData>();
